@@ -1,61 +1,132 @@
 package com.bink.wallet.utils.local_point_scraping
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.webkit.*
 import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.PointScrapingResponse
-import com.bink.wallet.utils.LocalPointScrapingError
-import com.bink.wallet.utils.SentryErrorType
-import com.bink.wallet.utils.SentryUtils
-import com.bink.wallet.utils.logDebug
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.charset.StandardCharsets
 
+import android.text.InputType
+
+import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.bink.wallet.utils.*
+
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
 
     private var webView: WebView? = null
+    private var authCode: String? = null
 
-    fun performNewScrape(context: Context, isAddCard: Boolean, localPointsAgent: LocalPointsAgent?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
+    fun performNewScrape(
+        context: Context,
+        isAddCard: Boolean,
+        localPointsAgent: LocalPointsAgent?,
+        email: String?,
+        password: String?,
+        attachableView: ConstraintLayout? = null,
+        callback: (PointScrapingResponse) -> Unit
+    ) {
         if (localPointsAgent == null || email == null || password == null) return
 
         webView = getWebView(context)
+        attachableView?.addView(webView)
         clearWebViewCookies()
 
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                getJavaScriptForMerchant(localPointsAgent, email, password) { javascript ->
+                getJavaScriptForMerchant(context, localPointsAgent, email, password) { javascript ->
 
                     if (javascript == null) {
-                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue, WebScrapableManager.currentAgent?.merchant, isAddCard)
+                        SentryUtils.logError(
+                            SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT,
+                            LocalPointScrapingError.SCRIPT_NOT_FOUND.issue,
+                            WebScrapableManager.currentAgent?.merchant,
+                            isAddCard
+                        )
                     } else {
                         webView?.evaluateJavascript(javascript) { responseFromSite ->
 
+                            logDebug(
+                                "LocalPointScrape",
+                                "unserializedResponse: $responseFromSite"
+                            )
+
                             processResponse(responseFromSite) { serializedResponse ->
 
-                                logDebug("LocalPointScrape", "serializedResponse: $serializedResponse")
+                                logDebug(
+                                    "LocalPointScrape",
+                                    "serializedResponse: $serializedResponse"
+                                )
 
                                 if (serializedResponse == null) {
-                                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue, WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                    SentryUtils.logError(
+                                        SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT,
+                                        LocalPointScrapingError.JS_DECODE_FAILED.issue,
+                                        WebScrapableManager.currentAgent?.merchant,
+                                        isAddCard
+                                    )
                                 } else {
                                     with(serializedResponse) {
-                                        if (localPointsAgent.merchant == "tesco" && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
+                                        if ((localPointsAgent.merchant == "tesco" || localPointsAgent.merchant == "nectar") && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
                                             //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
                                             webView?.evaluateJavascript(javascript) {}
                                         }
 
                                         if (errorMessage != null) {
                                             if (didAttemptLogin == true) {
-                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                                SentryUtils.logError(
+                                                    SentryErrorType.LOCAL_POINTS_SCRAPE_USER,
+                                                    "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage",
+                                                    WebScrapableManager.currentAgent?.merchant,
+                                                    isAddCard
+                                                )
                                             } else {
-                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                                SentryUtils.logError(
+                                                    SentryErrorType.LOCAL_POINTS_SCRAPE_USER,
+                                                    "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage",
+                                                    WebScrapableManager.currentAgent?.merchant,
+                                                    isAddCard
+                                                )
                                             }
+                                        }
+
+                                        if (userActionRequired == true) {
+                                            val captchaDialog =
+                                                WebScrapeCaptchaDialog(context, webView, javascript)
+                                            captchaDialog.setOnDismissListener {
+                                                logDebug(
+                                                    "LocalPointScrape",
+                                                    "captcha dialog dismissed"
+                                                )
+                                                webView?.evaluateJavascript(javascript) {}
+                                            }
+
+                                            logDebug("LocalPointScrape", "captcha dialog shown")
+                                            captchaDialog.show()
+//                                            val builder: AlertDialog.Builder =
+//                                                AlertDialog.Builder(context)
+//                                            builder.setTitle("Please enter your Auth Code")
+//                                            val input = EditText(context)
+//                                            input.inputType =
+//                                                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+//                                            builder.setView(input)
+//
+//                                            builder.setPositiveButton("Go") { _, _ ->
+//                                                authCode = input.text.toString()
+//                                                webView?.evaluateJavascript(javascript) {}
+//                                            }
+//                                            builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+//
+//                                            builder.show()
                                         }
 
                                         if (pointsString != null) {
@@ -81,8 +152,9 @@ object PointScrapingUtil {
         return WebView(context).apply {
             settings.apply {
                 javaScriptEnabled = true
-                cacheMode = WebSettings.LOAD_NO_CACHE;
-                setAppCacheEnabled(false);
+                cacheMode = WebSettings.LOAD_NO_CACHE
+                domStorageEnabled = true
+                setAppCacheEnabled(false)
             }
             clearCache(true)
             clearFormData()
@@ -98,14 +170,28 @@ object PointScrapingUtil {
         CookieManager.getInstance().flush()
     }
 
-    private fun getJavaScriptForMerchant(site: LocalPointsAgent, email: String, password: String, callback: (String?) -> Unit) {
-        val storageRef = Firebase.storage.reference.child("local-points-collection/${site.merchant.toLowerCase()}.js")
+    private fun getJavaScriptForMerchant(
+        context: Context,
+        site: LocalPointsAgent,
+        email: String,
+        password: String,
+        callback: (String?) -> Unit
+    ) {
+        val storageRef =
+            Firebase.storage.reference.child("local-points-collection/${site.merchant.toLowerCase()}.js")
 
         storageRef.getBytes(1024 * 1024).addOnSuccessListener {
             val javascriptClass = String(it, StandardCharsets.UTF_8)
-            val replacedEmail = javascriptClass.replaceFirst("%@", email)
+            //val javascriptClass = "nectar.txt".readFileText(context)
+
+            val replacedEmail = javascriptClass!!.replaceFirst("%@", email)
             val replacedPassword = replacedEmail.replaceFirst("%@", password)
-            callback(replacedPassword)
+            val replacedAuthCode: String? = if (!authCode.isNullOrEmpty()) {
+                replacedEmail.replaceFirst("%@", authCode ?: "")
+            } else {
+                null
+            }
+            callback(replacedAuthCode ?: replacedPassword)
         }.addOnFailureListener {
             callback(null)
         }
@@ -117,7 +203,10 @@ object PointScrapingUtil {
          * any messages to display to the user
          */
         try {
-            (Gson().fromJson(response, object : TypeToken<PointScrapingResponse?>() {}.type) as PointScrapingResponse).let { pointScrapeResponse ->
+            (Gson().fromJson(
+                response,
+                object : TypeToken<PointScrapingResponse?>() {}.type
+            ) as PointScrapingResponse).let { pointScrapeResponse ->
                 callback(pointScrapeResponse)
             }
         } catch (e: Exception) {

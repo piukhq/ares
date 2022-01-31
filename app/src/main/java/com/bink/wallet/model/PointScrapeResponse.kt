@@ -8,9 +8,9 @@ data class PointScrapingResponse(
     @SerializedName("did_attempt_login")
     var didAttemptLogin: Boolean?,
     @SerializedName("error_message")
-    var errorMessage: String?
-//    @SerializedName("points")
-//    var userActionRequired: Boolean?,
-//    @SerializedName("points")
-//    var userActionComplete: Boolean
+    var errorMessage: String?,
+    @SerializedName("user_action_required")
+    var userActionRequired: Boolean?,
+    @SerializedName("user_action_complete")
+    var userActionComplete: Boolean?
 )
