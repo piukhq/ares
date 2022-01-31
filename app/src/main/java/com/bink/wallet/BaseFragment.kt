@@ -173,15 +173,28 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 getMainActivity().newIntent = null
 
                 if (emailFromLocal.isNullOrEmpty()) {
-                    findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
+                    findNavController().navigate(
+                        LoyaltyWalletFragmentDirections.globalToMagicLink(
+                            token,
+                            false
+                        )
+                    )
                 } else {
 
-                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(Locale.ENGLISH)) {
+                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(
+                            Locale.ENGLISH
+                        )
+                    ) {
                         requireContext().displayModalPopup(
                             getString(R.string.already_logged_in_title),
                             getString(R.string.already_logged_in_subtitle, emailFromJson),
                             okAction = {
-                                findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
+                                findNavController().navigate(
+                                    LoyaltyWalletFragmentDirections.globalToMagicLink(
+                                        token,
+                                        true
+                                    )
+                                )
                             },
                             hasNegativeButton = true
                         )
@@ -391,10 +404,33 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         mixpanel.timeEvent(eventTitle)
     }
 
-    fun setMixpanelProperty(propertyTitle: String, propertyValue: String){
+    fun setMixpanelProperty(propertyTitle: String, propertyValue: String) {
         val mixpanel = getMainActivity().mixpanel
         mixpanel.people.identify(mixpanel.people.distinctId)
         mixpanel.people.set(propertyTitle, propertyValue)
+    }
+
+    fun logMixpanelLPSEvent(isStartTimer: Boolean, brandName: String, isSuccess: Boolean, reason: String? = null) {
+        if(isStartTimer){
+            //Start timer for both because we don't know what the outcome will be yet
+            startMixpanelEventTimer(MixpanelEvents.LPS_FAIL)
+            startMixpanelEventTimer(MixpanelEvents.LPS_SUCCESS)
+        } else {
+            if (!isSuccess) {
+                logMixpanelEvent(
+                    MixpanelEvents.LPS_FAIL, JSONObject().put(
+                        MixpanelEvents.BRAND_NAME,
+                        brandName
+                    ).put(MixpanelEvents.LPS_REASON, reason ?: MixpanelEvents.VALUE_UNKNOWN)
+                )
+            } else {
+                logMixpanelEvent(
+                    MixpanelEvents.LPS_SUCCESS,
+                    JSONObject().put(MixpanelEvents.BRAND_NAME, brandName)
+                )
+            }
+        }
+
     }
 
     fun logMixpanelEvent(eventTitle: String, properties: JSONObject? = null) {
@@ -406,7 +442,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun logoutMixpanel(){
+    fun logoutMixpanel() {
         val mixpanel = getMainActivity().mixpanel
         mixpanel.reset()
     }
