@@ -142,7 +142,8 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
                     BarcodeFormat.EAN_13 -> {
                         // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
                         // that has a length below or above the specified limits
-                        shouldShowBarcodeImage = (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
+                        shouldShowBarcodeImage =
+                            (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
                     }
                     else -> {
                     }
@@ -232,26 +233,34 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
 
         val cardNumber = card?.card?.membership_id ?: ""
+        val barcode = card?.card?.barcode ?: ""
+        val barcodeFormat = card?.card?.getBarcodeFormat()
 
-        when (card?.card?.getBarcodeFormat()) {
+        when (barcodeFormat) {
             BarcodeFormat.QR_CODE,
             BarcodeFormat.AZTEC -> {
-                binding.tapCard.text = if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(R.string.tap_to_enlarge_aztec)
+                binding.tapCard.text =
+                    if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(
+                        R.string.tap_to_enlarge_aztec
+                    )
                 binding.sbTitle.text = context.getString(R.string.barcode_card_number)
                 binding.sbCompanyLogo.loadImage(plan)
                 binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
                 binding.sbBarcodeText.text = cardNumber
             }
+            BarcodeFormat.ITF, BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(
+                    barcodeFormat,
+                    barcode
+                )
+            ) loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
             else -> {
-                binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
-                binding.rbTitle.text = context.getString(R.string.barcode_card_number)
-                binding.rbCompanyLogo.loadImage(plan)
-                binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
-                binding.rectangleBarcodeContainer.visibility = View.VISIBLE
-                binding.rbBarcodeText.text = cardNumber
+                loadRectangularBarcode(plan, card, cardNumber)
             }
         }
+
+    } else if (plan?.getCardType() != CardType.PLL && card?.card?.barcode.isNullOrEmpty()) {
+        loadNoBarcodeState(plan, card)
 
     } else {
         binding.cardPlaceholderText.text = context.getString(
@@ -312,6 +321,43 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 EMPTY_STRING
             }
         }
+    }
+}
+
+private fun LoyaltyCardHeader.loadRectangularBarcode(
+    plan: MembershipPlan?,
+    card: MembershipCard?,
+    cardNumber: String
+) {
+    binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
+    binding.rbTitle.text = context.getString(R.string.barcode_card_number)
+    binding.rbCompanyLogo.loadImage(plan)
+    binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+    binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+    binding.rbBarcodeText.text = cardNumber
+}
+
+private fun LoyaltyCardHeader.loadNoBarcodeState(
+    plan: MembershipPlan?,
+    card: MembershipCard?
+) {
+    binding.container.visibility = View.GONE
+    binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
+    binding.noBarcodeCardNumberTitle.text = context.getString(R.string.barcode_card_number)
+    binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
+    binding.noBarcodeContainer.visibility = View.VISIBLE
+    binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
+}
+
+private fun shouldShowBarcode(barcodeFormat: BarcodeFormat, barcode: String): Boolean {
+    val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
+    val barcodeNumberLength = barcode.length
+
+    return when (barcodeFormat) {
+        BarcodeFormat.ITF -> !(barcodeNumberLength.rem(2) != 0 ||
+                barcode.contains(LETTER_REGEX))
+        BarcodeFormat.EAN_13 -> (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
+        else -> false
     }
 }
 
