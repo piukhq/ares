@@ -53,6 +53,7 @@ object PointScrapingUtil {
                                         if (errorMessage != null) {
                                             if (didAttemptLogin == true) {
                                                 SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                                callback(serializedResponse)
                                             } else {
                                                 SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
                                             }
