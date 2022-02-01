@@ -176,6 +176,21 @@ object WebScrapableManager {
                                 }
                             }
 
+                            pointScrapeResponse.errorMessage?.let {
+                                if (membershipCards != null) {
+                                    try {
+                                        membershipCards!![index].status = CardStatus(
+                                            listOf(CardCodes.X101.code),
+                                            MembershipCardStatus.FAILED.status
+                                        )
+                                        membershipCards!![index].isScraped = true
+                                    } catch (e: IndexOutOfBoundsException) {
+                                    }
+                                }
+
+                                tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            }
+
                         } else {
                             tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                         }
