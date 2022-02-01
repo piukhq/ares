@@ -169,6 +169,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     binding.emailField.error == null
                 ) {
                     binding.progressSpinner.visibility = View.VISIBLE
+
+                    logMixpanelEvent(MixpanelEvents.ONBOARDING_STARTED, JSONObject().put(MixpanelEvents.ROUTE, MixpanelEvents.LOGIN_PASSWORD))
                     viewModel.logIn(
                         SignUpRequest(
                             email = viewModel.email.value,
@@ -213,7 +215,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     private fun finishLogInProcess() {
         if (SharedPreferenceManager.isUserLoggedIn) {
-            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_PASSWORD))
+            logMixpanelEvent(MixpanelEvents.ONBOARDING_COMPLETE, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_PASSWORD))
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
     }

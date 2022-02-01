@@ -71,7 +71,7 @@ class MagicLinkResultFragment :
         }
 
         viewModel.membershipPlans.observeNonNull(this) {
-            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_ML))
+            logMixpanelEvent(MixpanelEvents.ONBOARDING_COMPLETE, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_ML))
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
 
