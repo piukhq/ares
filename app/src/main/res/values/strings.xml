@@ -600,6 +600,9 @@
     <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
     <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
 
+    <string name="lps_auth_code">Auth Code</string>
+    <string name="lps_nectar_auth_code_message">You should have received an SMS containing an auth code from Nectar, please enter this below</string>
+
     <!-- WebView -->
     <string name="webview_error_title">Error</string>
     <string name="webview_error_message">There was a problem loading the page, please try again later.</string>

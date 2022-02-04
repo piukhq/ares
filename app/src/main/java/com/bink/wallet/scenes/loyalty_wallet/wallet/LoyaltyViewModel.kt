@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet.wallet
 
+import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -114,13 +115,13 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards(context: Context?) {
+    fun fetchMembershipCards(context: Activity?) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
             checkCardScrape(it, context)
         }
     }
 
-    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
+    private fun checkCardScrape(cards: List<MembershipCard>, context: Activity?) {
         val shouldScrapeCards = DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
 
         if (shouldScrapeCards) {
@@ -137,7 +138,7 @@ class LoyaltyViewModel constructor(
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
-    fun fetchPeriodicMembershipCards(context: Context) {
+    fun fetchPeriodicMembershipCards(context: Activity) {
         val shouldMakePeriodicCall = DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(context)
         if (shouldMakePeriodicCall) {
             fetchMembershipCards(context)
@@ -174,7 +175,7 @@ class LoyaltyViewModel constructor(
 
     }
 
-    fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
+    fun fetchMembershipCardsAndPlansForRefresh(context: Activity?) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
         }
@@ -216,7 +217,7 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
+    private fun scrapeCards(cards: List<MembershipCard>, context: Activity?) {
         WebScrapableManager.tryScrapeCards(0, cards, context, false) { scrapedCards ->
             if (scrapedCards != null) {
                 updateScrapedCards(scrapedCards)

@@ -1,22 +1,24 @@
 package com.bink.wallet.utils.local_point_scraping
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.webkit.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.bink.wallet.R
+import com.bink.wallet.databinding.DialogWebscrapeAuthcodeBinding
 import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.PointScrapingResponse
+import com.bink.wallet.utils.LocalPointScrapingError
+import com.bink.wallet.utils.SentryErrorType
+import com.bink.wallet.utils.SentryUtils
+import com.bink.wallet.utils.logDebug
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.charset.StandardCharsets
-
-import android.text.InputType
-
-import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.bink.wallet.utils.*
 
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
@@ -25,7 +27,7 @@ object PointScrapingUtil {
     private var authCode: String? = null
 
     fun performNewScrape(
-        context: Context,
+        context: Activity,
         isAddCard: Boolean,
         localPointsAgent: LocalPointsAgent?,
         email: String?,
@@ -96,33 +98,7 @@ object PointScrapingUtil {
                                         }
 
                                         if (userActionRequired == true) {
-                                            val captchaDialog =
-                                                WebScrapeCaptchaDialog(context, webView, javascript)
-                                            captchaDialog.setOnDismissListener {
-                                                logDebug(
-                                                    "LocalPointScrape",
-                                                    "captcha dialog dismissed"
-                                                )
-                                                webView?.evaluateJavascript(javascript) {}
-                                            }
-
-                                            logDebug("LocalPointScrape", "captcha dialog shown")
-                                            captchaDialog.show()
-//                                            val builder: AlertDialog.Builder =
-//                                                AlertDialog.Builder(context)
-//                                            builder.setTitle("Please enter your Auth Code")
-//                                            val input = EditText(context)
-//                                            input.inputType =
-//                                                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-//                                            builder.setView(input)
-//
-//                                            builder.setPositiveButton("Go") { _, _ ->
-//                                                authCode = input.text.toString()
-//                                                webView?.evaluateJavascript(javascript) {}
-//                                            }
-//                                            builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-//
-//                                            builder.show()
+                                            displayAuthCodeDialog(context, javascript)
                                         }
 
                                         if (pointsString != null) {
@@ -210,4 +186,20 @@ object PointScrapingUtil {
             //Either an issue with casting to a PointScrapeResponse or in Parsing the JSON
         }
     }
+
+    private fun displayAuthCodeDialog(context: Activity, javascript: String) {
+        val adb = AlertDialog.Builder(context)
+        adb.setTitle(context.getString(R.string.lps_auth_code))
+        adb.setMessage(context.getString(R.string.lps_nectar_auth_code_message))
+        val editTextView = context.layoutInflater.inflate(R.layout.dialog_webscrape_authcode, null)
+        val adbBinding = DialogWebscrapeAuthcodeBinding.bind(editTextView)
+        adb.setView(editTextView)
+
+        adb.setPositiveButton(context.getString(R.string.ok)) { _, _ ->
+            webView?.evaluateJavascript(javascript.replaceFirst("%@", adbBinding.etAuthCode.text.trim().toString() )) {}
+        }
+        adb.setNegativeButton(context.getString(R.string.cancel_text), null)
+        adb.show()
+    }
+
 }

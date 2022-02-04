@@ -54,7 +54,7 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.newMembershipCard.observeNonNull(this) {
-            //handleNavigationAfterCardCreation(it, false)
+            handleNavigationAfterCardCreation(it, false)
             val status = it.status?.state
             //Is it always going to be just one?
             val reasonCode = it.status?.reason_codes?.get(0)
@@ -75,7 +75,7 @@ class AddCardFragment : BaseAddAuthFragment() {
 
             binding.authFields.visibility = View.GONE
             binding.footerComposed.progressBtnContainer.visibility = View.GONE
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true, binding.layout) { cards ->
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), requireActivity(), true, null) { cards ->
                 if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }

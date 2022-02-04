@@ -1,5 +1,6 @@
 package com.bink.wallet.utils.local_point_scraping
 
+import android.app.Activity
 import android.content.Context
 import android.os.CountDownTimer
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +82,7 @@ object WebScrapableManager {
     fun tryScrapeCards(
         index: Int,
         cards: List<MembershipCard>,
-        context: Context?,
+        context: Activity?,
         isAddCard: Boolean,
         attachableView: ConstraintLayout? = null,
         callback: (List<MembershipCard>?) -> Unit
@@ -188,7 +189,7 @@ object WebScrapableManager {
                                     }
                                 }
 
-                                tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                             }
 
                         } else {
