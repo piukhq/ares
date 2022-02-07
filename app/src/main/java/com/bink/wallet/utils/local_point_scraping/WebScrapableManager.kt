@@ -22,10 +22,10 @@ object WebScrapableManager {
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
-    val localPointsCollection = RemoteConfigUtil().localPointsCollection
-    val scrapableAgents = localPointsCollection?.agents ?: ArrayList()
+    private val localPointsCollection = RemoteConfigUtil().localPointsCollection
+    private val scrapableAgents = localPointsCollection?.agents ?: ArrayList()
 
-    val deletedCards = ArrayList<String>()
+    private val deletedCards = ArrayList<String>()
 
     var currentAgent: LocalPointsAgent? = null
 
@@ -72,12 +72,10 @@ object WebScrapableManager {
     }
 
     fun storeCredentialsFromRequest(cardId: String) {
-
         if (userName == null || password == null) return
 
         val webScrapeCredentials = WebScrapeCredentials(userName, password, cardId)
         storeCredentials(webScrapeCredentials)
-
     }
 
     fun tryScrapeCards(

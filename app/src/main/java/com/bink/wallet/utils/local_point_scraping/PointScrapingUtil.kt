@@ -46,7 +46,7 @@ object PointScrapingUtil {
                 super.onPageFinished(view, url)
                 callback(null)
 
-                getJavaScriptForMerchant(context, localPointsAgent, email, password) { javascript ->
+                getJavaScriptForMerchant(localPointsAgent, email, password) { javascript ->
 
                     if (javascript == null) {
                         SentryUtils.logError(
@@ -71,16 +71,18 @@ object PointScrapingUtil {
                                 )
 
                                 if (serializedResponse == null) {
+
                                     SentryUtils.logError(
                                         SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT,
                                         LocalPointScrapingError.JS_DECODE_FAILED.issue,
                                         WebScrapableManager.currentAgent?.merchant,
                                         isAddCard
                                     )
+
                                 } else {
                                     with(serializedResponse) {
                                         if ((localPointsAgent.merchant == "tesco" || localPointsAgent.merchant == "nectar") && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
-                                            //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
+                                            //There's an issue with Tesco & Nectar which forces us to login twice.
                                             webView?.evaluateJavascript(javascript) {}
                                         }
 
@@ -121,6 +123,7 @@ object PointScrapingUtil {
         webView?.loadUrl(localPointsAgent.points_collection_url)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun getWebView(context: Context): WebView {
         return WebView(context).apply {
             settings.apply {
@@ -144,7 +147,6 @@ object PointScrapingUtil {
     }
 
     private fun getJavaScriptForMerchant(
-        context: Context,
         site: LocalPointsAgent,
         email: String,
         password: String,
@@ -155,9 +157,8 @@ object PointScrapingUtil {
 
         storageRef.getBytes(1024 * 1024).addOnSuccessListener {
             val javascriptClass = String(it, StandardCharsets.UTF_8)
-            //val javascriptClass = "nectar.txt".readFileText(context)
 
-            val replacedEmail = javascriptClass!!.replaceFirst("%@", email)
+            val replacedEmail = javascriptClass.replaceFirst("%@", email)
             val replacedPassword = replacedEmail.replaceFirst("%@", password)
             val replacedAuthCode: String? = if (!authCode.isNullOrEmpty()) {
                 replacedEmail.replaceFirst("%@", authCode ?: "")
