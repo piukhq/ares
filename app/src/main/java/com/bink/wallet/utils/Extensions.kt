@@ -437,3 +437,5 @@ fun Fragment.showUnLinkErrorMessage(errorText: String) {
 fun Fragment.getMainActivity() : MainActivity{
     return requireActivity() as MainActivity
 }
+
+fun Context.isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
