@@ -33,7 +33,7 @@ object PointScrapingUtil {
         email: String?,
         password: String?,
         attachableView: ConstraintLayout? = null,
-        callback: (PointScrapingResponse) -> Unit
+        callback: (PointScrapingResponse?) -> Unit
     ) {
         if (localPointsAgent == null || email == null || password == null) return
 
@@ -44,6 +44,7 @@ object PointScrapingUtil {
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                callback(null)
 
                 getJavaScriptForMerchant(context, localPointsAgent, email, password) { javascript ->
 

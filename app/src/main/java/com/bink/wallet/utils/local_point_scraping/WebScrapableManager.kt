@@ -32,7 +32,7 @@ object WebScrapableManager {
     private var userName: String? = null
     private var password: String? = null
 
-    private var timer: CountDownTimer? = null
+    private var webscrapeTimer: WebscrapeTimer? = null
 
     private const val BASE_ENCRYPTED_KEY_SHARED_PREFERENCES =
         "com.bink.wallet.utils.LocalPointScraping.credentials.cardId_%s.%s"
@@ -51,7 +51,8 @@ object WebScrapableManager {
                     request.account?.authorise_fields?.let { authoriseFields ->
 
                         userName = authoriseFields.firstOrNull {
-                            (it.column ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
+                            (it.column
+                                ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
                             (it.column ?: "").toLowerCase() == "password"
@@ -91,38 +92,34 @@ object WebScrapableManager {
         if (index == 0) membershipCards = cards
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
-        timer?.cancel()
-        timer = null
         currentAgent = null
+        webscrapeTimer = null
+        webscrapeTimer = WebscrapeTimer()
 
-        if (timer == null) {
-            timer = object : CountDownTimer(60000, 1000) {
-                override fun onFinish() {
-                    logDebug("LocalPointScrape", "Countdown Timer Finished")
-                    if (membershipCards != null) {
-                        try {
-                            membershipCards!![index].status = CardStatus(
-                                listOf(CardCodes.X101.code),
-                                MembershipCardStatus.FAILED.status
-                            )
-                            membershipCards!![index].isScraped = true
-                        } catch (e: IndexOutOfBoundsException) {
-                        }
-                    }
-
-                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant, isAddCard)
-
-                    tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
-                }
-
-                override fun onTick(millisUntilFinished: Long) {
+        webscrapeTimer?.startTimer {
+            logDebug("LocalPointScrape", "Countdown Timer Finished")
+            if (membershipCards != null) {
+                try {
+                    membershipCards!![index].status = CardStatus(
+                        listOf(CardCodes.X101.code),
+                        MembershipCardStatus.FAILED.status
+                    )
+                    membershipCards!![index].isScraped = true
+                } catch (e: IndexOutOfBoundsException) {
                 }
             }
+
+            SentryUtils.logError(
+                SentryErrorType.LOCAL_POINTS_SCRAPE_SITE,
+                LocalPointScrapingError.UNHANDLED_IDLING.issue,
+                currentAgent?.merchant,
+                isAddCard
+            )
+
+            tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
         }
 
         try {
-            timer?.start()
-
             val card = cards[index]
 
             retrieveCredentials(card.id).let { credentials ->
@@ -134,7 +131,14 @@ object WebScrapableManager {
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
                         if (!isScraped) {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                attachableView,
+                                callback
+                            )
                             return
                         }
                     }
@@ -157,43 +161,73 @@ object WebScrapableManager {
 
                         if (agent.isEnabled()) {
 
-                            logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
+                            if (pointScrapeResponse == null) {
+                                logDebug("LocalPointScrape", "Timer refreshed")
+                                webscrapeTimer?.refreshTimer()
+                            } else {
 
-                            pointScrapeResponse.pointsString?.let { points ->
-                                if (membershipCards != null) {
-                                    val balance = CardBalance(
-                                        points,
-                                        agent.loyalty_scheme.balance_currency,
-                                        agent.loyalty_scheme.balance_prefix,
-                                        agent.loyalty_scheme.balance_suffix,
-                                        (System.currentTimeMillis() / 1000)
-                                    )
-                                    membershipCards!![index].balances = arrayListOf(balance)
-                                    membershipCards!![index].status =
-                                        CardStatus(null, MembershipCardStatus.AUTHORISED.status)
-                                    membershipCards!![index].isScraped = true
+                                logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
-                                    tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
-                                }
-                            }
+                                pointScrapeResponse.pointsString?.let { points ->
 
-                            pointScrapeResponse.errorMessage?.let {
-                                if (membershipCards != null) {
-                                    try {
-                                        membershipCards!![index].status = CardStatus(
-                                            listOf(CardCodes.X101.code),
-                                            MembershipCardStatus.FAILED.status
+                                    webscrapeTimer?.cancelTimer()
+
+                                    if (membershipCards != null) {
+                                        val balance = CardBalance(
+                                            points,
+                                            agent.loyalty_scheme.balance_currency,
+                                            agent.loyalty_scheme.balance_prefix,
+                                            agent.loyalty_scheme.balance_suffix,
+                                            (System.currentTimeMillis() / 1000)
                                         )
+                                        membershipCards!![index].balances = arrayListOf(balance)
+                                        membershipCards!![index].status =
+                                            CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                         membershipCards!![index].isScraped = true
-                                    } catch (e: IndexOutOfBoundsException) {
+
+                                        tryScrapeCards(
+                                            index + 1,
+                                            cards,
+                                            context,
+                                            isAddCard,
+                                            attachableView,
+                                            callback
+                                        )
                                     }
                                 }
 
-                                tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
+                                pointScrapeResponse.errorMessage?.let {
+                                    if (membershipCards != null) {
+                                        try {
+                                            membershipCards!![index].status = CardStatus(
+                                                listOf(CardCodes.X101.code),
+                                                MembershipCardStatus.FAILED.status
+                                            )
+                                            membershipCards!![index].isScraped = true
+                                        } catch (e: IndexOutOfBoundsException) {
+                                        }
+                                    }
+
+                                    tryScrapeCards(
+                                        index + 1,
+                                        cards,
+                                        context,
+                                        isAddCard,
+                                        attachableView,
+                                        callback
+                                    )
+                                }
                             }
 
                         } else {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                attachableView,
+                                callback
+                            )
                         }
 
                     }
@@ -203,8 +237,8 @@ object WebScrapableManager {
         } catch (e: IndexOutOfBoundsException) {
             //Ran through all cards, return updated values
             logDebug("LocalPointScrape", "Index out of bounds")
-            timer?.cancel()
-            timer = null
+            webscrapeTimer?.cancelTimer()
+            webscrapeTimer = null
 
             var nonDeletedCards = ArrayList<MembershipCard>()
 

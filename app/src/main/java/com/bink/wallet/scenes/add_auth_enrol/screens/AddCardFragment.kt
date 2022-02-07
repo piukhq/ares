@@ -66,7 +66,12 @@ class AddCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ADD_JOURNEY,
+                        it.id,
+                        status,
+                        reasonCode,
+                        mPlanId,
+                        isAccountNew
                     )
                 )
             }
@@ -75,7 +80,16 @@ class AddCardFragment : BaseAddAuthFragment() {
 
             binding.authFields.visibility = View.GONE
             binding.footerComposed.progressBtnContainer.visibility = View.GONE
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), requireActivity(), true, null) { cards ->
+
+            //To see the webview, pass binding.layout as attachableView, and comment out line 57.
+
+            WebScrapableManager.tryScrapeCards(
+                0,
+                arrayListOf(it),
+                requireActivity(),
+                true,
+                null
+            ) { cards ->
                 if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
@@ -110,14 +124,17 @@ class AddCardFragment : BaseAddAuthFragment() {
                 val httpException = it as HttpException
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
+                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY,
+                        mPlanId,
+                        httpException.code(),
+                        httpException.getErrorBody()
                     )
                 )
             }
 
         }
 
-        viewModel.loading.observeNonNull(this){
+        viewModel.loading.observeNonNull(this) {
             binding.footerComposed.progressBtnContainer.setLoading(it)
         }
 

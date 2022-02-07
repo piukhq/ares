@@ -317,11 +317,11 @@ fun logError(tag: String?, message: String?, exception: Exception? = null) {
 }
 
 fun logDebug(tag: String?, message: String?) {
-    //if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
         message?.let {
             Log.d(tag, it)
         }
-    //}
+    }
 }
 
 fun TextView.setTermsAndPrivacyUrls(
