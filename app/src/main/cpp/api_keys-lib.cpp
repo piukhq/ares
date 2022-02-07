@@ -164,7 +164,7 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_bouncerProdKey(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_utils_Keys_mixPanelApiKey(JNIEnv *env,jobject ){
+Java_com_bink_wallet_utils_Keys_mixPanelBetaApiKey(JNIEnv *env, jobject ){
     std::string key = "20c9540b354f828aebee0dd478432187";
     return env ->NewStringUTF(key.c_str());
 }
