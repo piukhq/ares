@@ -7,5 +7,7 @@ object Keys {
         }
     external fun mixPanelBetaApiKey():String
 
+    external fun mixPanelProductionApiKey():String
+
     external fun binkTestAuthToken():String
 }

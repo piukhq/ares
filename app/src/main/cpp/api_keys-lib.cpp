@@ -170,6 +170,12 @@ Java_com_bink_wallet_utils_Keys_mixPanelBetaApiKey(JNIEnv *env, jobject ){
 }
 
 extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_utils_Keys_mixPanelProductionApiKey(JNIEnv *env, jobject ){
+    std::string key = "b900cc7644c628aaef87bf6475d20d6c";
+    return env ->NewStringUTF(key.c_str());
+}
+
+extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_utils_Keys_binkTestAuthToken(JNIEnv *env,jobject ){
     std::string key = "e66cd653a8a1a4ee49ef7b4f2f44517e01e4e513c0c0ad4cc0818696847f98be";
     return env ->NewStringUTF(key.c_str());
