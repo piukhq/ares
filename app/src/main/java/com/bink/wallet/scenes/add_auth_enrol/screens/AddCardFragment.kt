@@ -77,12 +77,7 @@ class AddCardFragment : BaseAddAuthFragment() {
             }
 
             WebScrapableManager.storeCredentialsFromRequest(it.id)
-
-            binding.authFields.visibility = View.GONE
-            binding.footerComposed.progressBtnContainer.visibility = View.GONE
-
             //To see the webview, pass binding.layout as attachableView, and comment out line 57.
-
             WebScrapableManager.tryScrapeCards(
                 0,
                 arrayListOf(it),

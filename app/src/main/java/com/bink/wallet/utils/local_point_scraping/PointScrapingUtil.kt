@@ -45,6 +45,7 @@ object PointScrapingUtil {
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                //We post null here so we can refresh the timer on a url change. 
                 callback(null)
 
                 getJavaScriptForMerchant(localPointsAgent, email, password) { javascript ->
