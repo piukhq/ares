@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.os.CountDownTimer
 import android.webkit.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.R
@@ -83,12 +84,18 @@ object PointScrapingUtil {
                                     with(serializedResponse) {
                                         if ((localPointsAgent.merchant == "tesco" || localPointsAgent.merchant == "nectar") && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
                                             //There's an issue with Tesco & Nectar which forces us to login twice.
+                                            logDebug("LocalPointScrape", "rerun script")
                                             webView?.evaluateJavascript(javascript) {}
                                         }
 
                                         if (errorMessage != null) {
                                             if (didAttemptLogin == true) {
-                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                                SentryUtils.logError(
+                                                    SentryErrorType.LOCAL_POINTS_SCRAPE_USER,
+                                                    "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage",
+                                                    WebScrapableManager.currentAgent?.merchant,
+                                                    isAddCard
+                                                )
                                                 callback(serializedResponse)
                                             } else {
                                                 SentryUtils.logError(
@@ -110,6 +117,14 @@ object PointScrapingUtil {
 
                                             callback(serializedResponse)
                                         }
+
+                                        if ((url == "https://www.nectar.com/homepage" || url?.contains(
+                                                "oauth_redirect"
+                                            ) == true) && pointsString.isNullOrEmpty() && didAttemptLogin == null && errorMessage.isNullOrEmpty()
+                                        ) {
+                                            handleNectarPointsFail(javascript, callback)
+                                        }
+
                                     }
                                 }
 
@@ -198,10 +213,44 @@ object PointScrapingUtil {
         adb.setView(editTextView)
 
         adb.setPositiveButton(context.getString(R.string.ok)) { _, _ ->
-            webView?.evaluateJavascript(javascript.replaceFirst("%@", adbBinding.etAuthCode.text.trim().toString() )) {}
+            webView?.evaluateJavascript(
+                javascript.replaceFirst(
+                    "%@",
+                    adbBinding.etAuthCode.text.trim().toString()
+                )
+            ) {}
         }
         adb.setNegativeButton(context.getString(R.string.cancel_text), null)
         adb.show()
+    }
+
+    private fun handleNectarPointsFail(
+        javascript: String,
+        callback: (PointScrapingResponse?) -> Unit
+    ) {
+        val timer = object : CountDownTimer(
+            5000,
+            1000
+        ) {
+            override fun onFinish() {
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                webView?.evaluateJavascript(javascript) {
+                    processResponse(it) { rescrapeResponse ->
+                        rescrapeResponse?.pointsString?.let {
+                            webView?.destroy()
+                            webView = null
+
+                            callback(rescrapeResponse)
+                            cancel()
+                        }
+                    }
+                }
+            }
+        }
+
+        timer.start()
     }
 
 }
