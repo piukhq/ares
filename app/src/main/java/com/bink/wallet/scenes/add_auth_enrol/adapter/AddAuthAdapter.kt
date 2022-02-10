@@ -5,6 +5,7 @@ import SpinnerViewHolder
 import TextFieldViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.AddAuthCheckboxItemBinding
 import com.bink.wallet.databinding.AddAuthDisplayItemBinding
@@ -19,7 +20,6 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 
-
 @Suppress("UNCHECKED_CAST")
 class AddAuthAdapter(
     private var addAuthItems: MutableList<AddAuthItemWrapper>,
@@ -27,6 +27,7 @@ class AddAuthAdapter(
     private var headerTitle: String?,
     private var headerDescription: String?,
     val checkValidation: (String?) -> Unit = {},
+    var showSoftkeyboard: (EditText) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
     val onNavigateToBarcodeScanListener: ((Account) -> Unit),
@@ -52,6 +53,7 @@ class AddAuthAdapter(
 
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
+        holder.showSoftkeyboard = showSoftkeyboard
         holder.checkValidation = checkValidation
 
         addAuthItems[position].let { addAuthItem ->
