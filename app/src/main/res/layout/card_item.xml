@@ -25,13 +25,14 @@
             android:background="@android:color/white"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/company_logo"
                 android:layout_width="@dimen/margin_padding_size_extra_large"
                 android:layout_height="@dimen/margin_padding_size_extra_large"
                 android:layout_marginStart="@dimen/loyalty_value_margin_end"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                app:shapeAppearanceOverlay="@style/rounded_corner"
                 app:imageUrl="@{plan}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
