@@ -32,11 +32,11 @@
                 android:layout_marginStart="@dimen/loyalty_value_margin_end"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                app:shapeAppearanceOverlay="@style/rounded_corner"
                 app:imageUrl="@{plan}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/rounded_corner"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
