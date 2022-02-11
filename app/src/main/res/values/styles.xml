@@ -113,6 +113,10 @@
     </style>
 
     <style name="rounded_corner">
+        <item name="cornerSize">5dp</item>
+    </style>
+
+    <style name="rounded_corner_size_medium">
         <item name="cornerSize">10dp</item>
     </style>
 </resources>

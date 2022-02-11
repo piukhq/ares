@@ -219,7 +219,7 @@
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:scaleType="fitXY"
-                    app:shapeAppearanceOverlay="@style/rounded_corner"
+                    app:shapeAppearanceOverlay="@style/rounded_corner_size_medium"
                     tools:ignore="ContentDescription"
                     tools:src="@tools:sample/avatars" />
 
