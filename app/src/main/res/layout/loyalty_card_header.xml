@@ -48,10 +48,11 @@
                         android:layout_weight="7"
                         android:orientation="vertical">
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/sb_company_logo"
                             android:layout_width="@dimen/margin_padding_size_extra_large"
                             android:layout_height="@dimen/margin_padding_size_extra_large"
+                            app:shapeAppearanceOverlay="@style/rounded_corner"
                             tools:ignore="ContentDescription"
                             tools:src="@tools:sample/avatars" />
 
@@ -115,11 +116,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/rb_company_logo"
                         android:layout_width="@dimen/margin_padding_size_extra_large"
                         android:layout_height="@dimen/margin_padding_size_extra_large"
                         android:layout_gravity="center"
+                        app:shapeAppearanceOverlay="@style/rounded_corner"
                         tools:ignore="ContentDescription"
                         tools:src="@tools:sample/avatars" />
 
@@ -210,13 +212,14 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/no_barcode_company_logo"
                     android:layout_width="@dimen/no_barcode_width"
                     android:layout_height="@dimen/no_barcode_height"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:scaleType="fitXY"
+                    app:shapeAppearanceOverlay="@style/rounded_corner"
                     tools:ignore="ContentDescription"
                     tools:src="@tools:sample/avatars" />
 
@@ -224,10 +227,10 @@
                     android:id="@+id/no_barcode_card_number_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_sans"
-                    android:textColor="@color/black"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
                     tools:text="@string/barcode_card_number"
                     tools:textColor="@color/black" />
@@ -236,8 +239,8 @@
                     android:id="@+id/no_barcode_card_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_sans_extrabold"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
                     tools:textColor="@color/black" />
