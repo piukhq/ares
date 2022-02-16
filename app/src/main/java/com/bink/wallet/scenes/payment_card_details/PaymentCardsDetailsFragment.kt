@@ -17,23 +17,11 @@ import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
-import com.bink.wallet.utils.PENDING_CARD
-import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
-import com.bink.wallet.utils.PROD_ARTICLE_ID
-import com.bink.wallet.utils.PaymentCardUtils
-import com.bink.wallet.utils.SANDBOX_ARTICLE_ID
-import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.goToContactUsForm
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.showUnLinkErrorMessage
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -87,6 +75,7 @@ class PaymentCardsDetailsFragment :
                 }
                 if (membershipPlanData.value == null) {
                     membershipPlanData.value = currentBundle.membershipPlans.toList()
+                        .filter { plan -> plan.canPlanBeAdded() }
                 }
             }
         }
@@ -199,13 +188,13 @@ class PaymentCardsDetailsFragment :
             }
         }
 
-        viewModel.unlinkError.observeNonNull(this){
+        viewModel.unlinkError.observeNonNull(this) {
             val exception = (it as HttpException)
             val errorText = exception.response()?.errorBody()?.string()
-            when(exception.code()){
+            when (exception.code()) {
                 403 -> errorText?.let { message -> showUnLinkErrorMessage(message) }
-                }
             }
+        }
     }
 
     private fun cardState(paymentCard: PaymentCard?, membershipCard: List<MembershipCard>?) {
