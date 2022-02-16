@@ -27,6 +27,7 @@ import androidx.navigation.NavDirections
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.BuildTypes
 import org.json.JSONException
 import org.json.JSONObject
@@ -431,4 +432,10 @@ fun Fragment.showUnLinkErrorMessage(errorText: String) {
         }
         .setCancelable(false)
         .show()
+}
+
+fun MembershipPlan.canPlanBeAdded(): Boolean {
+    return this.feature_set?.linking_support?.contains(LINKING_SUPPORT_ADD) == true || this.feature_set?.linking_support?.contains(
+        LINKING_SUPPORT_ENROL
+    ) == true
 }
