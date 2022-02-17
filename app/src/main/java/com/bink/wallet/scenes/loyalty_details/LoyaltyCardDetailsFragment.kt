@@ -31,6 +31,7 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.util.*
@@ -69,7 +70,11 @@ class LoyaltyCardDetailsFragment :
         binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, LoyaltyCardDetailsFragmentDirections.detailToHome(), currentDestination)
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToHome(),
+                currentDestination
+            )
 
         }
 
@@ -117,7 +122,11 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.adapter = viewModel.tiles.value?.let {
             LoyaltyDetailsTilesAdapter(it) { image ->
                 if (!image.cta_url.isNullOrEmpty()) {
-                    findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
+                    findNavController().navigate(
+                        LoyaltyCardDetailsFragmentDirections.globalToWeb(
+                            image.cta_url
+                        )
+                    )
 
                 }
             }
@@ -246,7 +255,12 @@ class LoyaltyCardDetailsFragment :
                 val httpException = it as HttpException
                 logEvent(
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
+                    getDeleteLoyaltyCardFailMap(
+                        planId,
+                        cardId,
+                        httpException.code(),
+                        httpException.getErrorBody()
+                    )
                 )
             }
         }
@@ -256,6 +270,14 @@ class LoyaltyCardDetailsFragment :
             WebScrapableManager.newlyAddedCard.value = null
         }
 
+        logMixpanelEvent(
+            MixpanelEvents.LOYALTY_CARD_DETAIL,
+            JSONObject().put(
+                MixpanelEvents.BRAND_NAME,
+                viewModel.membershipPlan.value?.account?.company_name
+                    ?: MixpanelEvents.VALUE_UNKNOWN
+            ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
+        )
         /**
          *
          * This is here as an example if you'd like to test, put a break point on the log line (267) and look at the array that is given back.
@@ -435,7 +457,10 @@ class LoyaltyCardDetailsFragment :
         }, SCROLL_DELAY)
 
         RequestReviewUtil.triggerViaCardDetails(this) {
-            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
+            logEvent(
+                FirebaseEvents.FIREBASE_REQUEST_REVIEW,
+                getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS)
+            )
         }
     }
 
@@ -466,6 +491,14 @@ class LoyaltyCardDetailsFragment :
                 setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
                     if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
+                            logMixpanelEvent(
+                                MixpanelEvents.CARD_DELETED,
+                                JSONObject().put(
+                                    MixpanelEvents.BRAND_NAME,
+                                    viewModel.membershipCard.value?.plan?.account?.company_name
+                                        ?: MixpanelEvents.VALUE_UNKNOWN
+                                ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
+                            )
                             viewModel.deleteCard(viewModel.membershipCard.value?.id)
                             val planId = viewModel.membershipCard.value?.membership_plan
                             val uuid = viewModel.membershipCard.value?.uuid
@@ -764,6 +797,13 @@ class LoyaltyCardDetailsFragment :
             ) {
                 binding.cardHeader.setOnClickListener {
                     viewModel.membershipPlan.value?.let { plan ->
+                        logMixpanelEvent(
+                            MixpanelEvents.BARCODE_VIEWED,
+                            JSONObject().put(
+                                MixpanelEvents.BRAND_NAME,
+                                plan.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                            ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
+                        )
                         findNavController().navigateIfAdded(
                             this,
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
@@ -809,7 +849,7 @@ class LoyaltyCardDetailsFragment :
                         if ((hasCorrectCardType && hasTransactions)
                             || (hasCorrectCardType && hasTransactions && hasVouchers)
                         ) {
-                            
+
                             viewModel.membershipCard.value?.plan = membershipPlan
 
                             val action =

@@ -10,6 +10,7 @@ import com.bink.wallet.databinding.ContinueWithEmailFragmentBinding
 import com.bink.wallet.scenes.sign_up.SignUpFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ContinueWithEmailFragment :
@@ -97,6 +98,7 @@ class ContinueWithEmailFragment :
         }
 
         binding.signUpButton.setOnClickListener {
+            logMixpanelEvent(MixpanelEvents.ONBOARDING_STARTED, JSONObject().put(MixpanelEvents.ROUTE, MixpanelEvents.LOGIN_ML))
             binding.emailField.text.trim().toString().let { email ->
                 viewModel.postMagicLink(email)
             }

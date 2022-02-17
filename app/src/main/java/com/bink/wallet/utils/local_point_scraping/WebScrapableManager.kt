@@ -49,7 +49,8 @@ object WebScrapableManager {
                     request.account?.authorise_fields?.let { authoriseFields ->
 
                         userName = authoriseFields.firstOrNull {
-                            (it.column ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
+                            (it.column
+                                ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
                             (it.column ?: "").toLowerCase() == "password"
@@ -82,6 +83,7 @@ object WebScrapableManager {
         cards: List<MembershipCard>,
         context: Context?,
         isAddCard: Boolean,
+        currentStatus: (Boolean, String, Boolean, String?) -> Unit,
         callback: (List<MembershipCard>?) -> Unit
     ) {
         if (context == null) return
@@ -107,9 +109,14 @@ object WebScrapableManager {
                         }
                     }
 
-                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant, isAddCard)
+                    SentryUtils.logError(
+                        SentryErrorType.LOCAL_POINTS_SCRAPE_SITE,
+                        LocalPointScrapingError.UNHANDLED_IDLING.issue,
+                        currentAgent?.merchant,
+                        isAddCard
+                    )
 
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, currentStatus, callback)
                 }
 
                 override fun onTick(millisUntilFinished: Long) {
@@ -131,7 +138,14 @@ object WebScrapableManager {
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
                         if (!isScraped) {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                currentStatus,
+                                callback
+                            )
                             return
                         }
                     }
@@ -140,15 +154,25 @@ object WebScrapableManager {
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, currentStatus, callback)
                 } else {
+
+                    currentStatus(true, "", false, "")
 
                     PointScrapingUtil.performNewScrape(
                         context,
                         isAddCard,
                         agent,
                         credentials.email,
-                        credentials.password
+                        credentials.password,
+                        {
+                            currentStatus(
+                                false,
+                                agent.merchant,
+                                false,
+                                it
+                            )
+                        }
                     ) { pointScrapeResponse ->
 
                         if (agent.isEnabled()) {
@@ -169,7 +193,21 @@ object WebScrapableManager {
                                         CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
-                                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                    currentStatus(
+                                        false,
+                                        agent.merchant,
+                                        true,
+                                        null
+                                    )
+
+                                    tryScrapeCards(
+                                        index + 1,
+                                        cards,
+                                        context,
+                                        isAddCard,
+                                        currentStatus,
+                                        callback
+                                    )
                                 }
                             }
 
@@ -189,7 +227,14 @@ object WebScrapableManager {
                             }
 
                         } else {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                currentStatus,
+                                callback
+                            )
                         }
 
                     }

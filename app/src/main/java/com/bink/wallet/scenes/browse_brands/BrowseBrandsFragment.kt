@@ -47,6 +47,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         binding.brandsRecyclerView.adapter = adapter.apply {
             setOnBrandItemClickListener { membershipPlan ->
+                startMixpanelEventTimer(MixpanelEvents.LOYALTY_CARD_ADD)
+
                 findNavController().navigateIfAdded(
                     this@BrowseBrandsFragment,
                     BrowseBrandsFragmentDirections.browseToAddJoin(

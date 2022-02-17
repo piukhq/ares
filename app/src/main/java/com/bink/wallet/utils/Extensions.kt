@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -439,3 +440,8 @@ fun MembershipPlan.canPlanBeAdded(): Boolean {
         LINKING_SUPPORT_ENROL
     ) == true
 }
+fun Fragment.getMainActivity() : MainActivity{
+    return requireActivity() as MainActivity
+}
+
+fun Context.isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type

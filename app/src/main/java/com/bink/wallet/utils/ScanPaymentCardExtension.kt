@@ -157,7 +157,7 @@ fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
             bundle.putString(entry.key, entry.value)
         }
 
-        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
+        getMainActivity().firebaseAnalytics.logEvent(name, bundle)
     }
 }
 

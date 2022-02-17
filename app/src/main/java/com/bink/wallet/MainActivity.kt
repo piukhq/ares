@@ -5,13 +5,11 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.AppConfiguration
 import com.bink.wallet.model.isNewVersionAvailable
 import com.bink.wallet.model.skipVersion
 import com.bink.wallet.scenes.login.LoginRepository
@@ -29,9 +27,7 @@ import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import io.sentry.android.core.SentryAndroid
 import io.sentry.android.core.SentryAndroidOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,11 +35,11 @@ import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
+    lateinit var mixpanel: MixpanelAPI
     private var isFirstLaunch = true
     private lateinit var appUpdateManager: AppUpdateManager
     var newIntent: Intent? = null
@@ -54,13 +50,19 @@ class MainActivity : AppCompatActivity() {
         appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
 
+        val mixpanelKey =
+            if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
+
+        mixpanel = MixpanelAPI.getInstance(this, mixpanelKey)
+
         SentryAndroid.init(
             this
         ) { options: SentryAndroidOptions ->
             options.environment =
                 if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
             options.setDebug(BuildConfig.DEBUG)
-            options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+            options.release =
+                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
         }
 
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
@@ -248,6 +250,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
     }
+
 }
 
 private operator fun Any.setValue(
