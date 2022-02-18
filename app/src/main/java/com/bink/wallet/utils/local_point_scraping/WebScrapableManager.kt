@@ -223,7 +223,7 @@ object WebScrapableManager {
                                     }
                                 }
 
-                                tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                tryScrapeCards(index + 1, cards, context, isAddCard,currentStatus, callback)
                             }
 
                         } else {
