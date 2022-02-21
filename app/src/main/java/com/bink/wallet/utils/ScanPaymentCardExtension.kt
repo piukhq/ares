@@ -89,7 +89,7 @@ fun Fragment.scanResult(
     logPaymentCardSuccess: (Boolean) -> Unit
 ) {
     if (CardScanActivity.isScanResult(requestCode)) {
-         val cardActivityResultHandler =  object :CardScanActivityResultHandler{
+        val cardActivityResultHandler = object : CardScanActivityResultHandler {
             override fun analyzerFailure(scanId: String?) {
                 logPaymentCardSuccess(false)
                 DialogFactory.showTryAgainGenericError(requireActivity())
@@ -120,25 +120,26 @@ fun Fragment.scanResult(
 
         }
 
-        CardScanActivity.parseScanResult(resultCode,data, cardActivityResultHandler)
+        CardScanActivity.parseScanResult(resultCode, data, cardActivityResultHandler)
     }
 
 }
 
 
-
 fun Fragment.openScanPaymentCard() {
     val bouncerKey = LocalStoreUtils.getAppSharedPref(
         LocalStoreUtils.KEY_BOUNCER_KEY
-    ) as String
-    shouldShowLogo()
-    CardScanActivity.start(
-        this,
-        bouncerKey,
-        enableEnterCardManually = true,
-        enableExpiryExtraction = false,
-        enableNameExtraction = false
     )
+    shouldShowLogo()
+    if (bouncerKey != null) {
+        CardScanActivity.start(
+            this,
+            bouncerKey,
+            enableEnterCardManually = true,
+            enableExpiryExtraction = false,
+            enableNameExtraction = false
+        )
+    }
 
 }
 
@@ -161,6 +162,6 @@ fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
     }
 }
 
-private fun shouldShowLogo(shouldShow:Boolean = false){
+private fun shouldShowLogo(shouldShow: Boolean = false) {
     com.getbouncer.scan.framework.Config.displayLogo = shouldShow
 }
