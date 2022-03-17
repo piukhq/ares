@@ -598,19 +598,21 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
 
 @BindingAdapter("paymentCardDetailsTitle", "paymentCard", requireAll = false)
 fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
-    text = if (paymentCard.isCardActive()) {
+    text = if (paymentCard.card?.isExpired() == true) {
+        context.getString(R.string.pcd_expired_card_title)
+    } else if (paymentCard.isCardActive()) {
         if (hasAddedPlls) {
             context.getString(R.string.payment_card_details_title_text)
         } else {
             context.getString(R.string.payment_card_details_title_text_empty)
         }
+
     } else {
         if (PaymentCardUtils.cardStatus(
                 paymentCard.status ?: ""
             ) == PENDING_CARD
         ) context.getString(R.string.payment_card_pending_title_text) else context.getString(R.string.payment_card_inactive_title_text)
     }
-
 }
 
 @BindingAdapter("paymentCardDetailsSubtitle", "paymentCard", "listener", requireAll = false)
@@ -619,7 +621,13 @@ fun TextView.setPcdSubtitle(
     paymentCard: PaymentCard,
     hyperlinkClick: (() -> Unit)?
 ) {
-    text = if (paymentCard.isCardActive()) {
+    text = if (paymentCard.card?.isExpired() == true) {
+        UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+            context.getString(
+                R.string.pcd_expired_card_description
+            ), CONTACT_US, this, hyperlinkClick
+        )
+    } else if (paymentCard.isCardActive()) {
         if (hasAddedPlls) {
             context.getString(R.string.payment_card_details_description_text)
         } else {
