@@ -655,13 +655,13 @@ fun TextView.setPaymentCardAddedDate(paymentCard: PaymentCard) {
     } else {
         if (PaymentCardUtils.cardStatus(paymentCard.status ?: "") == PENDING_CARD) {
             visibility = View.VISIBLE
-            try{
+            try {
                 text = context.getString(
                     R.string.payment_card_added_date,
                     paymentCard.account?.consents?.get(0)?.timestamp?.let {
                         DateTimeUtils.dateFormatTimeStamp(it)
                     })
-            } catch(e: Exception){
+            } catch (e: Exception) {
                 visibility = View.GONE
             }
         } else {
