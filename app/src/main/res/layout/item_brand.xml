@@ -19,7 +19,7 @@
         android:background="?selectableItemBackground"
         android:minHeight="@dimen/browse_brands_list_item_height">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/brand_logo"
             android:layout_width="@dimen/margin_padding_size_extra_large"
             android:layout_height="@dimen/margin_padding_size_extra_large"
@@ -31,6 +31,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/rounded_corner"
             tools:ignore="ContentDescription"
             tools:src="@tools:sample/avatars" />
 
