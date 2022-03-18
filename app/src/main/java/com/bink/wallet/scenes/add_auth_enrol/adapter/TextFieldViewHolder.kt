@@ -416,24 +416,24 @@ class TextFieldViewHolder(
             binding.tvDatePicker.visibility = View.VISIBLE
 
             binding.parent.setOnClickListener {
-                datePickerDialog.show()
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                    .setTextColor(Color.BLACK)
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                    .setTextColor(Color.BLACK)
+                openDatePicker(datePickerDialog)
             }
 
             binding.tvDatePicker.setOnClickListener {
-                datePickerDialog.show()
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                    .setTextColor(Color.BLACK)
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                    .setTextColor(Color.BLACK)
+                openDatePicker(datePickerDialog)
             }
         } else {
             binding.contentAddAuthText.visibility = View.VISIBLE
             binding.tvDatePicker.visibility = View.GONE
         }
+    }
+
+    private fun openDatePicker(datePickerDialog: DatePickerDialog){
+        datePickerDialog.show()
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+            .setTextColor(Color.BLACK)
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+            .setTextColor(Color.BLACK)
     }
 
     private fun setFieldValue(textInput: TextInputEditText) {
