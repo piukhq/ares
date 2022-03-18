@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.CountDownTimer
+import android.view.LayoutInflater
 import android.webkit.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.R
@@ -28,7 +29,7 @@ object PointScrapingUtil {
     private var authCode: String? = null
 
     fun performNewScrape(
-        context: Activity,
+        context: Context,
         isAddCard: Boolean,
         localPointsAgent: LocalPointsAgent?,
         email: String?,
@@ -205,11 +206,11 @@ object PointScrapingUtil {
         }
     }
 
-    private fun displayAuthCodeDialog(context: Activity, javascript: String) {
+    private fun displayAuthCodeDialog(context: Context, javascript: String) {
         val adb = AlertDialog.Builder(context)
         adb.setTitle(context.getString(R.string.lps_auth_code))
         adb.setMessage(context.getString(R.string.lps_nectar_auth_code_message))
-        val editTextView = context.layoutInflater.inflate(R.layout.dialog_webscrape_authcode, null)
+        val editTextView = LayoutInflater.from(context).inflate(R.layout.dialog_webscrape_authcode, null)
         val adbBinding = DialogWebscrapeAuthcodeBinding.bind(editTextView)
         adb.setView(editTextView)
 

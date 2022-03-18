@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.loyalty_wallet.wallet
 
-import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -115,17 +114,17 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards(activity: Activity?) {
+    fun fetchMembershipCards(context: Context?) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
-            checkCardScrape(it, activity)
+            checkCardScrape(it, context)
         }
     }
 
-    private fun checkCardScrape(cards: List<MembershipCard>, activity: Activity?) {
-        val shouldScrapeCards = DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(activity)
+    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
+        val shouldScrapeCards = DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
 
         if (shouldScrapeCards) {
-            scrapeCards(cards, activity)
+            scrapeCards(cards, context)
             SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
         } else {
             fetchLocalMembershipCards { cardsFromDb ->
@@ -138,13 +137,13 @@ class LoyaltyViewModel constructor(
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
-    fun fetchPeriodicMembershipCards(activity: Activity) {
-        val shouldMakePeriodicCall = DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(activity)
+    fun fetchPeriodicMembershipCards(context: Context?) {
+        val shouldMakePeriodicCall = DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(context)
         if (shouldMakePeriodicCall) {
-            fetchMembershipCards(activity)
+            fetchMembershipCards(context)
         } else {
             fetchLocalMembershipCards {
-                checkCardScrape(it, activity)
+                checkCardScrape(it, context)
             }
         }
     }
@@ -175,7 +174,7 @@ class LoyaltyViewModel constructor(
 
     }
 
-    fun fetchMembershipCardsAndPlansForRefresh(activity: Activity?) {
+    fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
         }
@@ -204,7 +203,7 @@ class LoyaltyViewModel constructor(
 
                 membershipCardsAndPlans.membershipCards?.let {
                     membershipCardData.value = it
-                    checkCardScrape(it, activity)
+                    checkCardScrape(it, context)
                 }
 
                 _isLoading.value = false
@@ -217,8 +216,8 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun scrapeCards(cards: List<MembershipCard>, activity: Activity?) {
-        WebScrapableManager.tryScrapeCards(0, cards, activity, false) { scrapedCards ->
+    private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
+        WebScrapableManager.tryScrapeCards(0, cards, context, false) { scrapedCards ->
             if (scrapedCards != null) {
                 updateScrapedCards(scrapedCards)
             }

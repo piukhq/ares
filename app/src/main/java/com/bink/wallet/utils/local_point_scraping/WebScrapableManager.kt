@@ -81,7 +81,7 @@ object WebScrapableManager {
     fun tryScrapeCards(
         index: Int,
         cards: List<MembershipCard>,
-        context: Activity?,
+        context: Context?,
         isAddCard: Boolean,
         attachableView: ConstraintLayout? = null,
         callback: (List<MembershipCard>?) -> Unit
