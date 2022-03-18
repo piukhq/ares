@@ -257,7 +257,7 @@ dependencies {
 
 
     // add the Firebase SDK for Google Analytics
-    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+    implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
@@ -274,7 +274,7 @@ dependencies {
     implementation 'com.github.greptastic:zxingscannerview:1.9.13.j'
 
     /** PAYMENT CARD SCANNING **/
-    implementation 'com.getbouncer:cardscan-ui:2.1.0023'
+    implementation 'com.getbouncer:cardscan-ui:2.1.0004'
     implementation 'org.tensorflow:tensorflow-lite:2.5.0'
 
 
