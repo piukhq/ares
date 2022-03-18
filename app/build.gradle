@@ -274,7 +274,7 @@ dependencies {
     implementation 'com.github.greptastic:zxingscannerview:1.9.13.j'
 
     /** PAYMENT CARD SCANNING **/
-    implementation 'com.getbouncer:cardscan-ui:2.1.0004'
+    implementation 'com.getbouncer:cardscan-ui:2.1.0023'
     implementation 'org.tensorflow:tensorflow-lite:2.5.0'
 
 
