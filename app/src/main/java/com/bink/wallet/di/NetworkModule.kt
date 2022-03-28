@@ -58,7 +58,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         jwtToken?.let {
             logError("NetworkModule", jwtToken)
         }
-        val request = chain.request().url().newBuilder().build()
+        val request = chain.request().url.newBuilder().build()
 
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
@@ -73,21 +73,21 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
 
         val response = chain.proceed(newRequest.build())
-        response.networkResponse()?.request()?.url()?.let {
+        response.networkResponse?.request?.url?.let {
             if (it.toString() == ADD_PAYMENT_CARD_URL) {
-                if (response.code() == 200 || response.code() == 201) {
-                    SharedPreferenceManager.addPaymentCardSuccessHttpCode = response.code()
+                if (response.code == 200 || response.code == 201) {
+                    SharedPreferenceManager.addPaymentCardSuccessHttpCode = response.code
                 }
             }
             if (it.toString() == ADD_LOYALTY_CARD_URL) {
-                if (response.code() == 200 || response.code() == 201) {
-                    SharedPreferenceManager.addLoyaltyCardSuccessHttpCode = response.code()
+                if (response.code == 200 || response.code == 201) {
+                    SharedPreferenceManager.addLoyaltyCardSuccessHttpCode = response.code
                 }
             }
         }
 
 
-        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
             LocalStoreUtils.clearPreferences(appContext)
             appContext.startActivity(
@@ -131,7 +131,7 @@ fun provideSpreedlyOkHttpClient(): OkHttpClient {
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerInterceptor = Interceptor { chain ->
-        val request = chain.request().url().newBuilder().build()
+        val request = chain.request().url.newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json").url(request).build()
 

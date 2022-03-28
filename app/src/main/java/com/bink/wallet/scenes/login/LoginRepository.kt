@@ -21,7 +21,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 
 class LoginRepository(
@@ -137,7 +139,7 @@ class LoginRepository(
     }
 
     suspend fun setPreference(requestBody: String) {
-        apiService.putPreferencesAsync(RequestBody.create(MediaType.parse(CONTENT_TYPE), requestBody))
+        apiService.putPreferencesAsync(requestBody.toRequestBody(CONTENT_TYPE.toMediaTypeOrNull()))
     }
 
     suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {
