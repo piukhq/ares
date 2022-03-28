@@ -106,10 +106,10 @@
                     android:fontFamily="@font/nunito_sans_light"
                     android:textSize="@dimen/size_body"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/separator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/payment_card_details_description"
-                    app:layout_constraintBottom_toTopOf="@id/separator"
                     app:paymentCardAddedDate="@{paymentCardDetail}"
                     tools:text="Card added: 01 Jan 2020" />
 
@@ -130,6 +130,7 @@
                     android:id="@+id/available_pll_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:overScrollMode="never"
                     app:isVisible="@{hasAddedPllCards}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -261,6 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:overScrollMode="never"
                     app:layout_constraintEnd_toStartOf="@+id/footer_delete"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/other_cards_description" />
