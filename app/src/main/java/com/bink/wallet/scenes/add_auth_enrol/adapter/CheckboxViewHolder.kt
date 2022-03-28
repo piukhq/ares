@@ -42,6 +42,11 @@ class CheckboxViewHolder(
             contentAddAuthCheckbox.setOnCheckedChangeListener { _, isChecked ->
                 handleCheckBoxChange(item, isChecked)
             }
+
+            addAuthCheckboxText.setOnClickListener {
+                contentAddAuthCheckbox.isChecked = !contentAddAuthCheckbox.isChecked
+            }
+
             contentAddAuthCheckbox.isFocusable = false
         }
         binding.executePendingBindings()

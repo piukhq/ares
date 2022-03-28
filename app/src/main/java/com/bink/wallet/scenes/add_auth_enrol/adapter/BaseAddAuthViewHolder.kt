@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
+import android.widget.EditText
 import androidx.databinding.ViewDataBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -10,6 +11,8 @@ abstract class BaseAddAuthViewHolder<T>(
     viewDataBinding: ViewDataBinding
 ) :
     BaseViewHolder<T>(viewDataBinding) {
+
+    var showSoftkeyboard: (EditText) -> Unit = {}
 
     var checkValidation: (String?) -> Unit = {}
 
@@ -26,6 +29,7 @@ abstract class BaseAddAuthViewHolder<T>(
     override fun bind(item: T) {}
 
     open fun onBarcodeScanSuccess(scannedBarcode: String?) {}
+
 
     open fun addFormField(planField: PlanField) {
         position?.let {
