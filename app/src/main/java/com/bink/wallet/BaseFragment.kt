@@ -17,7 +17,6 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
-import com.bink.wallet.scenes.settings.SettingsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
@@ -153,11 +152,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun getMagicLinkToken(shouldNullifyToken: Boolean? = false): String? {
-        (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
+    private fun getMagicLinkToken(shouldNullifyToken: Boolean? = false): String? {
+        getMainActivity().newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
             if (shouldNullifyToken == true) {
-                (requireActivity() as MainActivity).newIntent = null
+                getMainActivity().newIntent = null
             }
             return token
         }
@@ -171,18 +170,31 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             JWTUtils.decode(token)?.let { tokenJson ->
                 val emailFromJson = JWTUtils.getEmailFromJson(tokenJson)
                 val emailFromLocal = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                (requireActivity() as MainActivity).newIntent = null
+                getMainActivity().newIntent = null
 
                 if (emailFromLocal.isNullOrEmpty()) {
-                    findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
+                    findNavController().navigate(
+                        LoyaltyWalletFragmentDirections.globalToMagicLink(
+                            token,
+                            false
+                        )
+                    )
                 } else {
 
-                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(Locale.ENGLISH)) {
+                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(
+                            Locale.ENGLISH
+                        )
+                    ) {
                         requireContext().displayModalPopup(
                             getString(R.string.already_logged_in_title),
                             getString(R.string.already_logged_in_subtitle, emailFromJson),
                             okAction = {
-                                findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
+                                findNavController().navigate(
+                                    LoyaltyWalletFragmentDirections.globalToMagicLink(
+                                        token,
+                                        true
+                                    )
+                                )
                             },
                             hasNegativeButton = true
                         )
@@ -195,6 +207,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             logDebug("responseToken", "$e")
         }
     }
+
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(
@@ -344,7 +357,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         val user = User()
         user.id = uid
         Sentry.setUser(user)
-        (requireActivity() as MainActivity).firebaseAnalytics.setUserId(uid)
+        getMainActivity().firebaseAnalytics.setUserId(uid)
+        getMainActivity().mixpanel.people.identify(uid)
+        getMainActivity().mixpanel.identify(uid)
     }
 
     protected fun logEvent(identifierValue: String) {
@@ -363,20 +378,20 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             }
         }
 
-        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
+        getMainActivity().firebaseAnalytics.logEvent(name, bundle)
     }
 
     protected fun failedEvent(eventName: String) {
         val bundle = Bundle()
 
         bundle.putString(ATTEMPTED_EVENT_KEY, eventName)
-        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
+        getMainActivity().firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
 
     }
 
     protected fun logScreenView(screenName: String) {
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
-            (requireActivity() as MainActivity).firebaseAnalytics.setCurrentScreen(
+            getMainActivity().firebaseAnalytics.setCurrentScreen(
                 requireActivity(),
                 screenName,
                 screenName
@@ -384,11 +399,59 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    fun startMixpanelEventTimer(eventTitle: String) {
+        val mixpanel = getMainActivity().mixpanel
+        mixpanel.timeEvent(eventTitle)
+    }
+
+    fun setMixpanelProperty(propertyTitle: String, propertyValue: String) {
+        val mixpanel = getMainActivity().mixpanel
+        mixpanel.people.identify(mixpanel.people.distinctId)
+        mixpanel.people.set(propertyTitle, propertyValue)
+    }
+
+    fun logMixpanelLPSEvent(isStartTimer: Boolean, brandName: String, isSuccess: Boolean, reason: String? = null) {
+        if(isStartTimer){
+            //Start timer for both because we don't know what the outcome will be yet
+            startMixpanelEventTimer(MixpanelEvents.LPS_FAIL)
+            startMixpanelEventTimer(MixpanelEvents.LPS_SUCCESS)
+        } else {
+            if (!isSuccess) {
+                logMixpanelEvent(
+                    MixpanelEvents.LPS_FAIL, JSONObject().put(
+                        MixpanelEvents.BRAND_NAME,
+                        brandName
+                    ).put(MixpanelEvents.LPS_REASON, reason ?: MixpanelEvents.VALUE_UNKNOWN)
+                )
+            } else {
+                logMixpanelEvent(
+                    MixpanelEvents.LPS_SUCCESS,
+                    JSONObject().put(MixpanelEvents.BRAND_NAME, brandName)
+                )
+            }
+        }
+
+    }
+
+    fun logMixpanelEvent(eventTitle: String, properties: JSONObject? = null) {
+        val mixpanel = getMainActivity().mixpanel
+        if (properties == null) {
+            mixpanel.track(eventTitle)
+        } else {
+            mixpanel.track(eventTitle, properties)
+        }
+    }
+
+    fun logoutMixpanel() {
+        val mixpanel = getMainActivity().mixpanel
+        mixpanel.reset()
+    }
+
     private fun logFirebaseEvent(identifierValue: String) {
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             val bundle = Bundle()
             bundle.putString(ANALYTICS_IDENTIFIER, identifierValue)
-            (requireActivity() as MainActivity).firebaseAnalytics.logEvent(
+            getMainActivity().firebaseAnalytics.logEvent(
                 ANALYTICS_CALL_TO_ACTION_TYPE,
                 bundle
             )

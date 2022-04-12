@@ -37,6 +37,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -76,6 +77,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private lateinit var plans: List<MembershipPlan>
     private lateinit var handler: Handler
 
+    private var lastTouchedBrand: String? = null
 
     private var simpleCallback =
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
@@ -89,10 +91,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 try {
                     card = walletAdapter.membershipCards[currentPosition] as MembershipCard
+                    lastTouchedBrand = card.plan?.account?.company_name
                 } catch (e: ClassCastException) {
                     //User attempting to drag join plan
                 }
 
+                //Store current card being moved
                 card?.let {
                     return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
                 }
@@ -127,6 +131,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 displayNoBarcodeDialog(position)
                             } else {
                                 plan?.let {
+                                    logMixpanelEvent(
+                                        MixpanelEvents.BARCODE_VIEWED,
+                                        JSONObject().put(
+                                            MixpanelEvents.BRAND_NAME,
+                                            plan.account?.company_name
+                                                ?: MixpanelEvents.VALUE_UNKNOWN
+                                        ).put(
+                                            MixpanelEvents.ROUTE,
+                                            MixpanelEvents.ROUTE_WALLET
+                                        )
+                                    )
                                     findNavController().navigate(
                                         LoyaltyWalletFragmentDirections.loyaltyToBarcode(
                                             plan,
@@ -239,6 +254,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
+                    logMixpanelEvent(
+                        MixpanelEvents.LOYALTY_CARD_REORDER,
+                        JSONObject().put(
+                            MixpanelEvents.BRAND_NAME,
+                            lastTouchedBrand ?: MixpanelEvents.VALUE_UNKNOWN
+                        )
+                    )
                 }
 
             }
@@ -263,7 +285,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        context?.let { viewModel.fetchPeriodicMembershipCards(it) }
+        context?.let { context ->
+            viewModel.fetchPeriodicMembershipCards(context) { isStartTimer, brandName, isFail, reason ->
+                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+            }
+        }
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -332,7 +358,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context)
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                }
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -473,6 +501,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         isRefresh = false
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
+                setMixpanelCardProperties(userDataResult.result.first)
+
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
@@ -605,7 +635,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            context?.let { viewModel.fetchPeriodicMembershipCards(it) }
+            context?.let {
+                viewModel.fetchPeriodicMembershipCards(it) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                }
+            }
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
@@ -621,6 +655,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                            logMixpanelEvent(
+                                MixpanelEvents.CARD_DELETED,
+                                JSONObject().put(
+                                    MixpanelEvents.BRAND_NAME,
+                                    membershipCard.plan?.account?.company_name
+                                        ?: MixpanelEvents.VALUE_UNKNOWN
+                                ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
+                            )
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
@@ -759,6 +801,56 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 cards.toTypedArray()
             )
         )
+    }
+
+    private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
+        logMixpanelEvent(
+            MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
+            JSONObject().put(
+                MixpanelEvents.LPS_STATUS,
+                membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN
+            )
+                .put(
+                    MixpanelEvents.LC_ID,
+                    membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN
+                )
+        )
+    }
+
+    private fun setMixpanelCardProperties(membershipCards: List<MembershipCard>) {
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_CARDS_PROP,
+            "${membershipCards.size}"
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_PLL_CARDS_PROP,
+            membershipCards.filter { it.plan?.isPlanPLL() == true }.size.toString()
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_LINKED_PLL_CARDS_PROP,
+            membershipCards.filter { (it.plan?.isPlanPLL() == true) && (it.payment_cards != null) && (it.isAuthorised()) }.size.toString()
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_DUPE_CARDS_PROP,
+            getTotalDuplicateCards(membershipCards).toString()
+        )
+    }
+
+    private fun getTotalDuplicateCards(membershipCards: List<MembershipCard>): Int {
+        var totalDupes = 0
+        var checkedIds = ArrayList<String?>()
+        membershipCards.forEach { card ->
+            if (!checkedIds.contains(card.membership_plan)) {
+                checkedIds.add(card.membership_plan)
+                val totalOfCard =
+                    membershipCards.filter { it.membership_plan == card.membership_plan }.size
+                if (totalOfCard > 1) totalDupes++
+            }
+        }
+        return totalDupes
     }
 
     override fun onDestroyView() {

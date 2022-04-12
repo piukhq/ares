@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.browse_brands
 
-import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,7 +39,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
             membershipPlans.sortedByCardTypeAndCompany(),
             membershipCardIds
         )
-        this.membershipPlans.value = membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
+        this.membershipPlans.value =
+            membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
         this.membershipCardIds.value = membershipCardIds
         _filteredBrandItems.value = formattedBrandItems
         _activeFilters.value = membershipPlans.getCategories()
@@ -82,7 +82,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
         membershipCardIds: List<String>
     ): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
-        val joinablePlans = membershipPlans.filter { it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ADD) == true || it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ENROL) == true }
+        val joinablePlans = membershipPlans
+            .filter { plan -> plan.canPlanBeAdded() }
         val (pllCards, RestOfCards) = joinablePlans.partition { it.isPlanPLL() }
 
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
@@ -144,8 +145,9 @@ class BrowseBrandsViewModel : BaseViewModel() {
             }
         }
 
-        if(browseBrandsItems.isNotEmpty()){
-            browseBrandsItems.add(0,
+        if (browseBrandsItems.isNotEmpty()) {
+            browseBrandsItems.add(
+                0,
                 BrowseBrandsListItem.ScanCardItem()
             )
         }

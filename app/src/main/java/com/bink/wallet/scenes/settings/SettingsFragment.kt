@@ -298,6 +298,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         getString(R.string.log_out_confirmation),
                         okAction = {
                             if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                                logMixpanelEvent(MixpanelEvents.LOGOUT)
                                 viewModel.logOut()
                             }
                         },
@@ -335,11 +336,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+        logoutMixpanel()
         LocalStoreUtils.clearPreferences(requireContext())
         try {
-            (requireActivity() as MainActivity).forceRunApp()
+            getMainActivity().forceRunApp()
         } catch (e: Exception) {
-            (requireActivity() as MainActivity).forceRunApp()
+            getMainActivity().forceRunApp()
         }
     }
 

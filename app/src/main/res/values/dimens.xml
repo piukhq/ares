@@ -22,6 +22,8 @@
     <dimen name="margin_card_on_boarding">18dp</dimen>
     <dimen name="margin_card_on_boarding_padding_bottom">12dp</dimen>
     <dimen name="margin_progress_button_height">46dp</dimen>
+    <dimen name="no_barcode_width">164dp</dimen>
+    <dimen name="no_barcode_height">100dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
