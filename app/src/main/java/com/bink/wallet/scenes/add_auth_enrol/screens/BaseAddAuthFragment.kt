@@ -28,6 +28,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -131,6 +132,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->
+            logMixpanelEvent(
+                MixpanelEvents.LOYALTY_CARD_ADD_FAIL,
+                JSONObject().put(
+                    MixpanelEvents.BRAND_NAME,
+                    currentMembershipPlan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                ).put(MixpanelEvents.ERROR, "$exception")
+            )
+
             binding.loadingIndicator.visibility = View.GONE
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {

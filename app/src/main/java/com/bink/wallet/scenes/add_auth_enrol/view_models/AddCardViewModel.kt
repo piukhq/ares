@@ -13,8 +13,11 @@ import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 
-class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletRepository, loginRepository: LoginRepository) :
-    AddAuthViewModel(loyaltyWalletRepository,loginRepository) {
+class AddCardViewModel constructor(
+    loyaltyWalletRepository: LoyaltyWalletRepository,
+    loginRepository: LoginRepository
+) :
+    AddAuthViewModel(loyaltyWalletRepository, loginRepository) {
 
     override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
         super.addItems(membershipPlan, shouldExcludeBarcode)

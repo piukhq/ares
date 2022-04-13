@@ -2,12 +2,11 @@ package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
-import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_ADD_JOURNEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_REQUEST
@@ -15,10 +14,8 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
-import com.bink.wallet.utils.ProgressButton
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.observeNonNull
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -53,11 +50,11 @@ class AddCardFragment : BaseAddAuthFragment() {
             handleAuthCtaRequest()
         }
 
-        viewModel.newMembershipCard.observeNonNull(this) {
-            handleNavigationAfterCardCreation(it, false)
-            val status = it.status?.state
+        viewModel.newMembershipCard.observeNonNull(this) { newMembershipCard ->
+            handleNavigationAfterCardCreation(newMembershipCard, false)
+            val status = newMembershipCard.status?.state
             //Is it always going to be just one?
-            val reasonCode = it.status?.reason_codes?.get(0)
+            val reasonCode = newMembershipCard.status?.reason_codes?.get(0)
             val mPlanId = membershipPlanId
             if (status == null || reasonCode == null || mPlanId == null) {
                 failedEvent(ADD_LOYALTY_CARD_RESPONSE_SUCCESS)
@@ -66,14 +63,31 @@ class AddCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ADD_JOURNEY,
+                        newMembershipCard.id,
+                        status,
+                        reasonCode,
+                        mPlanId,
+                        isAccountNew
                     )
                 )
             }
 
-            WebScrapableManager.storeCredentialsFromRequest(it.id)
+            WebScrapableManager.storeCredentialsFromRequest(newMembershipCard.id)
 
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
+            WebScrapableManager.tryScrapeCards(
+                0,
+                arrayListOf(newMembershipCard),
+                context,
+                true,
+                { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(
+                        isStartTimer,
+                        brandName,
+                        isFail,
+                        reason
+                    )
+                }) { cards ->
                 if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
@@ -82,8 +96,15 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.addLoyaltyCardRequestMade.observeNonNull(this) {
-            val mPlanId = membershipPlanId
+            logMixpanelEvent(
+                MixpanelEvents.LOYALTY_CARD_ADD,
+                JSONObject().put(
+                    MixpanelEvents.BRAND_NAME,
+                    currentMembershipPlan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                )
+            )
 
+            val mPlanId = membershipPlanId
             if (mPlanId == null) {
                 failedEvent(ADD_LOYALTY_CARD_REQUEST)
             } else {
@@ -108,14 +129,17 @@ class AddCardFragment : BaseAddAuthFragment() {
                 val httpException = it as HttpException
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
+                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY,
+                        mPlanId,
+                        httpException.code(),
+                        httpException.getErrorBody()
                     )
                 )
             }
 
         }
 
-        viewModel.loading.observeNonNull(this){
+        viewModel.loading.observeNonNull(this) {
             binding.footerComposed.progressBtnContainer.setLoading(it)
         }
 

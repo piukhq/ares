@@ -75,6 +75,7 @@ class PaymentCardsDetailsFragment :
                 }
                 if (membershipPlanData.value == null) {
                     membershipPlanData.value = currentBundle.membershipPlans.toList()
+                        .filter { plan -> plan.canPlanBeAdded() }
                 }
             }
         }
