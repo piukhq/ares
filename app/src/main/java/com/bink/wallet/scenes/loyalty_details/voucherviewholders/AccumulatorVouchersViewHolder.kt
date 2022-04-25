@@ -25,13 +25,13 @@ class AccumulatorVouchersViewHolder(
         with(binding) {
             voucher = thisVoucher
             thisVoucher.burn?.let {
-                    title.text = ValueDisplayUtils.displayValue(
-                        it.value,
-                        it.prefix,
-                        it.suffix,
-                        it.currency,
-                        it.type
-                    )
+                title.text = ValueDisplayUtils.displayValue(
+                    it.value,
+                    it.prefix,
+                    it.suffix,
+                    it.currency,
+                    it.type
+                )
             }
             root.apply {
                 this.setOnClickListener {
@@ -98,14 +98,17 @@ class AccumulatorVouchersViewHolder(
     private fun displayForEarning(thisVoucher: Voucher) {
         thisVoucher.earn?.let { earn ->
             binding.apply {
-                subtitle.text = thisVoucher.subtext.plus(SPACE).plus(
-                    ValueDisplayUtils.displayValue(
-                        earn.target_value,
-                        earn.prefix,
-                        earn.suffix,
-                        earn.currency
+                subtitle.text =
+                    (if (!thisVoucher.subtext.isNullOrEmpty()) thisVoucher.subtext else "").plus(
+                        SPACE
+                    ).plus(
+                        ValueDisplayUtils.displayValue(
+                            earn.target_value,
+                            earn.prefix,
+                            earn.suffix,
+                            earn.currency
+                        )
                     )
-                )
                 goalAmount.text =
                     ValueDisplayUtils.displayValue(
                         earn.target_value,
