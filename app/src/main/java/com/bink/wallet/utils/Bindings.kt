@@ -564,7 +564,7 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard, membershipCards: Membersh
                 linkedCardsNumber
             )
         } else {
-            context.getString(R.string.payment_card_not_linked)
+            context.getString(R.string.payment_card_ready_to_link)
         }
     } else {
         text = PaymentCardUtils.cardStatus(paymentCard.status ?: "")
