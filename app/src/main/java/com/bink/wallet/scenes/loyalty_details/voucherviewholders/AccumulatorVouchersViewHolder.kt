@@ -98,7 +98,7 @@ class AccumulatorVouchersViewHolder(
     private fun displayForEarning(thisVoucher: Voucher) {
         thisVoucher.earn?.let { earn ->
             binding.apply {
-                subtitle.text =
+                subtitle.text = itemView.context.getString(R.string.for_earning_prefix).plus(
                     (if (!thisVoucher.subtext.isNullOrEmpty()) thisVoucher.subtext else "").plus(
                         SPACE
                     ).plus(
@@ -109,6 +109,7 @@ class AccumulatorVouchersViewHolder(
                             earn.currency
                         )
                     )
+                )
                 goalAmount.text =
                     ValueDisplayUtils.displayValue(
                         earn.target_value,
