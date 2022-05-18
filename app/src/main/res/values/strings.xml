@@ -625,7 +625,7 @@
     <string name="clear_stored_cred_title">Clear Stored Credentials</string>
     <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <string name="preferences_clear_storage"><u>Clear Stored Credentials</u></string>
-    <string name="for_earning_prefix">for Earning</string>
+    <string name="for_earning_prefix">for spending</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>
