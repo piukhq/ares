@@ -2,18 +2,14 @@ package com.bink.wallet.scenes.add_loyalty_card
 
 import android.app.Activity
 import android.content.Context
-import android.os.Build
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.*
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -52,16 +48,18 @@ class AddLoyaltyCardFragment :
 
     override val viewModel: AddLoyaltyCardViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         cancelHaptic = false
-        setBottomLayout()
         getValidators()
+        setBottomLayout()
         context?.resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
         account = args.account
-        findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(ADD_AUTH_BARCODE)
+        findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(
+            ADD_AUTH_BARCODE
+        )
     }
 
     override fun onResume() {
@@ -120,7 +118,7 @@ class AddLoyaltyCardFragment :
 
                 }
             } else {
-                   showUnsupportedBarcodePopup(account!!.company_name!!)
+                showUnsupportedBarcodePopup(account!!.company_name!!)
             }
 
         } else {
