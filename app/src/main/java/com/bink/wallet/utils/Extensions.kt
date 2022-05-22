@@ -391,7 +391,7 @@ fun HttpException.getErrorBody(): String {
         }
 
     } catch (e: JSONException) {
-        return "Could not deserialise error body"
+        return "Could not deserialise error body. Error: ${e.message}. Raw Body: $errorBody"
     }
 
     return errorBody
