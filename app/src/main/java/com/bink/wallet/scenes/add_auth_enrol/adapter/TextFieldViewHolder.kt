@@ -23,7 +23,6 @@ import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class TextFieldViewHolder(
     val onNavigateToBarcodeScan: ((Account) -> Unit),
     val binding: AddAuthTextItemBinding,
@@ -79,6 +78,11 @@ class TextFieldViewHolder(
         }
 
         binding.planField = planField
+
+        binding.parent.setOnClickListener {
+            binding.contentAddAuthText.requestFocus()
+            showSoftkeyboard(binding.contentAddAuthText)
+        }
 
         with(binding.contentAddAuthText) {
             planField.description?.length?.let {
@@ -386,8 +390,7 @@ class TextFieldViewHolder(
     private fun createDateAndShowPicker(commonName: String) {
         if (commonName == SignUpFieldTypes.DATE_OF_BIRTH.common_name || commonName == SignUpFieldTypes.MEMORABLE_DATE.common_name) {
             val datePickerDialog = DatePickerDialog(
-                binding.root.context, R.style.BinkDatePicker,
-                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                binding.root.context, R.style.BinkDatePicker, { _, year, month, dayOfMonth ->
                     val calendar = Calendar.getInstance()
                     calendar.set(Calendar.MONTH, month)
                     calendar.set(Calendar.YEAR, year)
@@ -412,17 +415,25 @@ class TextFieldViewHolder(
             binding.contentAddAuthText.visibility = View.INVISIBLE
             binding.tvDatePicker.visibility = View.VISIBLE
 
+            binding.parent.setOnClickListener {
+                openDatePicker(datePickerDialog)
+            }
+
             binding.tvDatePicker.setOnClickListener {
-                datePickerDialog.show()
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                    .setTextColor(Color.BLACK)
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                    .setTextColor(Color.BLACK)
+                openDatePicker(datePickerDialog)
             }
         } else {
             binding.contentAddAuthText.visibility = View.VISIBLE
             binding.tvDatePicker.visibility = View.GONE
         }
+    }
+
+    private fun openDatePicker(datePickerDialog: DatePickerDialog){
+        datePickerDialog.show()
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+            .setTextColor(Color.BLACK)
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+            .setTextColor(Color.BLACK)
     }
 
     private fun setFieldValue(textInput: TextInputEditText) {

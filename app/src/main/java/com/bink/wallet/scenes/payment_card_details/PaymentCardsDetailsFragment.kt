@@ -253,7 +253,7 @@ class PaymentCardsDetailsFragment :
             val pllCards =
                 membershipCards.filter { card -> pllPlansIds.contains(card.membership_plan) }
             binding.apply {
-                hasAddedPllCards = pllCards.isNotEmpty()
+                hasAddedPllCards = pllCards.isNotEmpty() && pCard.card?.isExpired() == false
                 availablePllList.apply {
                     layoutManager = GridLayoutManager(context, 1)
 
@@ -273,9 +273,12 @@ class PaymentCardsDetailsFragment :
                         unaddedCardsForPlan.add(plan)
                     }
                 }
-                hasOtherCardsToAdd = unaddedCardsForPlan.isNotEmpty()
-                shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() &&
-                        unaddedCardsForPlan.isNotEmpty()
+                val shouldShowOtherCards =
+                    unaddedCardsForPlan.isNotEmpty() && pCard.card?.isExpired() == false
+                hasOtherCardsToAdd = shouldShowOtherCards
+                shouldDisplayOtherCardsTitleAndDescription =
+                    pllCards.isNotEmpty() && shouldShowOtherCards
+
                 otherCardsList.apply {
                     layoutManager = GridLayoutManager(context, 1)
                     adapter = SuggestedCardsAdapter(
@@ -321,8 +324,10 @@ class PaymentCardsDetailsFragment :
     }
 
     private fun setViewState(shouldShowViews: Boolean) {
+        val expiredCard = viewModel.paymentCard.value?.card?.isExpired()
         val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
-        val invertedVisibility = if (shouldShowViews) View.GONE else View.VISIBLE
+        val invertedVisibility =
+            if (expiredCard == true) View.VISIBLE else if (shouldShowViews) View.GONE else View.VISIBLE
         with(binding) {
             availablePllList.visibility = visibility
             otherCardsTitle.visibility = visibility

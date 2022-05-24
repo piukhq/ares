@@ -366,7 +366,7 @@
     <!-- Payment card wallet-->
     <string name="payment_card_linked_status">Linked to %1$d loyalty card</string>
     <string name="payment_cards_linked_status">Linked to %1$d loyalty cards</string>
-    <string name="payment_card_not_linked">Not linked</string>
+    <string name="payment_card_ready_to_link">Ready to Link</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="payment_card_details_title_text">Linked cards</string>
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
@@ -395,6 +395,9 @@
     <string name="payment_card_footer_faq_description">Learn more</string>
     <string name="already_logged_in_title">Already Logged In</string>
     <string name="already_logged_in_subtitle">Would you like to log in with %s?</string>
+    <string name="pcd_expired_card_title">Payment card expired</string>
+    <string name="pcd_expired_card_description">Your payment card has expired. Please use the “Delete this card” action below to remove it from your wallet and add your new payment card if applicable. If you have any concerns, please read the FAQs or you can get in touch with Bink by pressing Contact us.</string>
+
 
 
     <!-- Payment Card entry -->
@@ -622,6 +625,7 @@
     <string name="clear_stored_cred_title">Clear Stored Credentials</string>
     <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <string name="preferences_clear_storage"><u>Clear Stored Credentials</u></string>
+    <string name="for_earning_prefix">for spending</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

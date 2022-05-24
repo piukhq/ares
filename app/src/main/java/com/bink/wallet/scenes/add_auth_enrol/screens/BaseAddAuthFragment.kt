@@ -1,9 +1,11 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
+import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -84,6 +86,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 } else {
                     viewModel.haveValidationsPassed.set(false)
                 }
+            },
+            showSoftkeyboard = {
+                (requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(
+                    it,
+                    InputMethodManager.SHOW_IMPLICIT
+                )
             },
             navigateToHeader = {
                 navigationHandler?.navigateToBrandHeader()
