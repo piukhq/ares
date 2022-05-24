@@ -29,13 +29,14 @@ object ValueDisplayUtils {
                         NO_DECIMALS_FORMAT.format(it)
                     }
                 )
+
+                append(SPACE)
             }
             if (!suffix.isNullOrEmpty()) {
-                append(SPACE)
                 append(suffix)
+                append(SPACE)
             }
             if (!type.isNullOrEmpty()) {
-                append(SPACE)
                 append(type)
             }
             return toString()
