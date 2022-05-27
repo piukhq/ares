@@ -12,6 +12,9 @@
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="barcode_label">Barcode:</string>
+
+    <string name="pending_card_delete_title">Cannot delete</string>
+    <string name="pending_card_delete_message">While your card is pending it cannot be deleted. Please try again later.</string>
     <string name="loyalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
     <string name="loyalty_wallet_dialog_description">Delete card was canceled</string>
     <string name="loyalty_wallet_no_barcode_title">No Barcode</string>
