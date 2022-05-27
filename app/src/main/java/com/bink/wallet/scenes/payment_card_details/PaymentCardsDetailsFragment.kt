@@ -23,15 +23,12 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import zendesk.support.guide.ViewArticleActivity
 import zendesk.support.requestlist.RequestListActivity
-import java.util.*
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -120,13 +117,9 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.footerFaqs.setOnClickListener {
-            val articleId =
-                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) PROD_ARTICLE_ID else SANDBOX_ARTICLE_ID
-            ViewArticleActivity.builder(articleId)
-                .withContactUsButtonVisible(false)
-                .show(requireContext())
-
-
+            findNavController().navigate(
+                PaymentCardsDetailsFragmentDirections.globalToWeb(getString(R.string.faq_url))
+            )
         }
 
         with(viewModel.paymentCard) {
