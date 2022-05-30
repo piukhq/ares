@@ -9,10 +9,6 @@ plugins {
 
 }
 
-repositories {
-    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
-}
-
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021339"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 def secureFlags = System.getenv("SECURE_FLAGS") ?: "true"
@@ -261,9 +257,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
 
     implementation 'com.auth0.android:jwtdecode:2.0.1'
-
-    /** ZENDESK **/
-    implementation group: 'com.zendesk', name: 'support', version: '5.0.8'
 
     /** TESTING **/
     testImplementation "org.robolectric:robolectric:4.5.1"

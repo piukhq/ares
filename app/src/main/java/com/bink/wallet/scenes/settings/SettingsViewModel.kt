@@ -1,34 +1,23 @@
 package com.bink.wallet.scenes.settings
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
-import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.model.LoginData
-import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 
 class SettingsViewModel constructor(
     var loginRepository: LoginRepository,
     var loyaltyWalletRepository: LoyaltyWalletRepository,
     var paymentWalletRepository: PaymentWalletRepository,
-    var userRepository: UserRepository,
-    var zendeskRepository: ZendeskRepository
+    var userRepository: UserRepository
 ) :
     BaseViewModel() {
 
@@ -85,7 +74,8 @@ class SettingsViewModel constructor(
         }
         scope.launch(handler) {
             try {
-                val returnedUser = withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
+                val returnedUser =
+                    withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
 
                 _userResponse.value = returnedUser
             } catch (e: Exception) {
@@ -94,16 +84,8 @@ class SettingsViewModel constructor(
         }
     }
 
-    fun launchZendesk(fragment: Fragment, callbackUser: (User) -> Unit) {
-        zendeskRepository.launchZendesk(fragment, callbackUser)
-    }
-
     override fun onCleared() {
         super.onCleared()
         scope.cancel()
-    }
-
-    fun setIdentity() {
-        zendeskRepository.setIdentity()
     }
 }

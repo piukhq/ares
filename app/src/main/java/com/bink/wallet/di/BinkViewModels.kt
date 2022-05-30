@@ -27,7 +27,6 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
-import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyViewModel
@@ -59,7 +58,6 @@ val viewModelModules = module {
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
 
-    single { provideZendeskRepository() }
     viewModel { LoginViewModel(get(), get(), get()) }
 
     single {
@@ -71,7 +69,7 @@ val viewModelModules = module {
             get()
         )
     }
-    viewModel { LoyaltyViewModel(get(), get(), get()) }
+    viewModel { LoyaltyViewModel(get(), get()) }
 
     viewModel { AddAuthViewModel(get(), get()) }
     viewModel { AddCardViewModel(get(), get()) }
@@ -116,9 +114,9 @@ val viewModelModules = module {
 
     viewModel { AddPaymentCardViewModel(get()) }
 
-    viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
+    viewModel { PaymentCardWalletViewModel(get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get(), get(), get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get()) }
 
     viewModel { BaseModalViewModel() }
 
@@ -127,13 +125,13 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 
     viewModel { WhoWeAreViewModel() }
 
-    viewModel { DynamicActionViewModel(get(), get()) }
+    viewModel { DynamicActionViewModel(get()) }
 
     single {
         provideAddPaymentCardRepository(
@@ -162,8 +160,6 @@ val viewModelModules = module {
 
     viewModel { CheckInboxViewModel(get()) }
 }
-
-fun provideZendeskRepository() = ZendeskRepository()
 
 fun provideLoginRepository(
     restApiService: ApiService,
@@ -200,7 +196,8 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao
-): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
+): PaymentWalletRepository =
+    PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
 
 fun provideUserRepository(
     restApiService: ApiService

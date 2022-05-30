@@ -13,20 +13,11 @@ import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.settings.SettingsFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.NetworkUtils
-import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
-import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
-import com.bink.wallet.utils.PaymentCardUtils
-import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.WalletOrderingUtil
-import com.bink.wallet.utils.goToPendingFaqArticle
-import com.bink.wallet.utils.isLinkedToMembershipCard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -278,9 +269,10 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 if (shouldShowPlanAlreadyExists) {
                     showLinkErrorMessage(shouldShowPlanAlreadyExists, null)
                 } else {
-                    viewModel.hasDisplayableError(requireContext(), it as ArrayList<Exception>)?.let { errorMessage ->
-                        showLinkErrorMessage(false, errorMessage)
-                    }
+                    viewModel.hasDisplayableError(requireContext(), it as ArrayList<Exception>)
+                        ?.let { errorMessage ->
+                            showLinkErrorMessage(false, errorMessage)
+                        }
                 }
             }
         }
@@ -290,6 +282,12 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 showLinkErrorMessage(false, errorMessage)
             }
         }
+    }
+
+    private fun goToPendingFaqArticle() {
+        findNavController().navigate(
+            PllFragmentDirections.globalToWeb(getString(R.string.faq_url))
+        )
     }
 
     override fun onResume() {

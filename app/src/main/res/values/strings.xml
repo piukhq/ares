@@ -341,7 +341,6 @@
     <string name="debug_current_version_content">%s build %d</string>
     <string name="debug_environment_base_url_title">Environment Base URL</string>
     <string name="debug_backend_version">Backend Version</string>
-    <string name="debug_environment_open_zendesk_title">Launch Zendesk</string>
     <string name="debug_backend_colour_swatches">Loyalty card secondary colour swatches</string>
     <string name="debug_current_email_address">Current email address</string>
     <string name="apply_changes">Apply changes</string>
@@ -579,12 +578,6 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
-
-    <!-- Zendesk -->
-    <string name="zendesk_user_details_prompt_title">Please enter your contact details</string>
-    <string name="zendesk_user_details_prompt_first_name_hint">First Name</string>
-    <string name="zendesk_user_details_prompt_second_name_hint">Last Name</string>
-    <string name="zendesk_user_details_prompt_cta">Save details</string>
 
     <!-- Add Loyalty card -->
     <string name="capture_window">Capture window</string>
