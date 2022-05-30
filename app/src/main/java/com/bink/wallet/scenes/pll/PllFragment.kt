@@ -13,7 +13,6 @@ import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.settings.SettingsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
