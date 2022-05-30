@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -16,22 +15,17 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.MembershipCardListWrapper
-import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import zendesk.support.guide.ViewArticleActivity
-import zendesk.support.requestlist.RequestListActivity
-import java.util.*
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -120,13 +114,9 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.footerFaqs.setOnClickListener {
-            val articleId =
-                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) PROD_ARTICLE_ID else SANDBOX_ARTICLE_ID
-            ViewArticleActivity.builder(articleId)
-                .withContactUsButtonVisible(false)
-                .show(requireContext())
-
-
+            findNavController().navigate(
+                PaymentCardsDetailsFragmentDirections.globalToWeb(getString(R.string.faq_url))
+            )
         }
 
         with(viewModel.paymentCard) {
@@ -424,42 +414,5 @@ class PaymentCardsDetailsFragment :
         }
     }
 
-    private fun buildAndShowUserDetailsDialog() {
-        val dialog: androidx.appcompat.app.AlertDialog
-        val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
-        builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
-        val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
-        val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
-        val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
-        builder.setView(container)
-            .setPositiveButton(
-                getString(R.string.zendesk_user_details_prompt_cta), null
-            )
-            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
-                dialog.cancel()
-            }
-        dialog = builder.create()
-        dialog.show()
-        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
-            .setOnClickListener {
-                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    viewModel.setZendeskIdentity(
-                        etFirstName.text.toString(),
-                        etSecondName.text.toString()
-                    )
-
-                    viewModel.putUserDetails(
-                        User(
-                            etFirstName.text.toString(),
-                            etSecondName.text.toString()
-                        )
-                    )
-                    RequestListActivity.builder()
-                        .show(requireActivity())
-
-                    dialog.dismiss()
-                }
-            }
-    }
 
 }

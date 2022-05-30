@@ -290,7 +290,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
             }
         }
-        viewModel.checkZendeskResponse()
+
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
         }
@@ -322,10 +322,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
-        }
-
-        viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
-            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
         }
 
         mainViewModel.isLoading.observeNonNull(this) {

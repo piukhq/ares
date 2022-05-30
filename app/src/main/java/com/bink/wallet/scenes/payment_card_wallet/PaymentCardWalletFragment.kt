@@ -58,7 +58,6 @@ class PaymentCardWalletFragment :
         super.onResume()
 
         viewModel.getPeriodicPaymentCards()
-        viewModel.checkZendeskResponse()
 
         logScreenView(PAYMENT_WALLET_VIEW)
     }
@@ -309,10 +308,6 @@ class PaymentCardWalletFragment :
             isRefreshing = false
             binding.swipeRefresh.isRefreshing = false
             viewModel.fetchLocalData()
-        }
-
-        viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
-            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
         }
 
         binding.settingsButton.setOnClickListener {

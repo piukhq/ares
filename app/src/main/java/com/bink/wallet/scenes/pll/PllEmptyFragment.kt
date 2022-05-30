@@ -12,16 +12,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
-import com.bink.wallet.utils.PaymentCardUtils
-import com.bink.wallet.utils.goToPendingFaqArticle
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -68,10 +59,10 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                             true,
                             currentMembershipPlan?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            currentMembershipPlan?.account?.plan_summary?:"",
+                            currentMembershipPlan?.account?.plan_summary ?: "",
                             description2 = planDescription,
                             firstButtonText = getString(R.string.go_to_site)
-                        ),currentMembershipPlan?.account?.plan_url ?: ""
+                        ), currentMembershipPlan?.account?.plan_url ?: ""
                     )
                 )
             }
@@ -184,6 +175,11 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
         }
 
+    }
 
+    private fun goToPendingFaqArticle() {
+        findNavController().navigate(
+            PllEmptyFragmentDirections.globalToWeb(getString(R.string.faq_url))
+        )
     }
 }

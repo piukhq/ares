@@ -37,9 +37,6 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import zendesk.core.Zendesk
-import zendesk.support.guide.HelpCenterActivity
-import zendesk.support.guide.ViewArticleActivity
 
 class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding>() {
 
@@ -235,19 +232,11 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 )
             }
             SettingsItemType.FAQS -> {
-                if (Zendesk.INSTANCE.identity == null) {
-                    viewModel.setIdentity()
-
+                item.url?.let { url ->
+                    findNavController().navigate(
+                        SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(url)
+                    )
                 }
-
-                val articleConfig = ViewArticleActivity.builder()
-                    .withContactUsButtonVisible(false)
-                    .config()
-
-                HelpCenterActivity.builder()
-                    .withContactUsButtonVisible(false)
-                    .withShowConversationsMenuButton(false)
-                    .show(requireContext(), articleConfig)
             }
             SettingsItemType.SECURITY_AND_PRIVACY -> {
                 val action =

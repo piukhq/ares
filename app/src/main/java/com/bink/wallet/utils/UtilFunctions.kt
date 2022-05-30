@@ -33,11 +33,11 @@ object UtilFunctions {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
             spannableString.setSpan(
-               object : ClickableSpan() {
-                   override fun onClick(widget: View) {
-                       onLinkClickListener?.invoke(url)
-                   }
-               },
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        onLinkClickListener?.invoke(url)
+                    }
+                },
                 spannableString.indexOf(stringToHyperlink),
                 spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
@@ -52,7 +52,7 @@ object UtilFunctions {
         stringToHyperlink: String,
         textView: TextView,
         hyperLinkClickListener: (() -> Unit)? = null
-    ) :SpannableString {
+    ): SpannableString {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
             spannableString.setSpan(
@@ -109,4 +109,5 @@ object UtilFunctions {
             context.getString(R.string.ssl_pinning_failure_text)
         )
     }
+
 }

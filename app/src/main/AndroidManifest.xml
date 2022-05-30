@@ -59,22 +59,6 @@
             android:name="io.fabric.ApiKey"
             android:value="40cef155d89af567c87c555814e62cfe337bbd7e" />
 
-        <activity
-            android:name="zendesk.support.guide.HelpCenterActivity"
-            android:theme="@style/BinkZendeskTheme" />
-
-        <activity
-            android:name="zendesk.support.guide.ViewArticleActivity"
-            android:theme="@style/BinkZendeskTheme" />
-
-        <activity
-            android:name="zendesk.support.request.RequestActivity"
-            android:theme="@style/BinkZendeskTheme" />
-
-        <activity
-            android:name="zendesk.support.requestlist.RequestListActivity"
-            android:theme="@style/BinkZendeskTheme" />
-
         <meta-data
             android:name="io.sentry.dsn"
             android:value="https://1493165102b3486797ce4c7404ba40cc@o503751.ingest.sentry.io/5610019" />
