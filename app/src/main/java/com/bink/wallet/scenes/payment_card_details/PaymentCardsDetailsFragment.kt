@@ -1,6 +1,9 @@
 package com.bink.wallet.scenes.payment_card_details
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -400,11 +403,24 @@ class PaymentCardsDetailsFragment :
     }
 
     val onContactUsClicked: (() -> Unit)? = {
-        if (viewModel.shouldShowDetailsDialog()) {
-            buildAndShowUserDetailsDialog()
-        } else {
-            viewModel.setZendeskIdentity()
-            goToContactUsForm()
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse(getString(R.string.contact_us_mailto))
+                putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(getString(R.string.contact_us_email_address))
+                )
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    getString(R.string.contact_us_email_subject, BuildConfig.VERSION_NAME)
+                )
+            })
+        } catch (ex: ActivityNotFoundException) {
+            requireContext().displayModalPopup(
+                getString(R.string.contact_us_no_email_title),
+                getString(R.string.contact_us_no_email_message),
+                buttonText = R.string.ok
+            )
         }
     }
 

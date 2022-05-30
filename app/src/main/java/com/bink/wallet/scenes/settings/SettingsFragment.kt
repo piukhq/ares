@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.settings
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
-import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -96,7 +96,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     @Composable
     fun SettingsList(settings: List<SettingsItem>, modifier: Modifier = Modifier) {
 
-        LazyColumn(modifier = modifier, contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
+        LazyColumn(
+            modifier = modifier,
+            contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_padding_size_medium))
+        ) {
             items(items = settings) { setting ->
 
                 when (setting.type) {
@@ -286,8 +289,24 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             }
 
             SettingsItemType.CONTACT_US -> {
-                viewModel.launchZendesk(this) { user ->
-                    viewModel.putUserDetails(user)
+                try {
+                    startActivity(Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse(getString(R.string.contact_us_mailto))
+                        putExtra(
+                            Intent.EXTRA_EMAIL,
+                            arrayOf(getString(R.string.contact_us_email_address))
+                        )
+                        putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            getString(R.string.contact_us_email_subject, BuildConfig.VERSION_NAME)
+                        )
+                    })
+                } catch (ex: ActivityNotFoundException) {
+                    requireContext().displayModalPopup(
+                        getString(R.string.contact_us_no_email_title),
+                        getString(R.string.contact_us_no_email_message),
+                        buttonText = R.string.ok
+                    )
                 }
             }
 

@@ -329,7 +329,7 @@
     <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
     <string name="contact_us_mailto">mailto:</string>
     <string name="contact_us_email_address">support@bink.com</string>
-    <string name="contact_us_email_subject">Bink App Support</string>
+    <string name="contact_us_email_subject">Bink App %s - Support Request</string>
     <string name="contact_us_email_message">\n\n\n\nThe below information will help us with your query, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
     <string name="contact_us_no_email_title">No email app installed</string>
     <string name="contact_us_no_email_message">No Mail accounts set up, please email us directly: support@bink.com.</string>
