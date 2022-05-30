@@ -9,11 +9,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
-import com.bink.wallet.utils.LocalStoreUtils
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,9 +18,7 @@ import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
     private var paymentWalletRepository: PaymentWalletRepository,
-    private var loyaltyWalletRepository: LoyaltyWalletRepository,
-    private var zendeskRepository: ZendeskRepository,
-    private var userRepository: UserRepository
+    private var loyaltyWalletRepository: LoyaltyWalletRepository
 ) :
     BaseViewModel() {
 
@@ -121,29 +116,6 @@ class PaymentCardsDetailsViewModel(
                 it.addPaymentCard(cardId)
             }
         }
-    }
-
-    fun shouldShowDetailsDialog() = zendeskRepository.shouldShowUserDetailsDialog()
-
-    fun putUserDetails(user: User) {
-        val handler = CoroutineExceptionHandler { _, _ -> //Exception handler to prevent app crash
-
-        }
-        viewModelScope.launch(handler) {
-            try {
-                val returnedUser =
-                    withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
-
-
-                _userResponse.value = returnedUser
-            } catch (e: Exception) {
-
-            }
-        }
-    }
-
-    fun setZendeskIdentity(firstName: String = "", lastName: String = "") {
-        zendeskRepository.setIdentity(firstName, lastName)
     }
 
 }

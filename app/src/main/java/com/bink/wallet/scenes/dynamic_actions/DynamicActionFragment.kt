@@ -1,16 +1,21 @@
 package com.bink.wallet.scenes.dynamic_actions
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DynamicActionFragmentBinding
 import com.bink.wallet.model.DynamicActionEventBodyCTAHandler
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -97,8 +102,24 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
     private fun launchDynamicActionEventCta(action: DynamicActionEventBodyCTAHandler) {
         when (action) {
             DynamicActionEventBodyCTAHandler.ZENDESK_CONTACT_US -> {
-                viewModel.launchZendesk(this) { user ->
-                    viewModel.putUserDetails(user)
+                try {
+                    startActivity(Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse(getString(R.string.contact_us_mailto))
+                        putExtra(
+                            Intent.EXTRA_EMAIL,
+                            arrayOf(getString(R.string.contact_us_email_address))
+                        )
+                        putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            getString(R.string.contact_us_email_subject, BuildConfig.VERSION_NAME)
+                        )
+                    })
+                } catch (ex: ActivityNotFoundException) {
+                    requireContext().displayModalPopup(
+                        getString(R.string.contact_us_no_email_title),
+                        getString(R.string.contact_us_no_email_message),
+                        buttonText = R.string.ok
+                    )
                 }
             }
         }
@@ -106,7 +127,12 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
 
 }
 
-class Snow(context: Context, private val screenW: Float, private val screenH: Float, parent: ViewGroup) {
+class Snow(
+    context: Context,
+    private val screenW: Float,
+    private val screenH: Float,
+    parent: ViewGroup
+) {
     var snowflake: ImageView = ImageView(context)
     private var distance = Random().nextFloat() * 0.5f + 0.5f
     private val fallingSpeed = 6
@@ -126,8 +152,10 @@ class Snow(context: Context, private val screenW: Float, private val screenH: Fl
     }
 
     fun update() {
-        snowflake.translationY = (snowflake.translationY + fallingSpeed * (1 - distance * 0.8)).toFloat()
-        snowflake.translationX = (snowflake.translationX + windSpeed * (1 - distance * 0.7)).toFloat()
+        snowflake.translationY =
+            (snowflake.translationY + fallingSpeed * (1 - distance * 0.8)).toFloat()
+        snowflake.translationX =
+            (snowflake.translationX + windSpeed * (1 - distance * 0.7)).toFloat()
 
         if (snowflake.translationY > screenH)
             snowflake.translationY = snowflake.translationY - screenH
