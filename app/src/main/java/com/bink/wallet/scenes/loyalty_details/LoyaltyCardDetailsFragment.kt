@@ -489,7 +489,7 @@ class LoyaltyCardDetailsFragment :
                 lateinit var dialog: androidx.appcompat.app.AlertDialog
                 val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
                 if (builder != null) {
-                    builder.setCancelable(false)x
+                    builder.setCancelable(false)
                     builder.setTitle(getString(R.string.pending_card_delete_title))
                     builder.setMessage(getString(R.string.pending_card_delete_message))
                     builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
