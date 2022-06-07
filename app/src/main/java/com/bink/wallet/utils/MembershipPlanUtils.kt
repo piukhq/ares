@@ -1,5 +1,7 @@
 package com.bink.wallet.utils
 
+import android.content.Context
+import android.graphics.Bitmap
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -8,6 +10,10 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.common.BitMatrix
+import com.journeyapps.barcodescanner.BarcodeEncoder
 
 object MembershipPlanUtils {
 
@@ -155,12 +161,72 @@ object MembershipPlanUtils {
         }
     }
 
-     fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
+    fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
         val originalSize = paymentCards.size
-        val filteredCards = paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
+        val filteredCards =
+            paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
         return originalSize == filteredCards.size
 
 
+    }
+
+    fun loadBarcode(context: Context, membershipCard: BarcodeWrapper?): Bitmap? {
+        if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
+            val multiFormatWriter = MultiFormatWriter()
+            val isSquare = when (membershipCard?.membershipCard?.card?.getBarcodeFormat()) {
+                BarcodeFormat.QR_CODE,
+                BarcodeFormat.AZTEC -> true
+                else -> false
+            }
+            val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
+            val widthPx = context.toPixelFromDip(if (isSquare) 100f else 320f)
+            val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
+            var shouldShowBarcodeImage = true
+            val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
+            val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
+
+            membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
+                barcodeNumberLength?.let {
+                    when (format) {
+                        BarcodeFormat.ITF -> {
+                            // For the ITF barcode format, the library will cause a crash if trying to generate a barcode
+                            // that contains letters or has an uneven length
+                            shouldShowBarcodeImage = !(barcodeNumberLength.rem(2) != 0 ||
+                                    barcode.contains(LETTER_REGEX))
+                        }
+                        BarcodeFormat.EAN_13 -> {
+                            // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
+                            // that has a length below or above the specified limits
+                            shouldShowBarcodeImage =
+                                (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
+                        }
+                        else -> {
+                        }
+                    }
+                }
+            }
+
+            if (shouldShowBarcodeImage) {
+                return try {
+                    val bitMatrix: BitMatrix =
+                        multiFormatWriter.encode(
+                            membershipCard?.membershipCard?.card?.barcode,
+                            format,
+                            widthPx.toInt(),
+                            heightPx.toInt()
+                        )
+                    val barcodeEncoder = BarcodeEncoder()
+                    barcodeEncoder.createBitmap(bitMatrix)
+                } catch (e: Exception) {
+                    null
+                }
+
+            } else {
+                return null
+            }
+        } else {
+            return null
+        }
     }
 }

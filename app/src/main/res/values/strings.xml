@@ -43,9 +43,10 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind that some scanners cannot read from screens.</string>
+    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
+    <string name="membership_number_title">Membership number</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
     <string name="card_status_pending">Pending</string>
     <string name="card_status_retry">Retry</string>

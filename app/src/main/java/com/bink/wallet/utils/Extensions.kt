@@ -445,3 +445,5 @@ fun Fragment.getMainActivity() : MainActivity{
 }
 
 fun Context.isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
+
+
