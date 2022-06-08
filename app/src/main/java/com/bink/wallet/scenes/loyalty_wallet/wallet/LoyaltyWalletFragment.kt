@@ -35,6 +35,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
@@ -153,7 +154,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             }
                         }
                     } else {
-                        deleteDialog(card, position)
+                        if (card.status?.state == MembershipCardStatus.PENDING.status) {
+                            pendingCardDeleteDialog(position)
+                        } else {
+                            deleteDialog(card, position)
+                        }
                     }
                 }
 
@@ -695,6 +700,22 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
                 binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
             }
+        }
+    }
+
+    fun pendingCardDeleteDialog(position: Int) {
+        lateinit var dialog: AlertDialog
+        val builder = context?.let { AlertDialog.Builder(it) }
+        if (builder != null) {
+            builder.setCancelable(false)
+            builder.setTitle(getString(R.string.pending_card_delete_title))
+            builder.setMessage(getString(R.string.pending_card_delete_message))
+            builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
+                dialogInterface.cancel()
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            }
+            dialog = builder.create()
+            dialog.show()
         }
     }
 
