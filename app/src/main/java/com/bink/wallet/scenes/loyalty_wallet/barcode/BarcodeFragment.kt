@@ -214,12 +214,12 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             Column(
                 modifier = Modifier
                     .background(Color.White)
-                    .padding(16.dp)
+                    .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
             ) {
                 Text(
                     text = stringResource(R.string.barcode_issue_title),
                     modifier = Modifier
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
@@ -230,7 +230,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(dimensionResource(id = R.dimen.issue_button_height))
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
                     onClick = {
                         issueEvent(issueCardNumber)
@@ -251,7 +251,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(dimensionResource(id = R.dimen.issue_button_height))
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimaryDark)),
                     onClick = {
                         issueEvent(issueWontScan)
