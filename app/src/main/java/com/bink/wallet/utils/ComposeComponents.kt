@@ -11,11 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.bink.wallet.R
 
 val nunitoSans = FontFamily(
@@ -83,4 +87,19 @@ fun GradientButton(
                 )
         }
     }
+}
+
+
+@Composable
+fun ImageViaUrl(url: String, contentDesc: String = "", modifier: Modifier) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(url)
+            .crossfade(true)
+            .build(),
+        contentDescription = contentDesc,
+        contentScale = ContentScale.Crop,
+        modifier = modifier,
+        alignment = Alignment.Center
+    )
 }

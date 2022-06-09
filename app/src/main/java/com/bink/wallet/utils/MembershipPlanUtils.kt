@@ -167,8 +167,6 @@ object MembershipPlanUtils {
             paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
         return originalSize == filteredCards.size
-
-
     }
 
     fun loadBarcode(context: Context, membershipCard: BarcodeWrapper?): Bitmap? {
@@ -179,8 +177,8 @@ object MembershipPlanUtils {
                 BarcodeFormat.AZTEC -> true
                 else -> false
             }
-            val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
-            val widthPx = context.toPixelFromDip(if (isSquare) 100f else 320f)
+            val heightPx = context.toPixelFromDip(if (isSquare) 250f else 80f)
+            val widthPx = context.toPixelFromDip(if (isSquare) 250f else 320f)
             val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
             var shouldShowBarcodeImage = true
             val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length

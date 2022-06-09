@@ -11,15 +11,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,28 +44,24 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
         arguments?.let {
             BarcodeFragmentArgs.fromBundle(it).apply {
-                viewModel.membershipPlan.value = currentMembershipPlan
-                viewModel.membershipCard.value = membershipCard
-
                 binding.title.text = currentMembershipPlan.account?.company_name
                 binding.composeView.setContent {
-                    BarcodeScreen(membershipCard)
+                    BarcodeScreen(membershipCard, currentMembershipPlan)
                 }
-
             }
         }
 
     }
 
     @Composable
-    fun BarcodeScreen(membershipCard: MembershipCard) {
+    fun BarcodeScreen(membershipCard: MembershipCard, membershipPlan: MembershipPlan) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(36.dp)
+                .padding(dimensionResource(id = R.dimen.margin_padding_size_large))
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(membershipCard)
+            Header(membershipCard, membershipPlan)
             if (!membershipCard.card?.membership_id.isNullOrEmpty()) {
                 MembershipNumber(membershipCard.card?.membership_id!!)
             }
@@ -81,13 +80,24 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     }
 
     @Composable
-    fun Header(membershipCard: MembershipCard) {
+    fun Header(membershipCard: MembershipCard, membershipPlan: MembershipPlan) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))?.let {
-                Image(bitmap = it.asImageBitmap(), contentDescription = "Barcode")
+            val barcode = MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))
+            if (barcode == null) {
+                getIconTypeFromPlan(membershipPlan)?.let { url ->
+                    ImageViaUrl(
+                        url = url, modifier = Modifier
+                            .clip(RectangleShape)
+                            .width(dimensionResource(id = R.dimen.barcode_brand_image_size))
+                            .height(dimensionResource(id = R.dimen.barcode_brand_image_size))
+                    )
+                }
+            } else {
+                Image(bitmap = barcode.asImageBitmap(), contentDescription = "Barcode")
             }
+
             Text(
-                modifier = Modifier.padding(top = 16.dp), text = getString(R.string.barcode_description),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.barcode_description),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
                 fontSize = 21.sp
@@ -102,7 +112,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp), text = getString(R.string.membership_number_title),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.membership_number_title),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp
@@ -119,7 +129,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp), text = getString(R.string.barcode_text),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.barcode_text),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp
@@ -140,13 +150,18 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             Column(
                 modifier = Modifier
                     .background(backgroundColour)
-                    .widthIn(min = 46.dp)
-                    .height(86.dp), horizontalAlignment = Alignment.CenterHorizontally
+                    .widthIn(min = dimensionResource(id = R.dimen.high_vis_width))
+                    .height(dimensionResource(id = R.dimen.high_vis_height)), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
                     Text(
                         text = itemData,
-                        Modifier.padding(top = 10.dp, bottom = 5.dp, start = 5.dp, end = 5.dp),
+                        Modifier.padding(
+                            top = dimensionResource(id = R.dimen.high_vis_top_margin),
+                            bottom = dimensionResource(id = R.dimen.high_vis_margin),
+                            start = dimensionResource(id = R.dimen.high_vis_margin),
+                            end = dimensionResource(id = R.dimen.high_vis_margin)
+                        ),
                         fontFamily = nunitoSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 40.sp

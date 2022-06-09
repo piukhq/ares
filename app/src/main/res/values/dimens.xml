@@ -54,6 +54,13 @@
     <dimen name="description_margin_top">24dp</dimen>
     <dimen name="date_margin_top">12dp</dimen>
     <dimen name="title_margin">8dp</dimen>
+    <dimen name="high_vis_top_margin">10dp</dimen>
+    <dimen name="high_vis_margin">10dp</dimen>
+    <dimen name="high_vis_width">46dp</dimen>
+    <dimen name="high_vis_height">86dp</dimen>
+    <dimen name="barcode_brand_image_size">150dp</dimen>
+    <dimen name="high_vis_text_size">40sp</dimen>
+    <dimen name="high_vis_text_size_small">8sp</dimen>
 
     <!-- Browse Brands Screen -->
     <dimen name="browse_brands_search_bar_height">42dp</dimen>
@@ -218,3 +225,4 @@
     <dimen name="auto_complete_corner_radius">4dp</dimen>
     <dimen name="checkbox_margin_top">13dp</dimen>
 </resources>
+
