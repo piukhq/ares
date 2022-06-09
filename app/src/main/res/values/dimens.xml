@@ -24,6 +24,7 @@
     <dimen name="margin_progress_button_height">46dp</dimen>
     <dimen name="no_barcode_width">164dp</dimen>
     <dimen name="no_barcode_height">100dp</dimen>
+    <dimen name="issue_button_height">65dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>

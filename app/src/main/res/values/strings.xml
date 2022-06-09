@@ -620,6 +620,10 @@
     <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <string name="preferences_clear_storage"><u>Clear Stored Credentials</u></string>
     <string name="for_earning_prefix">for spending</string>
+    <string name="barcode_issue_title">We\'re sorry you\'re experiencing an issue. Thank you for reporting it to us</string>
+    <string name="barcode_issue_card_number">Membership number incorrect</string>
+    <string name="barcode_issue_wont_scan">Barcode won\'t scan</string>
+    <string name="barcode_issue_other">Other</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

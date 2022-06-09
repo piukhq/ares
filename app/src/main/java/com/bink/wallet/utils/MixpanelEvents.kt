@@ -30,4 +30,5 @@ object MixpanelEvents {
     const val ROUTE_WALLET = "Wallet"
     const val ROUTE_LCD = "Loyalty Card Detail"
     const val CARD_DELETED = "Card Deleted"
+    const val BARCODE_ISSUE = "Barcode screen issue reported"
 }

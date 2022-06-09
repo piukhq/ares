@@ -7,17 +7,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
@@ -25,6 +33,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
@@ -39,11 +48,14 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.barcode_fragment
 
+    private val showDialog = mutableStateOf(false)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
             BarcodeFragmentArgs.fromBundle(it).apply {
+                viewModel.companyName.value = currentMembershipPlan.account?.company_name
                 binding.title.text = currentMembershipPlan.account?.company_name
                 binding.composeView.setContent {
                     BarcodeScreen(membershipCard, currentMembershipPlan)
@@ -62,20 +74,16 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 .verticalScroll(rememberScrollState())
         ) {
             Header(membershipCard, membershipPlan)
+
             if (!membershipCard.card?.membership_id.isNullOrEmpty()) {
                 MembershipNumber(membershipCard.card?.membership_id!!)
             }
+
             if (!membershipCard.card?.barcode.isNullOrEmpty() && membershipCard.card?.barcode != membershipCard.card?.membership_id) {
                 BarcodeNumber(membershipCard.card?.barcode!!)
             }
-            GradientButton(
-                text = "Report Issue",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = {
 
-                }
-            )
+            ReportIssueButton()
         }
     }
 
@@ -180,4 +188,120 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     }
 
+    @Composable
+    fun ReportIssueButton() {
+        GradientButton(
+            text = "Report Issue",
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = {
+                showDialog.value = true
+            }
+        )
+
+        if (showDialog.value) {
+            IssueDialog()
+        }
+    }
+
+    @Composable
+    fun IssueDialog() {
+        val issueCardNumber = stringResource(R.string.barcode_issue_card_number)
+        val issueWontScan = stringResource(R.string.barcode_issue_wont_scan)
+        val issueOther = stringResource(R.string.barcode_issue_other)
+
+        Dialog(onDismissRequest = { showDialog.value = false }) {
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.barcode_issue_title),
+                    modifier = Modifier
+                        .padding(bottom = 8.dp),
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.issue_button_height))
+                        .padding(bottom = 8.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
+                    onClick = {
+                        issueEvent(issueCardNumber)
+                        showDialog.value = false
+                    }
+                ) {
+                    Text(
+                        text = issueCardNumber,
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.issue_button_height))
+                        .padding(bottom = 8.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimaryDark)),
+                    onClick = {
+                        issueEvent(issueWontScan)
+                        showDialog.value = false
+                    }
+                ) {
+                    Text(
+                        text = issueWontScan,
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.issue_button_height)),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
+                    onClick = {
+                        issueEvent(issueOther)
+                        showDialog.value = false
+                    }
+                ) {
+                    Text(
+                        text = issueOther,
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
+    }
+
+    private fun issueEvent(issue: String) {
+        logMixpanelEvent(
+            MixpanelEvents.BARCODE_ISSUE,
+            JSONObject()
+                .put(MixpanelEvents.LPS_REASON, issue)
+                .put(
+                    MixpanelEvents.BRAND_NAME, viewModel.companyName.value
+                )
+        )
+    }
+
 }
+
