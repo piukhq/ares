@@ -310,6 +310,7 @@
     <string name="settings_menu_contact_us">Contact us</string>
     <string name="settings_menu_contact_us_subtitle">Get in touch with Bink</string>
     <string name="settings_menu_rate_this_app">Rate this app</string>
+    <string name="settings_menu_delete_acc">Delete Account</string>
     <string name="settings_menu_about">About</string>
     <string name="settings_menu_security_and_privacy">Security and privacy</string>
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
