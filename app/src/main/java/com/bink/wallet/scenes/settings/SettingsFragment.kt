@@ -158,6 +158,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            .height(dimensionResource(id = R.dimen.settings_box_height
+            ))
             .clickable {
                 settingsItemClick(settingsItem)
             }) {
@@ -170,7 +172,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 )
                 if (!settingsItem.value.isNullOrEmpty()) {
                     Text(
-                        text = settingsItem.value,
+                        text = settingsItem.value ?: "",
                         fontFamily = nunitoSans,
                         fontWeight = FontWeight.Light,
                         fontSize = 15.sp
