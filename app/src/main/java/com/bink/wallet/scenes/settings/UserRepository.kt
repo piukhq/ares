@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.settings
 
-import com.bink.wallet.model.DeleteRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
@@ -40,8 +39,8 @@ class UserRepository(private val apiService: ApiService) {
         return user
     }
 
-    suspend fun deleteUser(deleteRequest: DeleteRequest): ResponseBody {
-        return apiService.deleteUser(deleteRequest)
+    suspend fun deleteUser(): ResponseBody {
+        return apiService.deleteUser()
     }
 
 }

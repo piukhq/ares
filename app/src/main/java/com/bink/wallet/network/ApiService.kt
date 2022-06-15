@@ -32,9 +32,7 @@ interface ApiService {
     ): LoginResponse
 
     @DELETE("/ubiquity/service")
-    suspend fun deleteUser(
-        @Body deleteRequest: DeleteRequest
-    ): ResponseBody
+    suspend fun deleteUser(): ResponseBody
 
     @POST("/users/forgotten_password/")
     suspend fun forgotPasswordAsync(
