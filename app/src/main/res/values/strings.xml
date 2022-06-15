@@ -43,7 +43,8 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card.</string>
+    <string name="barcode_description">Show this barcode at the store, just like you would a physical loyalty card.</string>
+    <string name="barcode_description_no_barcode">Share this number in-store just like you would a physical loyalty card.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
     <string name="membership_number_title">Membership number</string>

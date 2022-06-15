@@ -23,7 +23,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bink.wallet.BaseFragment
@@ -104,8 +103,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 Image(bitmap = barcode.asImageBitmap(), contentDescription = "Barcode")
             }
 
+            val text = if (barcode == null) getString(R.string.barcode_description_no_barcode) else getString(R.string.barcode_description)
             Text(
-                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.barcode_description),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = text,
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
                 fontSize = 21.sp
