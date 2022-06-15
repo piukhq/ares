@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
         }
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             if (BuildConfig.SECURE_FLAGS) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }

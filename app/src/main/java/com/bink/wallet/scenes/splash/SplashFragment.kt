@@ -19,8 +19,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import zendesk.core.Zendesk
-import zendesk.support.Support
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     override val layoutRes: Int
@@ -45,13 +43,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private external fun paymentCardEncryptionPublicKeyStaging(): String
     private external fun paymentCardEncryptionPublicKeyProd(): String
 
-    // Zendesk Keys
-    private external fun zendeskSandboxUrl(): String
-    private external fun zendeskSandboxAppId(): String
-    private external fun zendeskSandboxOAuthId(): String
-    private external fun zendeskProdUrl(): String
-    private external fun zendeskProdAppId(): String
-    private external fun zendeskProdOAuthId(): String
 
     // Bouncer
     private external fun bouncerDevKey(): String
@@ -72,7 +63,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         )
         Keys
         persistPaymentCardHashSecret()
-        configureZendesk()
         persistBouncerKeys()
         setUpRemoteConfig()
         RequestReviewUtil.recordAppOpen()
@@ -158,19 +148,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                 )
             }
         }
-    }
-
-    private fun configureZendesk() {
-        val isProduction =
-            BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
-        Zendesk.INSTANCE.init(
-            requireActivity(),
-            if (isProduction) zendeskProdUrl() else zendeskSandboxUrl(),
-            if (isProduction) zendeskProdAppId() else zendeskSandboxAppId(),
-            if (isProduction) zendeskProdOAuthId() else zendeskSandboxOAuthId()
-        )
-
-        Support.INSTANCE.init(Zendesk.INSTANCE)
     }
 
     private fun persistBouncerKeys() {

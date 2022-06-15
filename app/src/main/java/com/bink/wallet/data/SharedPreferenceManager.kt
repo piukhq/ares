@@ -24,7 +24,6 @@ object SharedPreferenceManager {
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_SCRAPED_TIME = "membershipCardsLastScrapedTime"
-    private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
@@ -132,12 +131,6 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(IS_USER_LOGGED_IN_KEY, false)
         set(value) = preferences.edit {
             it.putBoolean(IS_USER_LOGGED_IN_KEY, value)
-        }
-
-    var isResponseAvailable: Boolean
-        get() = preferences.getBoolean(ZENDESK_REQUEST_UPDATE, false)
-        set(value) = preferences.edit {
-            it.putBoolean(ZENDESK_REQUEST_UPDATE, value)
         }
 
     var hasContactUsBeenClicked: Boolean
