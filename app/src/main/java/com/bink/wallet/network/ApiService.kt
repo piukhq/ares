@@ -1,9 +1,6 @@
 package com.bink.wallet.network
 
-import com.bink.wallet.model.MagicLinkAccessToken
-import com.bink.wallet.model.MagicLinkBody
-import com.bink.wallet.model.MagicLinkToken
-import com.bink.wallet.model.PostServiceRequest
+import com.bink.wallet.model.*
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
@@ -33,6 +30,11 @@ interface ApiService {
     suspend fun loginOrRegisterAsync(
         @Body loginResponse: LoginResponse
     ): LoginResponse
+
+    @DELETE("/ubiquity/service")
+    suspend fun deleteUser(
+        @Body deleteRequest: DeleteRequest
+    ): ResponseBody
 
     @POST("/users/forgotten_password/")
     suspend fun forgotPasswordAsync(

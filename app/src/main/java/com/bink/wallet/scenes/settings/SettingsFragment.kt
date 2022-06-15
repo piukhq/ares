@@ -5,26 +5,29 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
@@ -57,6 +60,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         Font(R.font.nunito_sans_light, FontWeight.Light)
     )
 
+    private val showDialog = mutableStateOf(false)
+
     override fun onResume() {
         super.onResume()
         logScreenView(SETTINGS_VIEW)
@@ -88,6 +93,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 modifier = Modifier.weight(1f)
             )
         }
+
+        DeleteAccountDialog()
     }
 
     @Composable
@@ -158,8 +165,11 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-            .height(dimensionResource(id = R.dimen.settings_box_height
-            ))
+            .height(
+                dimensionResource(
+                    id = R.dimen.settings_box_height
+                )
+            )
             .clickable {
                 settingsItemClick(settingsItem)
             }) {
@@ -194,11 +204,78 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
-    @Preview(showBackground = true)
+
     @Composable
-    fun DefaultPreview() {
-        Surface(color = MaterialTheme.colors.background) {
-            SettingsScreen()
+    private fun DeleteAccountDialog() {
+        if (showDialog.value) {
+            Dialog(onDismissRequest = { showDialog.value = false }) {
+                Column(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
+                ) {
+                    Text(
+                        text = "Delete Account",
+                        modifier = Modifier
+                            .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "Account deletion is irreversible, are you sure you want to delete your account?",
+                        modifier = Modifier
+                            .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(65.dp)
+                            .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
+                        onClick = {
+                            showDialog.value = false
+                        }
+                    ) {
+                        Text(
+                            text = "Cancel",
+                            fontFamily = nunitoSans,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(65.dp)
+                            .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimaryDark)),
+                        onClick = {
+                            showDialog.value = false
+                            findNavController().navigate(SettingsFragmentDirections.settingsToDeleteAccount())
+                        }
+                    ) {
+                        Text(
+                            text = "Delete",
+                            fontFamily = nunitoSans,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -252,6 +329,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         )
                     )
                 findNavController().navigateIfAdded(this, action)
+            }
+            SettingsItemType.DELETE_ACC -> {
+                showDialog.value = true
             }
             SettingsItemType.HOW_IT_WORKS -> {
                 val action =
@@ -343,7 +423,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
-
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         logoutMixpanel()
@@ -352,6 +431,14 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             getMainActivity().forceRunApp()
         } catch (e: Exception) {
             getMainActivity().forceRunApp()
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        Surface(color = MaterialTheme.colors.background) {
+            SettingsScreen()
         }
     }
 
