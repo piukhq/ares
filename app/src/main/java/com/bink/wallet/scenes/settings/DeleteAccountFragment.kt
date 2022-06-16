@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.settings
 import android.os.Bundle
 import android.view.View
 import android.widget.Toolbar
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,16 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.DeleteAccountFragmentBinding
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.getMainActivity
@@ -52,9 +50,7 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            Surface(color = MaterialTheme.colors.background) {
-                DeleteAccount()
-            }
+            DeleteAccount()
         }
 
         viewModel.isLoading.observeNonNull(this) {
@@ -65,36 +61,59 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
 
     @Composable
     private fun DeleteAccount() {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(R.drawable.splash_background),
-                contentDescription = null,
-                modifier = Modifier
+        if (viewModel.requestComplete.value) {
+            SharedPreferenceManager.allowBackOnDeleteFragment = false
+            Column(
+                Modifier
                     .fillMaxSize()
-            )
+                    .padding(dimensionResource(id = R.dimen.margin_padding_size_extra_large)), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = if (viewModel.deleteError.value) "Account deletion failed, please contact us" else "Account deletion is successful",
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
 
-            if (viewModel.requestComplete.value) {
-                Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.delete_account_button_height))
+                        .padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
+                    onClick = {
+                        if (viewModel.deleteError.value) {
+                            requireActivity().onBackPressed()
+                        } else {
+                            clearUserDetails()
+                        }
+                    }
+                ) {
                     Text(
-                        text = if (viewModel.deleteError.value) "Account deletion failed, please contact us" else "Account deletion is successful",
+                        text = "Ok",
                         fontFamily = nunitoSans,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
+                        color = Color.White,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Center
                     )
+                }
 
+                if (viewModel.deleteError.value) {
+                    SharedPreferenceManager.allowBackOnDeleteFragment = true
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(80.dp)
+                            .height(dimensionResource(id = R.dimen.delete_account_button_height))
                             .padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
                         onClick = {
-                            clearUserDetails()
+                            contactSupport()
                         }
                     ) {
                         Text(
-                            text = "Ok",
+                            text = "Contact Us",
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -102,33 +121,11 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
                             textAlign = TextAlign.Center
                         )
                     }
-
-                    if (viewModel.deleteError.value) {
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp)
-                                .padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.colorPrimary)),
-                            onClick = {
-                                clearUserDetails()
-                                contactSupport()
-                            }
-                        ) {
-                            Text(
-                                text = "Contact Us",
-                                fontFamily = nunitoSans,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-
                 }
+
             }
         }
+
     }
 
     private fun clearUserDetails() {

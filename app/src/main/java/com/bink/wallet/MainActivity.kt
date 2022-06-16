@@ -143,6 +143,11 @@ class MainActivity : AppCompatActivity() {
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
+            R.id.delete_account_screen -> {
+                if(SharedPreferenceManager.allowBackOnDeleteFragment){
+                    super.onBackPressed()
+                }
+            }
             else -> super.onBackPressed()
         }
     }

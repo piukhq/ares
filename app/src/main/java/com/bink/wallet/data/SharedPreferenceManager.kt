@@ -43,6 +43,7 @@ object SharedPreferenceManager {
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val HAS_BARCODE_BEEN_SCANNED = "has_barcode_been_scanned"
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
+    private const val ALLOW_BACK_ON_DELETE = "allow_back_on_delete"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -72,6 +73,12 @@ object SharedPreferenceManager {
         operation(editor)
         editor.apply()
     }
+
+    var allowBackOnDeleteFragment
+        get() = preferences.getBoolean(ALLOW_BACK_ON_DELETE, false)
+        set(value) = preferences.edit {
+            it.putBoolean(ALLOW_BACK_ON_DELETE, value)
+        }
 
     var isAddJourney: Boolean
         get() = preferences.getBoolean(IS_ADD_JOURNEY.first, IS_ADD_JOURNEY.second)
@@ -241,8 +248,8 @@ object SharedPreferenceManager {
             it.putInt(SKIPPED_APP_VERSION, value)
         }
 
-    var loyaltyWalletPosition : Parcelable? = null
-    var paymentWalletPosition : Parcelable? = null
+    var loyaltyWalletPosition: Parcelable? = null
+    var paymentWalletPosition: Parcelable? = null
 
     fun clear() {
         /**

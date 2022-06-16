@@ -219,4 +219,5 @@
     <dimen name="checkbox_margin_top">13dp</dimen>
 
     <dimen name="settings_box_height">48dp</dimen>
+    <dimen name="delete_account_button_height">80dp</dimen>
 </resources>
