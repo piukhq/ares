@@ -301,6 +301,10 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     MixpanelEvents.BRAND_NAME, viewModel.companyName.value
                 )
         )
+
+        if (issue == getString(R.string.barcode_issue_other)) {
+            contactSupport()
+        }
     }
 
 }
