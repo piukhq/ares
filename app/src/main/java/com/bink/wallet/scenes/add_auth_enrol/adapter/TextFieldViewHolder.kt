@@ -60,7 +60,7 @@ class TextFieldViewHolder(
             p3: Int
         ) {
             item?.let {
-                updateFieldValue(currentText.toString().toLowerCase(Locale.ROOT))
+                updateFieldValue(currentText.toString().lowercase(Locale.ROOT))
             }
             checkValidation(null)
         }

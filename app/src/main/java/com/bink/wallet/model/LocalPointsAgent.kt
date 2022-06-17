@@ -21,7 +21,7 @@ data class LocalPointsAgent(
 )
 
 fun LocalPointsAgent.isEnabled(): Boolean {
-    return if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+    return if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
         enabled.android_debug
     } else {
         enabled.android

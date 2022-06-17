@@ -79,7 +79,7 @@ class OnboardingPageFragment : Fragment() {
     }
 
     private fun openSettingsPage() {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
             parentFragment?.let {
                 findNavController().navigateIfAdded(
                     it,

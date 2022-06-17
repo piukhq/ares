@@ -59,8 +59,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
         if (searchQuery != EMPTY_STRING) {
             val searchList = mutableListOf<MembershipPlan>()
             filteredBrandItems.forEach {
-                if (it.account?.company_name?.toLowerCase(Locale.ENGLISH)
-                        ?.contains(searchQuery.toLowerCase(Locale.ENGLISH)) == true
+                if (it.account?.company_name?.lowercase(Locale.ENGLISH)
+                        ?.contains(searchQuery.lowercase(Locale.ENGLISH)) == true
                 ) {
                     searchList.add(it)
                 }
