@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -215,7 +216,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
                 ) {
                     Text(
-                        text = "Delete Account",
+                        text = stringResource(R.string.delete_account_title),
                         modifier = Modifier
                             .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                         fontFamily = nunitoSans,
@@ -225,7 +226,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     )
 
                     Text(
-                        text = "Account deletion is irreversible, are you sure you want to delete your account?",
+                        text = stringResource(R.string.delete_account_body),
                         modifier = Modifier
                             .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                         fontFamily = nunitoSans,
@@ -245,7 +246,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         }
                     ) {
                         Text(
-                            text = "Cancel",
+                            text =  stringResource(R.string.cancel_text),
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -266,7 +267,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         }
                     ) {
                         Text(
-                            text = "Delete",
+                            text = stringResource(R.string.delete_button_text),
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,

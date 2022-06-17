@@ -310,7 +310,7 @@
     <string name="settings_menu_contact_us">Contact us</string>
     <string name="settings_menu_contact_us_subtitle">Get in touch with Bink</string>
     <string name="settings_menu_rate_this_app">Rate this app</string>
-    <string name="settings_menu_delete_acc">Delete Account</string>
+    <string name="settings_menu_delete_acc">Delete My Account</string>
     <string name="settings_menu_about">About</string>
     <string name="settings_menu_security_and_privacy">Security and privacy</string>
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
@@ -623,6 +623,9 @@
     <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <string name="preferences_clear_storage"><u>Clear Stored Credentials</u></string>
     <string name="for_earning_prefix">for spending</string>
+    <string name="delete_account_title">Delete Account</string>
+    <string name="delete_account_body">Account deletion is irreversible, are you sure you want to delete your account?</string>
+    <string name="delete_button_text">Delete</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>
