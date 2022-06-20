@@ -102,25 +102,7 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
     private fun launchDynamicActionEventCta(action: DynamicActionEventBodyCTAHandler) {
         when (action) {
             DynamicActionEventBodyCTAHandler.ZENDESK_CONTACT_US -> {
-                try {
-                    startActivity(Intent(Intent.ACTION_SENDTO).apply {
-                        data = Uri.parse(getString(R.string.contact_us_mailto))
-                        putExtra(
-                            Intent.EXTRA_EMAIL,
-                            arrayOf(getString(R.string.contact_us_email_address))
-                        )
-                        putExtra(
-                            Intent.EXTRA_SUBJECT,
-                            getString(R.string.contact_us_email_subject, BuildConfig.VERSION_NAME)
-                        )
-                    })
-                } catch (ex: ActivityNotFoundException) {
-                    requireContext().displayModalPopup(
-                        getString(R.string.contact_us_no_email_title),
-                        getString(R.string.contact_us_no_email_message),
-                        buttonText = R.string.ok
-                    )
-                }
+                contactSupport()
             }
         }
     }

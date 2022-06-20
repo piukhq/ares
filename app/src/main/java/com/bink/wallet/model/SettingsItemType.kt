@@ -13,6 +13,7 @@ enum class SettingsItemType : Parcelable {
     FAQS,
     CONTACT_US,
     RATE_APP,
+    DELETE_ACC,
     SECURITY_AND_PRIVACY,
     HOW_IT_WORKS,
     WHO_WE_ARE,
