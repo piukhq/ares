@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -69,7 +70,7 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
                     .padding(dimensionResource(id = R.dimen.margin_padding_size_extra_large)), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = if (viewModel.deleteError.value) "Account deletion failed, please contact us" else "Account deletion is successful",
+                    text = if (viewModel.deleteError.value) stringResource(R.string.account_delete_failed) else stringResource(R.string.account_delete_success),
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
@@ -91,7 +92,7 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
                     }
                 ) {
                     Text(
-                        text = "Ok",
+                        text = stringResource(R.string.ok),
                         fontFamily = nunitoSans,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -113,7 +114,7 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
                         }
                     ) {
                         Text(
-                            text = "Contact Us",
+                            text = stringResource(R.string.contact_us),
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
