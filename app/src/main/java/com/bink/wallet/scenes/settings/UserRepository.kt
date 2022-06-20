@@ -5,6 +5,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 
 class UserRepository(private val apiService: ApiService) {
 
@@ -29,7 +30,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     suspend fun getUserDetails(): User {
-        val user = withContext(Dispatchers.IO){apiService.getUserAsync()}
+        val user = withContext(Dispatchers.IO) { apiService.getUserAsync() }
 
         user.first_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME, it) }
         user.last_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME, it) }
@@ -37,4 +38,9 @@ class UserRepository(private val apiService: ApiService) {
 
         return user
     }
+
+    suspend fun deleteUser(): ResponseBody {
+        return apiService.deleteUser()
+    }
+
 }

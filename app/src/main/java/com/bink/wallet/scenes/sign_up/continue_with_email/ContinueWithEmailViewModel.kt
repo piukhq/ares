@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.BuildConfig
 import com.bink.wallet.model.MagicLinkBody
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.utils.*
-import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.MAGIC_LINK_BUNDLE_ID
+import com.bink.wallet.utils.MAGIC_LINK_LOCALE
+import com.bink.wallet.utils.MAGIC_LINK_SLUG
+import com.bink.wallet.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class ContinueWithEmailViewModel(val loginRepository: LoginRepository) : BaseViewModel() {
@@ -27,11 +28,10 @@ class ContinueWithEmailViewModel(val loginRepository: LoginRepository) : BaseVie
 
     fun postMagicLink(email: String) {
         _isLoading.value = true
-        val slug = if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) MAGIC_LINK_DEBUG_SLUG else MAGIC_LINK_PROD_SLUG
 
         viewModelScope.launch {
             try {
-                loginRepository.sendMagicLink(MagicLinkBody(email, slug, MAGIC_LINK_LOCALE, MAGIC_LINK_BUNDLE_ID))
+                loginRepository.sendMagicLink(MagicLinkBody(email, MAGIC_LINK_SLUG, MAGIC_LINK_LOCALE, MAGIC_LINK_BUNDLE_ID))
                 _isLoading.value = false
                 _isSuccessful.value = true
             } catch (e: Exception) {

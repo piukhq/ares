@@ -38,10 +38,7 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
-import com.bink.wallet.scenes.settings.DebugColorSwatchesViewModel
-import com.bink.wallet.scenes.settings.DebugMenuViewModel
-import com.bink.wallet.scenes.settings.SettingsViewModel
-import com.bink.wallet.scenes.settings.UserRepository
+import com.bink.wallet.scenes.settings.*
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxViewModel
@@ -126,6 +123,8 @@ val viewModelModules = module {
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
+
+    viewModel { DeleteAccountViewModel(get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 

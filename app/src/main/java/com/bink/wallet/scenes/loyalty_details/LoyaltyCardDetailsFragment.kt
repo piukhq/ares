@@ -485,38 +485,53 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.footerDelete.setOnClickListener {
-            with(AlertDialog.Builder(requireContext())) {
-                setMessage(getString(R.string.delete_card_modal_body))
-                setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-                setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
-                    if (isNetworkAvailable(requireActivity(), true)) {
-                        runBlocking {
-                            logMixpanelEvent(
-                                MixpanelEvents.CARD_DELETED,
-                                JSONObject().put(
-                                    MixpanelEvents.BRAND_NAME,
-                                    viewModel.membershipCard.value?.plan?.account?.company_name
-                                        ?: MixpanelEvents.VALUE_UNKNOWN
-                                ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
-                            )
-                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                            val planId = viewModel.membershipCard.value?.membership_plan
-                            val uuid = viewModel.membershipCard.value?.uuid
-                            if (planId == null || uuid == null) {
-                                failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST)
-                            } else {
-                                logEvent(
-                                    FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST,
-                                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+            if (viewModel.membershipCard.value?.status?.state == MembershipCardStatus.PENDING.status) {
+                lateinit var dialog: androidx.appcompat.app.AlertDialog
+                val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
+                if (builder != null) {
+                    builder.setCancelable(false)
+                    builder.setTitle(getString(R.string.pending_card_delete_title))
+                    builder.setMessage(getString(R.string.pending_card_delete_message))
+                    builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
+                        dialogInterface.cancel()
+                    }
+                    dialog = builder.create()
+                    dialog.show()
+                }
+            } else {
+                with(AlertDialog.Builder(requireContext())) {
+                    setMessage(getString(R.string.delete_card_modal_body))
+                    setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                    setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
+                        if (isNetworkAvailable(requireActivity(), true)) {
+                            runBlocking {
+                                logMixpanelEvent(
+                                    MixpanelEvents.CARD_DELETED,
+                                    JSONObject().put(
+                                        MixpanelEvents.BRAND_NAME,
+                                        viewModel.membershipCard.value?.plan?.account?.company_name
+                                            ?: MixpanelEvents.VALUE_UNKNOWN
+                                    ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
                                 )
+                                viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                                val planId = viewModel.membershipCard.value?.membership_plan
+                                val uuid = viewModel.membershipCard.value?.uuid
+                                if (planId == null || uuid == null) {
+                                    failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST)
+                                } else {
+                                    logEvent(
+                                        FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST,
+                                        getDeleteLoyaltyCardGenericMap(planId, uuid)
+                                    )
+
+                                }
 
                             }
-
                         }
+                        dialog.dismiss()
                     }
-                    dialog.dismiss()
+                    create().show()
                 }
-                create().show()
             }
         }
     }

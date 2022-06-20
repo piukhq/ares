@@ -12,6 +12,9 @@
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="barcode_label">Barcode:</string>
+
+    <string name="pending_card_delete_title">Cannot delete</string>
+    <string name="pending_card_delete_message">While your card is pending it cannot be deleted. Please try again later.</string>
     <string name="loyalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
     <string name="loyalty_wallet_dialog_description">Delete card was canceled</string>
     <string name="loyalty_wallet_no_barcode_title">No Barcode</string>
@@ -309,6 +312,7 @@
     <string name="settings_menu_contact_us">Contact us</string>
     <string name="settings_menu_contact_us_subtitle">Get in touch with Bink</string>
     <string name="settings_menu_rate_this_app">Rate this app</string>
+    <string name="settings_menu_delete_acc">Delete my account</string>
     <string name="settings_menu_about">About</string>
     <string name="settings_menu_security_and_privacy">Security and privacy</string>
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
@@ -625,6 +629,13 @@
     <string name="barcode_issue_card_number">Membership number incorrect</string>
     <string name="barcode_issue_wont_scan">Barcode won\'t scan</string>
     <string name="barcode_issue_other">Other</string>
+    <string name="delete_account_title">Delete Account</string>
+    <string name="delete_account_body">Account deletion is irreversible, are you sure you want to delete your account?</string>
+    <string name="delete_button_text">Delete</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="account_delete_failed">Account deletion failed, please contact us</string>
+    <string name="account_delete_success">Account deletion is successful</string>
+
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>
