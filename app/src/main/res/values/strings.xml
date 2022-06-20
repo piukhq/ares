@@ -46,9 +46,11 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind that some scanners cannot read from screens.</string>
+    <string name="barcode_description">Show this barcode at the store, just like you would a physical loyalty card.</string>
+    <string name="barcode_description_no_barcode">Share this number in-store just like you would a physical loyalty card.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
+    <string name="membership_number_title">Membership number</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
     <string name="card_status_pending">Pending</string>
     <string name="card_status_retry">Retry</string>
@@ -623,12 +625,17 @@
     <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <string name="preferences_clear_storage"><u>Clear Stored Credentials</u></string>
     <string name="for_earning_prefix">for spending</string>
+    <string name="barcode_issue_title">We\'re sorry you\'re experiencing an issue. Thank you for reporting it to us</string>
+    <string name="barcode_issue_card_number">Membership number incorrect</string>
+    <string name="barcode_issue_wont_scan">Barcode won\'t scan</string>
+    <string name="barcode_issue_other">Other</string>
     <string name="delete_account_title">Delete Account</string>
     <string name="delete_account_body">Account deletion is irreversible, are you sure you want to delete your account?</string>
     <string name="delete_button_text">Delete</string>
     <string name="contact_us">Contact Us</string>
     <string name="account_delete_failed">Account deletion failed, please contact us</string>
     <string name="account_delete_success">Account deletion is successful</string>
+
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

@@ -296,7 +296,8 @@ dependencies {
 
     /** MixPanel**/
     implementation 'com.mixpanel.android:mixpanel-android:5.+'
-
-
+    
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.1.0")
 
 }
