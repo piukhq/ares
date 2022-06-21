@@ -132,7 +132,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             if (isChecked != null) {
                 addAuthItemsList.forEach { item ->
                     if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                        if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase(Locale.ENGLISH))) {
+                        if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.lowercase(Locale.ENGLISH))) {
                             val planField = PlanField(REMEMBER_DETAILS_DISPLAY_NAME, null, REMEMBER_DETAILS_COMMON_NAME, 3, null, REMEMBER_DETAILS_DISPLAY_NAME, null, null)
                             callback(AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, isChecked.toString())))
                             return@isRememberDetailsChecked
@@ -151,26 +151,26 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         if (!shouldSaveDetails.isNullOrEmpty()) {
             if (shouldSaveDetails[0].value == true.toString()) {
                 membershipCardRequest.account.add_fields?.forEach { addField ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(addField.common_name?.toLowerCase(Locale.ENGLISH))) {
-                        FormsUtil.saveFormField(addField.common_name?.toLowerCase(Locale.ENGLISH), addField.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(addField.common_name?.lowercase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(addField.common_name?.lowercase(Locale.ENGLISH), addField.value)
                     }
                 }
 
                 membershipCardRequest.account.authorise_fields?.forEach { authField ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.toLowerCase(Locale.ENGLISH))) {
-                        FormsUtil.saveFormField(authField.common_name?.toLowerCase(Locale.ENGLISH), authField.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.lowercase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(authField.common_name?.lowercase(Locale.ENGLISH), authField.value)
                     }
                 }
 
                 membershipCardRequest.account.enrol_fields?.forEach { enrolField ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.toLowerCase(Locale.ENGLISH))) {
-                        FormsUtil.saveFormField(enrolField.common_name?.toLowerCase(Locale.ENGLISH), enrolField.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.lowercase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(enrolField.common_name?.lowercase(Locale.ENGLISH), enrolField.value)
                     }
                 }
 
                 membershipCardRequest.account.registration_fields?.forEach { registrationFields ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(registrationFields.common_name?.toLowerCase(Locale.ENGLISH))) {
-                        FormsUtil.saveFormField(registrationFields.common_name?.toLowerCase(Locale.ENGLISH), registrationFields.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(registrationFields.common_name?.lowercase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(registrationFields.common_name?.lowercase(Locale.ENGLISH), registrationFields.value)
                     }
                 }
             }

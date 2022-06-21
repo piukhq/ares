@@ -34,6 +34,6 @@ data class PaymentCard(
     }
 
     fun isCardActive(): Boolean {
-        return status?.toLowerCase(Locale.getDefault()) == "active"
+        return status?.lowercase(Locale.getDefault()) == "active"
     }
 }

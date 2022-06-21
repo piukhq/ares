@@ -184,7 +184,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     )
                 } else {
 
-                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(
+                    if (emailFromJson?.lowercase(Locale.ENGLISH) != emailFromLocal.lowercase(
                             Locale.ENGLISH
                         )
                     ) {
@@ -393,7 +393,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected fun logScreenView(screenName: String) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             getMainActivity().firebaseAnalytics.setCurrentScreen(
                 requireActivity(),
                 screenName,
@@ -451,7 +451,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     private fun logFirebaseEvent(identifierValue: String) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             val bundle = Bundle()
             bundle.putString(ANALYTICS_IDENTIFIER, identifierValue)
             getMainActivity().firebaseAnalytics.logEvent(
