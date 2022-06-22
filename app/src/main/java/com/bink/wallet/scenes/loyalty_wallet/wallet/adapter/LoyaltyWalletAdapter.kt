@@ -20,7 +20,6 @@ import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyW
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(

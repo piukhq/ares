@@ -51,7 +51,7 @@ object ValueDisplayUtils {
         val targetValue: Float? = voucher?.target_value
         val value: Float? = voucher?.value
         val suffix = voucher?.suffix
-        var difference: Float = 0.0F
+        var difference = 0.0F
 
         val headline = StringBuilder()
 

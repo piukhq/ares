@@ -392,7 +392,7 @@ class PaymentCardsDetailsFragment :
             .show()
     }
 
-    val onContactUsClicked: (() -> Unit)? = {
+    val onContactUsClicked: () -> Unit = {
         try {
             startActivity(Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(getString(R.string.contact_us_mailto))

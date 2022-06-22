@@ -11,7 +11,7 @@ class ApiErrorUtils {
         fun getApiErrorMessage(httpException: HttpException, defaultMessage: String): String {
             return try {
                 val apiError = Gson().fromJson(
-                    httpException.response()?.errorBody()?.string()?.let { it },
+                    httpException.response()?.errorBody()?.string(),
                     ApiError::class.java
                 )
                 apiError.non_field_errors[0]

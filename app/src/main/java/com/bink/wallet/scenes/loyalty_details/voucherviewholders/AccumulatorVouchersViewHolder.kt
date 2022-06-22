@@ -7,13 +7,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.scenes.loyalty_details.OnVoucherClickListener
-import com.bink.wallet.utils.FLOAT_ONE_HUNDRED
-import com.bink.wallet.utils.FLOAT_ZERO
-import com.bink.wallet.utils.INT_ONE_HUNDRED
-import com.bink.wallet.utils.SPACE
-import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.VoucherStates
-import com.bink.wallet.utils.setTimestamp
 import kotlin.math.roundToInt
 
 class AccumulatorVouchersViewHolder(

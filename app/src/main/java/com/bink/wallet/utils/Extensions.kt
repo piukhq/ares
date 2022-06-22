@@ -21,7 +21,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.BuildConfig
@@ -115,9 +114,9 @@ fun Context.displayModalPopup(
 }
 
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Unit) {
-    this.observe(owner, Observer {
+    this.observe(owner) {
         it?.let(observer)
-    })
+    }
 }
 
 fun LiveData<Exception>.observeErrorNonNull(
@@ -128,7 +127,7 @@ fun LiveData<Exception>.observeErrorNonNull(
     isUserDriven: Boolean,
     observer: ((t: Exception) -> Unit)?
 ) {
-    this.observe(owner, Observer {
+    this.observe(owner) {
         it?.let {
             if (((it is HttpException)
                         && it.code() >= ApiErrorUtils.SERVER_ERROR)
@@ -155,7 +154,7 @@ fun LiveData<Exception>.observeErrorNonNull(
         observer?.let { safeObserver ->
             it?.let(safeObserver)
         }
-    })
+    }
 }
 
 fun LiveData<Exception>.observeErrorNonNull(
@@ -269,7 +268,7 @@ fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
     setOnClickListener(safeClickListener)
 }
 
-fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
+fun matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
     val constraintSet = ConstraintSet()
     constraintSet.clone(parentLayout)
     constraintSet.connect(
@@ -444,6 +443,6 @@ fun Fragment.getMainActivity() : MainActivity{
     return requireActivity() as MainActivity
 }
 
-fun Context.isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
+fun isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
 
 

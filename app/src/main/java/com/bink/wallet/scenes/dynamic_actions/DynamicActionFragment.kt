@@ -1,21 +1,16 @@
 package com.bink.wallet.scenes.dynamic_actions
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.graphics.Point
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bink.wallet.BaseFragment
-import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DynamicActionFragmentBinding
 import com.bink.wallet.model.DynamicActionEventBodyCTAHandler
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*

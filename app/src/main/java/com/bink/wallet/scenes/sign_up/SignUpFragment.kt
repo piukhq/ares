@@ -13,8 +13,7 @@ import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.EMAIL_REGEX
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_FALSE
@@ -22,18 +21,8 @@ import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_TRUE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setTermsAndPrivacyUrls
-import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.validateEmail
-import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {

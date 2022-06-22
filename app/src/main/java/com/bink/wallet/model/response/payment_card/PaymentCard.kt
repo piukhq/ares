@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Parcelize
 @JsonClass(generateAdapter = true)

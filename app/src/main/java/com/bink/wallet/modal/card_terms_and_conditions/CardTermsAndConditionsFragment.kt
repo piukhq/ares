@@ -14,16 +14,12 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 

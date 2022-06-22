@@ -295,7 +295,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                             Uri.parse(getString(viewModel.getPlayStoreAppUrl(), appPackageName))
                         )
                     )
-                } catch (_: android.content.ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     startActivity(
                         Intent(
                             Intent.ACTION_VIEW,

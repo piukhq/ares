@@ -10,7 +10,7 @@ object StringUtils {
         return (1..length)
             .map { Random.nextInt(0, charPool.size) }
             .map(charPool::get)
-            .joinToString("");
+            .joinToString("")
     }
 }
 

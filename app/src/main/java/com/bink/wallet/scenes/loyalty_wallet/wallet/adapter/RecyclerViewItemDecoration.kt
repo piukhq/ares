@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 class RecyclerViewItemDecoration : RecyclerView.ItemDecoration() {
 
     companion object {
-        private const val MARGIN = 20;
+        private const val MARGIN = 20
     }
 
     override fun getItemOffsets(

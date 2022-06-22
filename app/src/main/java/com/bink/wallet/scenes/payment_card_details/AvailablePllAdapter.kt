@@ -39,7 +39,7 @@ class AvailablePllAdapter(
             val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             if (isLastItem) {
-                binding.root.context.matchSeparator(binding.separator.id, binding.itemLayout)
+                matchSeparator(binding.separator.id, binding.itemLayout)
             }
             binding.membershipCard = item
 

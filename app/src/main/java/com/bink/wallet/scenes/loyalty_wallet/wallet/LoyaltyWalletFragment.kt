@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
@@ -426,11 +425,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
+        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner) {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
-        })
+        }
 
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(

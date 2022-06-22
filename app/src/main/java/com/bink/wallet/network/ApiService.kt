@@ -1,6 +1,9 @@
 package com.bink.wallet.network
 
-import com.bink.wallet.model.*
+import com.bink.wallet.model.MagicLinkAccessToken
+import com.bink.wallet.model.MagicLinkBody
+import com.bink.wallet.model.MagicLinkToken
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
@@ -15,14 +18,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.scenes.login.LoginResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
 

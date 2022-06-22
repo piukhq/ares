@@ -50,9 +50,6 @@ import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.sentry.Sentry
 import io.sentry.protocol.User
 import org.json.JSONException
@@ -60,7 +57,6 @@ import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
-import kotlin.collections.HashMap
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 

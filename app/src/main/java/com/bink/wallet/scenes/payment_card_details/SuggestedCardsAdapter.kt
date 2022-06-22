@@ -32,7 +32,7 @@ class SuggestedCardsAdapter(
                 itemClickListener(plans[adapterPosition])
             }
             if (isLastItem) {
-                binding.root.context.matchSeparator(binding.separator.id, binding.root)
+                matchSeparator(binding.separator.id, binding.root)
             }
 
             binding.executePendingBindings()

@@ -146,8 +146,8 @@ object PointScrapingUtil {
         return WebView(context).apply {
             settings.apply {
                 javaScriptEnabled = true
-                cacheMode = WebSettings.LOAD_NO_CACHE;
-                setAppCacheEnabled(false);
+                cacheMode = WebSettings.LOAD_NO_CACHE
+                setAppCacheEnabled(false)
             }
             clearCache(true)
             clearFormData()

@@ -7,9 +7,12 @@ import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.canPlanBeAdded
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
+import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
 
 class BrowseBrandsViewModel : BaseViewModel() {

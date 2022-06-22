@@ -176,7 +176,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
     }
 }
 
-fun View.shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
+fun shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
     viewModel?.shouldShowLabel?.value = showMessage
 }
 

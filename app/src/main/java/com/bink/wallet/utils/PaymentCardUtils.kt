@@ -258,7 +258,7 @@ object PaymentCardUtils {
     fun countLinkedPaymentCards(
         paymentCard: PaymentCard,
         membershipCards: MutableList<MembershipCard>
-    ): Int? {
+    ): Int {
         val membershipCardIds = mutableListOf<String>()
         membershipCards.forEach { membershipCard ->
             membershipCardIds.add(membershipCard.id)

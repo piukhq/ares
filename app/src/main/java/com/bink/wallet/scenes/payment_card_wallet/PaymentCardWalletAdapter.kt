@@ -16,7 +16,6 @@ import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.getCardTypeFromProvider
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class PaymentCardWalletAdapter(

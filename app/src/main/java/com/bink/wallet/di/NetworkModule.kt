@@ -8,14 +8,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.Keys
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.RELEASE_BUILD_TYPE
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.BackendVersion
-import com.bink.wallet.utils.logError
-import com.bink.wallet.utils.putSessionHandlerNavigationDestination
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

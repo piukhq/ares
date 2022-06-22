@@ -15,7 +15,6 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import java.util.*
-import kotlin.collections.ArrayList
 
 object WebScrapableManager {
 

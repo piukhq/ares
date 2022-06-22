@@ -14,14 +14,7 @@ import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.InvalidPayloadType
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.RELEASE_BUILD_TYPE
-import com.bink.wallet.utils.SecurityUtils
-import com.bink.wallet.utils.SentryErrorType
-import com.bink.wallet.utils.SentryUtils
-import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,9 +48,7 @@ class AddPaymentCardRepository(
         if (BuildConfig.BUILD_TYPE == RELEASE_BUILD_TYPE) {
             val spreedlyEnvironmentKey = LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_SPREEDLY
-            )?.let {
-                it
-            }
+            )
 
             if (spreedlyEnvironmentKey == null) {
                 error.value = Exception(spreedlyKeyMissingError)

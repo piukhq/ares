@@ -59,7 +59,7 @@ class AddCardViewModel constructor(
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
-        val account: Account? = FormsUtil.getAccount()
+        val account = FormsUtil.getAccount()
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
 
