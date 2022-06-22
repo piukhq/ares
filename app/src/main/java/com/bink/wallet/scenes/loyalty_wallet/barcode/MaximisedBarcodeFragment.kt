@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.loyalty_wallet.barcode
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
@@ -20,8 +21,8 @@ class MaximisedBarcodeFragment :
         get() = R.layout.fragment_maximised_barcode
     override val viewModel: MaximisedBarcodeViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
             MaximisedBarcodeFragmentArgs.fromBundle(it).apply {

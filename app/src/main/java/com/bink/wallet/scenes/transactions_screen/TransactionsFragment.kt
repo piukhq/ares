@@ -29,8 +29,8 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
 
     override val viewModel: TransactionViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             viewModel.membershipCard.value =
                 TransactionsFragmentArgs.fromBundle(it).membershipCard

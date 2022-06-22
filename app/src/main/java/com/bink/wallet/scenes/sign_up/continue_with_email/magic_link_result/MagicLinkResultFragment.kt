@@ -30,8 +30,8 @@ class MagicLinkResultFragment :
 
     override val viewModel: MagicLinkResultViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             val token = MagicLinkResultFragmentArgs.fromBundle(bundle).token

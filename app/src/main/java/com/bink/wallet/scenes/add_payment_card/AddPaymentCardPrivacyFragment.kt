@@ -5,8 +5,8 @@ import android.view.View
 import com.bink.wallet.modal.generic.GenericModalFragment
 
 class AddPaymentCardPrivacyFragment : GenericModalFragment() {
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             setupUi(AddPaymentCardPrivacyFragmentArgs.fromBundle(bundle).genericModalParameters)

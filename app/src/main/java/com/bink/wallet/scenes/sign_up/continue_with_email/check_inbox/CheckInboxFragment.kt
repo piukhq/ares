@@ -28,8 +28,8 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
     override val viewModel: CheckInboxViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             val email = CheckInboxFragmentArgs.fromBundle(bundle).userEmail

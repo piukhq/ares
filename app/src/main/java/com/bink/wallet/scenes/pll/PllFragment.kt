@@ -43,8 +43,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     private lateinit var pendingAdapter: PllPendingAdapter
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         arguments?.let {
             PllFragmentArgs.fromBundle(it).apply {

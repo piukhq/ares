@@ -42,8 +42,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     var userBankCard: BankCard? = null
     var cardNumber: String = ""
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             CardTermsAndConditionsFragmentArgs.fromBundle(bundle).apply {

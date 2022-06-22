@@ -30,14 +30,11 @@ class ForgotPasswordFragment :
         registerKeyboardHiddenLayoutListener(binding.container)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.lifecycleOwner = this
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
         binding.viewModel = viewModel
 
         viewModel.email.observeNonNull(this) {

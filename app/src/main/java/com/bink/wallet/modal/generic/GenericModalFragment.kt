@@ -50,8 +50,8 @@ open class GenericModalFragment :
     override val viewModel: BaseModalViewModel by viewModel()
     override val layoutRes: Int get() = R.layout.generic_modal_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with(binding) {
             toolbar.setNavigationOnClickListener {
                 onNavigationButtonClicked()

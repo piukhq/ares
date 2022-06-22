@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.who_we_are
 
 import android.os.Bundle
+import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.WhoWeAreFragmentBinding
@@ -22,8 +23,8 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
             .build()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.nameList.observeNonNull(this) { nameList ->
             binding.nameList.adapter = WhoWeAreAdapter(nameList)

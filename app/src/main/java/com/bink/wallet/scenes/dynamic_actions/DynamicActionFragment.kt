@@ -36,8 +36,8 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
             .build()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         arguments?.let { bundle ->
             DynamicActionFragmentArgs.fromBundle(bundle).apply {

@@ -9,13 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
-import com.bink.wallet.utils.INT_ONE_HUNDRED
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,9 +33,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         logScreenView(ADD_OPTIONS_VIEW)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.getLocalMembershipCards()
+
+        binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
         binding.cancelButton.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
@@ -61,11 +58,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 true
             ) { navigateToScanLoyaltyCard() }
         }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,13 +114,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private fun navigateToScanLoyaltyCard() {
         viewModel.membershipCards.value?.let { membershipCards ->
             viewModel.membershipPlans.value?.let { membershipPlans ->
-            val directions = AddFragmentDirections.addToAddLoyalty(
-                membershipPlans.toTypedArray(),
-                membershipCards.toTypedArray(),
-                null
-            )
-            findNavController().navigateIfAdded(this, directions)
-        }
+                val directions = AddFragmentDirections.addToAddLoyalty(
+                    membershipPlans.toTypedArray(),
+                    membershipCards.toTypedArray(),
+                    null
+                )
+                findNavController().navigateIfAdded(this, directions)
+            }
         }
     }
 

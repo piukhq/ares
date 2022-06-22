@@ -39,12 +39,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override val viewModel: LoginViewModel by viewModel()
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
-    }
-
     override fun onResume() {
         super.onResume()
         logScreenView(LOGIN_VIEW)
@@ -52,11 +46,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         registerKeyboardHiddenLayoutListener(binding.container)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val content = SpannableString(getString(R.string.forgot_password_text))
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
 
+        binding.lifecycleOwner = this
         with(binding.forgotPassword) {
             text = content
             setOnClickListener {
@@ -129,7 +124,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //SHOULD WE COUNT THIS AS END OF JOURNEY?
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(

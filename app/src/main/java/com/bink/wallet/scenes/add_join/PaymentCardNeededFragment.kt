@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_join
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.modal.generic.GenericModalFragment
@@ -15,8 +16,8 @@ class PaymentCardNeededFragment : GenericModalFragment() {
 
     private val args by navArgs<PaymentCardNeededFragmentArgs>()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupUi(args.genericModalParameters)
     }
 

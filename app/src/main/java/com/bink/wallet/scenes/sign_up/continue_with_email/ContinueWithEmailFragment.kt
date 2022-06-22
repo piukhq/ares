@@ -27,8 +27,8 @@ class ContinueWithEmailFragment :
 
     override val viewModel: ContinueWithEmailViewModel by viewModel()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.magicLinkError.observeNonNull(this) {
             showMagicLinkFail()

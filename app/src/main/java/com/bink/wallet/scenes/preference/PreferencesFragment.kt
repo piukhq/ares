@@ -28,8 +28,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         logScreenView(PREFERENCES_VIEW)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.progressSpinner.visibility = View.VISIBLE
 

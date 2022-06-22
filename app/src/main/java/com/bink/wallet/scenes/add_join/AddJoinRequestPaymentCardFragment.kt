@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -25,8 +26,8 @@ class AddJoinRequestPaymentCardFragment : BaseFragment<AddJoinViewModel, AddJoin
 
     private val args: AddJoinFragmentArgs by navArgs()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.membershipPlan.value = args.currentMembershipPlan
 

@@ -26,8 +26,8 @@ class LoyaltyCardRewardsHistoryFragment :
     override val layoutRes: Int
         get() = R.layout.loyalty_card_rewards_history
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         arguments?.let {
             viewModel.membershipPlan.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan

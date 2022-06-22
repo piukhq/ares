@@ -6,8 +6,8 @@ import com.bink.wallet.modal.generic.GenericModalFragment
 
 class AboutMembershipFragment : GenericModalFragment() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             setupUi(AboutMembershipFragmentArgs.fromBundle(bundle).genericModalParameters)

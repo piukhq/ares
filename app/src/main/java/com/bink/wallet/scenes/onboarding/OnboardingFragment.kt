@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.onboarding
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
@@ -46,8 +47,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         super.onPause()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel.clearWallets()
 

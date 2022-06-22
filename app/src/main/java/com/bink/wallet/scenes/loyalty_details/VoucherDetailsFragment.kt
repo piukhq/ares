@@ -33,11 +33,6 @@ class VoucherDetailsFragment :
     override val viewModel: VoucherDetailsViewModel by viewModel()
     private val contentMap = mutableMapOf<String?, String?>()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
-    }
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -45,9 +40,10 @@ class VoucherDetailsFragment :
             .build()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        binding.lifecycleOwner = this
         binding.membershipPlan = args.membershipPlan
 
         setColumnAndValue(args.membershipPlan.content)

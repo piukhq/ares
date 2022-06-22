@@ -50,9 +50,6 @@ import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.sentry.Sentry
 import io.sentry.protocol.User
 import org.json.JSONException
@@ -60,7 +57,6 @@ import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
-import kotlin.collections.HashMap
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -107,12 +103,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
         init()
         checkForDynamicActions()
-        return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -129,7 +119,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         if (activity != null) {
             bottomNavigation = requireActivity().findViewById(R.id.bottom_navigation)
-
         }
 
         if (this.isAdded) {
@@ -146,6 +135,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             findNavController().addOnDestinationChangedListener(destinationListener)
         }
+
+        return binding.root
     }
 
     override fun onResume() {
@@ -414,7 +405,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     fun logMixpanelLPSEvent(isStartTimer: Boolean, brandName: String, isSuccess: Boolean, reason: String? = null) {
-        if(isStartTimer){
+        if (isStartTimer) {
             //Start timer for both because we don't know what the outcome will be yet
             startMixpanelEventTimer(MixpanelEvents.LPS_FAIL)
             startMixpanelEventTimer(MixpanelEvents.LPS_SUCCESS)
@@ -799,7 +790,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    protected fun contactSupport(){
+    protected fun contactSupport() {
         try {
             startActivity(Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(getString(R.string.contact_us_mailto))

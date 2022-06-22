@@ -305,6 +305,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handler = Handler()
+        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
+        })
+
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
+            )
+        }
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
@@ -421,23 +433,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             WebScrapableManager.newlyAddedCard.value = null
         }
 
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchDismissedCards()
-        })
-
-        binding.settingsButton.setOnClickListener {
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
-            )
-        }
     }
 
     override fun onPause() {

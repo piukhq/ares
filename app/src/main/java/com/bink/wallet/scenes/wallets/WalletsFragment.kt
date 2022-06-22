@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -29,8 +30,8 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.wallets_fragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 

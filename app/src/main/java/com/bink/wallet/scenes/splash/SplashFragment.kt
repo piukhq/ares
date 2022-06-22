@@ -53,11 +53,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_splash, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
@@ -73,7 +68,27 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                 findNavController().navigateIfAdded(this, getDirections())
             }
         }
+        return inflater.inflate(R.layout.fragment_splash, container, false)
     }
+
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        LocalStoreUtils.setAppSharedPref(
+//            LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
+//        )
+//        Keys
+//        persistPaymentCardHashSecret()
+//        persistBouncerKeys()
+//        setUpRemoteConfig()
+//        RequestReviewUtil.recordAppOpen()
+//        if (findNavController().currentDestination?.id == R.id.splash) {
+//            if (getDirections() == R.id.global_to_home) {
+//                goToDashboard()
+//            } else {
+//                findNavController().navigateIfAdded(this, getDirections())
+//            }
+//        }
+//    }
 
     private fun getDirections(): Int {
         val rootBeer = RootBeer(context)

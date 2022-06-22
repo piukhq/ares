@@ -37,8 +37,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         logScreenView(BROWSE_BRANDS_VIEW)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         viewModel.setupBrandItems(
             args.membershipPlans.toList(),
@@ -94,25 +94,22 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
 
+         binding.lifecycleOwner = this
+
+         viewModel.searchText.observe(viewLifecycleOwner, Observer {
+             viewModel.filterBrandItems()
+         })
+
+         viewModel.activeFilters.observe(viewLifecycleOwner, Observer {
+             viewModel.filterBrandItems()
+         })
+
+         viewModel.filteredBrandItems.observeNonNull(this) {
+             adapter.submitList(it)
+             binding.labelNoMatch.setVisible(it.isEmpty())
+         }
+
         initBrowseBrandsList()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
-
-        viewModel.searchText.observe(viewLifecycleOwner, Observer {
-            viewModel.filterBrandItems()
-        })
-
-        viewModel.activeFilters.observe(viewLifecycleOwner, Observer {
-            viewModel.filterBrandItems()
-        })
-
-        viewModel.filteredBrandItems.observeNonNull(this) {
-            adapter.submitList(it)
-            binding.labelNoMatch.setVisible(it.isEmpty())
-        }
     }
 
     private fun initBrowseBrandsList() {

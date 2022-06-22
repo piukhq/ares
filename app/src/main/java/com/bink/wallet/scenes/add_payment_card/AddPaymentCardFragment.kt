@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -73,8 +74,8 @@ class AddPaymentCardFragment :
             }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         addPaymentCardArgs.cardNumber?.let { safeCardNumber ->
             if (safeCardNumber.isNotEmpty()) {
