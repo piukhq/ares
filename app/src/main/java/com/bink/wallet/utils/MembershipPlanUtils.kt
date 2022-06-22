@@ -182,7 +182,6 @@ object MembershipPlanUtils {
             val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
             var shouldShowBarcodeImage = true
             val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
-            val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
 
             membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
                 barcodeNumberLength?.let {

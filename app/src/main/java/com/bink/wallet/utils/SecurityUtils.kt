@@ -31,10 +31,10 @@ class SecurityUtils {
         private fun loadPublicKey(publicKeyString: String): PublicKey? {
             try {
                 val byteKey = Base64.decode(publicKeyString.toByteArray(), Base64.DEFAULT)
-                val X509publicKey = X509EncodedKeySpec(byteKey)
+                val mX509publicKey = X509EncodedKeySpec(byteKey)
                 val keyFactory = KeyFactory.getInstance("RSA")
 
-                return keyFactory.generatePublic(X509publicKey)
+                return keyFactory.generatePublic(mX509publicKey)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
