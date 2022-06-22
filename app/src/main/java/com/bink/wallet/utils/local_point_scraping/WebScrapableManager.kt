@@ -14,6 +14,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import java.util.*
+import kotlin.collections.ArrayList
 
 object WebScrapableManager {
 
@@ -50,10 +52,10 @@ object WebScrapableManager {
 
                         userName = authoriseFields.firstOrNull {
                             (it.column
-                                ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
+                                                        ?: "").lowercase(Locale.getDefault()) == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
-                            (it.column ?: "").toLowerCase() == "password"
+                            (it.column ?: "").lowercase(Locale.getDefault()) == "password"
                         }?.value
 
                         request.account.authorise_fields!!.removeAll { it.value == userName }

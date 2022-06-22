@@ -263,7 +263,7 @@ class LoyaltyViewModel constructor(
         combinedCards.add(newlyAddedCard)
 
         previousCards?.let { cards ->
-            combinedCards.addAll(cards.filter { it.id != newlyAddedCard?.id })
+            combinedCards.addAll(cards.filter { it.id != newlyAddedCard.id })
         }
 
         membershipCardData.value = combinedCards

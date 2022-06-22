@@ -102,7 +102,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                         else -> addRegisterFieldsRequest.registration_fields?.add(addAuthItem.fieldsRequest)
                     }
                 } else {
-                    addRegisterFieldsRequest.plan_documents?.add(addAuthItem.fieldsRequest)
+                    addRegisterFieldsRequest.plan_documents.add(addAuthItem.fieldsRequest)
                 }
             }
         }

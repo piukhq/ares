@@ -72,8 +72,8 @@ class PaymentWalletRepository(
             val idsFromApi = cards.map { cardsFromApi -> cardsFromApi.id }
 
             // List if id's which are in the database but not in the api data.
-            val difference = idsFromApi?.let { cardIdsInDb.minus(it) }
-            difference?.let {
+            val difference = idsFromApi.let { cardIdsInDb.minus(it) }
+            difference.let {
                 if (it.isNotEmpty()) {
                     it.forEach { cardId ->
                         withContext(Dispatchers.IO) {
