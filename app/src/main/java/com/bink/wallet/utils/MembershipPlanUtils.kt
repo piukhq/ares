@@ -46,10 +46,10 @@ object MembershipPlanUtils {
                 FAILED.status,
                 UNAUTHORISED.status -> {
                     membershipCard.status?.reason_codes?.let { reasonCodes ->
-                        if (!reasonCodes.intersect(listOf(CardCodes.X201.code)).isNullOrEmpty()) {
+                        if (!reasonCodes.intersect(listOf(CardCodes.X201.code).toSet()).isNullOrEmpty()) {
                             return LoginStatus.STATUS_SIGN_UP_FAILED
                         }
-                        if (!reasonCodes.intersect(listOf(CardCodes.X202.code)).isNullOrEmpty()) {
+                        if (!reasonCodes.intersect(listOf(CardCodes.X202.code).toSet()).isNullOrEmpty()) {
                             return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                         }
                         if (!reasonCodes.intersect(
@@ -61,12 +61,12 @@ object MembershipPlanUtils {
                                     CardCodes.X302.code,
                                     CardCodes.X303.code,
                                     CardCodes.X304.code
-                                )
+                                ).toSet()
                             ).isNullOrEmpty()
                         ) {
                             return LoginStatus.STATUS_LOGIN_FAILED
                         }
-                        if (!reasonCodes.intersect(listOf(CardCodes.X105.code)).isNullOrEmpty()) {
+                        if (!reasonCodes.intersect(listOf(CardCodes.X105.code).toSet()).isNullOrEmpty()) {
                             return LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD
                         }
                         if (reasonCodes.isNullOrEmpty()) {

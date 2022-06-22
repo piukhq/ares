@@ -39,7 +39,7 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     val paymentCardsMerger: LiveData<List<PaymentCard>>
         get() = _paymentCardsMerger
 
-    val _unlinkErrors = MutableLiveData<ArrayList<Exception>>()
+    private val _unlinkErrors = MutableLiveData<ArrayList<Exception>>()
     val unlinkErrors: LiveData<ArrayList<Exception>>
         get() = _unlinkErrors
 

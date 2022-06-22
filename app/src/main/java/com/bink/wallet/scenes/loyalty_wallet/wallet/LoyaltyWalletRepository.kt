@@ -391,7 +391,7 @@ class LoyaltyWalletRepository(
             val idFromApi = membershipCards?.map { card -> card.id }
 
             //list of Id's which are available in database but not in return api
-            val difference = idFromApi?.let { cardIdInDb.minus(it) }
+            val difference = idFromApi?.let { cardIdInDb.minus(it.toSet()) }
             difference?.let {
                 if (it.isNotEmpty()) {
                     deleteFromDb(it)
