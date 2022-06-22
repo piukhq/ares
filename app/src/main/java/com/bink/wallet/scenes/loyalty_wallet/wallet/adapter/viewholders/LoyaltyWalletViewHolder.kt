@@ -29,7 +29,7 @@ class LoyaltyWalletViewHolder(
 
     override fun bind(item: MembershipCard) {
         val cardBinding = binding.cardItem
-        if (!membershipPlans.isNullOrEmpty()) {
+        if (membershipPlans.isNotEmpty()) {
 
             membershipPlans.firstOrNull { it.id == item.membership_plan }?.let { membershipPlan ->
 

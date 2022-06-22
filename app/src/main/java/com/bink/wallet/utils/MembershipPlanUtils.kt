@@ -46,13 +46,13 @@ object MembershipPlanUtils {
                 FAILED.status,
                 UNAUTHORISED.status -> {
                     membershipCard.status?.reason_codes?.let { reasonCodes ->
-                        if (!reasonCodes.intersect(listOf(CardCodes.X201.code).toSet()).isNullOrEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X201.code).toSet()).isNotEmpty()) {
                             return LoginStatus.STATUS_SIGN_UP_FAILED
                         }
-                        if (!reasonCodes.intersect(listOf(CardCodes.X202.code).toSet()).isNullOrEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X202.code).toSet()).isNotEmpty()) {
                             return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                         }
-                        if (!reasonCodes.intersect(
+                        if (reasonCodes.intersect(
                                 listOf(
                                     CardCodes.X101.code,
                                     CardCodes.X102.code,
@@ -62,14 +62,15 @@ object MembershipPlanUtils {
                                     CardCodes.X303.code,
                                     CardCodes.X304.code
                                 ).toSet()
-                            ).isNullOrEmpty()
+                            ).isNotEmpty()
                         ) {
                             return LoginStatus.STATUS_LOGIN_FAILED
                         }
-                        if (!reasonCodes.intersect(listOf(CardCodes.X105.code).toSet()).isNullOrEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X105.code).toSet()).isNotEmpty()) {
                             return LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD
                         }
-                        if (reasonCodes.isNullOrEmpty()) {
+                        if (reasonCodes.isEmpty()
+                        ) {
                             return LoginStatus.STATUS_NO_REASON_CODES
                         }
                     }
@@ -91,7 +92,7 @@ object MembershipPlanUtils {
                 when (membershipCard.status?.state) {
                     AUTHORISED.status -> {
                         return when {
-                            paymentCards.isNullOrEmpty() || hasNoActiveCards(paymentCards) -> {
+                            paymentCards.isEmpty() || hasNoActiveCards(paymentCards) -> {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             }
                             membershipCard.payment_cards.isNullOrEmpty() ||

@@ -43,7 +43,7 @@ class PaymentWalletRepository(
                 storePaymentsCards(requestResult, fetchError)
 
                 SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
-                SharedPreferenceManager.isPaymentEmpty = requestResult.isNullOrEmpty()
+                SharedPreferenceManager.isPaymentEmpty = requestResult.isEmpty()
                 SharedPreferenceManager.hasNoActivePaymentCards =
                     MembershipPlanUtils.hasNoActiveCards(requestResult)
 

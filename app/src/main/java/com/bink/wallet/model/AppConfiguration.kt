@@ -8,7 +8,7 @@ data class LocalPointsCollection(val idle_threshold: Int, val idle_retry_limit: 
 
 fun LocalPointsCollection.currentAgent(membershipPlanId: Int?) : LocalPointsAgent? {
     val currentAgent = agents.filter { it.membership_plan_id.getId() == membershipPlanId }
-    if (!currentAgent.isNullOrEmpty()) {
+    if (currentAgent.isNotEmpty()) {
         return currentAgent[0]
     }
 

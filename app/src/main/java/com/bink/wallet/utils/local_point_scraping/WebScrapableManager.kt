@@ -309,7 +309,7 @@ object WebScrapableManager {
              **/
 
             if (isAddCard) {
-                if (!nonDeletedCards.isNullOrEmpty()) {
+                if (nonDeletedCards.isNotEmpty()) {
                     nonDeletedCards[0].let { newCard ->
                         newlyAddedCard.value = newCard
                     }

@@ -19,9 +19,9 @@ object  WalletOrderingUtil {
         val allSavedWalletOrders = getSavedPaymentWalletOrder()
 
         for (i in 0 until allSavedWalletOrders.size) {
-            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
 
-                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                if (allSavedWalletOrders[i].cardIds.isNotEmpty()) {
                     for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
                         for (paymentCard in paymentCards) {
                             if (getPaymentCardId(paymentCard) == (allSavedWalletOrders[i].cardIds[x])) {
@@ -49,7 +49,7 @@ object  WalletOrderingUtil {
         for (i in 0 until allSavedWalletOrders.size) {
             if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
 
-                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                if (allSavedWalletOrders[i].cardIds.isNotEmpty()) {
                     for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
                         for (paymentCard in paymentCards) {
                             if (getPaymentCardId(paymentCard) == (allSavedWalletOrders[i].cardIds[x])) {
@@ -76,7 +76,7 @@ object  WalletOrderingUtil {
         for (i in 0 until allSavedWalletOrders.size) {
             if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
 
-                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                if (allSavedWalletOrders[i].cardIds.isNotEmpty()) {
                     for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
                         for (loyaltyCard in loyaltyCards) {
                             if (getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].cardIds[x])) {
