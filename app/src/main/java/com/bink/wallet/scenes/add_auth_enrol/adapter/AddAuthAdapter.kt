@@ -1,8 +1,5 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
-import DisplayViewHolder
-import SpinnerViewHolder
-import TextFieldViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText

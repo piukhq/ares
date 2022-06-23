@@ -41,7 +41,6 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
-private const val HERE = "here"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {

@@ -8,8 +8,6 @@ import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 
-typealias OnBrandHeaderClickListener = (String) -> Unit
-
 class PllPaymentCardAdapter(
     val paymentCards: MutableList<PaymentCard> = mutableListOf(),
     private val isFromAddJourney: Boolean

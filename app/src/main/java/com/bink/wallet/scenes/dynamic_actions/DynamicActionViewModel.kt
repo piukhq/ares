@@ -10,6 +10,4 @@ class DynamicActionViewModel constructor(
     var userRepository: UserRepository
 ) : BaseViewModel() {
 
-    private val job = Job()
-
 }

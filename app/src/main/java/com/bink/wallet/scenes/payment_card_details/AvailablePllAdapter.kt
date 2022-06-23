@@ -44,13 +44,9 @@ class AvailablePllAdapter(
             binding.membershipCard = item
 
             binding.toggle.isChecked =
-                if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item) else false
+                isLinkedToPaymentCard(item)
 
-            if (isLinkedToPaymentCard(item) != null) {
-                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item))
-            } else {
-                binding.toggle.displayCustomSwitch(false)
-            }
+            binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item))
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 if (isNetworkAvailable(binding.root.context, true)) {

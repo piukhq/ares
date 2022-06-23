@@ -38,12 +38,6 @@ import java.util.*
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
 
-fun Context.toPixelFromDip(@IntegerRes resId: Int) =
-    toPixelFromDip(resources.getInteger(resId).toFloat())
-
-fun Context.toDipFromPixel(value: Float) =
-    value / (resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
-
 fun NavController.navigateIfAdded(
     fragment: Fragment, @IdRes resId: Int,
     currentDestinationId: Int? = null

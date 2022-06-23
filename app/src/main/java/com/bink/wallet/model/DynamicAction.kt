@@ -50,8 +50,7 @@ data class DynamicActionEvent(
     val body: DynamicActionEventBody?
 ) : Parcelable
 
-enum class DynamicActionEventType {
-}
+enum class DynamicActionEventType
 
 @Parcelize
 data class DynamicActionEventBody(

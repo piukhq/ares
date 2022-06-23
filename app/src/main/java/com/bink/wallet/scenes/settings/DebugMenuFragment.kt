@@ -114,7 +114,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 BackendVersion.VERSION_3.name
             )
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 
@@ -143,7 +143,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 "4"
             )
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 
@@ -175,7 +175,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         adb.setView(editTextView)
 
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 

@@ -89,17 +89,4 @@ class AuthNavigationHandler(
         }
     }
 
-    fun navigateToGhostRegistrationUnavailableScreen() {
-        fragment.findNavController().navigateIfAdded(
-            fragment,
-            AddCardFragmentDirections.addCardToGhostRegistrationUnavailable(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    fragment.getString(R.string.title_ghost_card_not_available),
-                    fragment.getString(R.string.description_ghost_card_not_available)
-                )
-            )
-        )
-    }
 }

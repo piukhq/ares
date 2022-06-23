@@ -38,18 +38,6 @@ data class ListHolder<T>(val list: MutableList<T> = mutableListOf()) {
                 adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
                 indexChanged: Int
             ) = adapter.notifyItemInserted(indexChanged)
-        },
-        REMOVE {
-            override fun notifyChange(
-                adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                indexChanged: Int
-            ) = adapter.notifyItemRemoved(indexChanged)
-        },
-        CHANGE {
-            override fun notifyChange(
-                adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                indexChanged: Int
-            ) = adapter.notifyItemChanged(indexChanged)
         };
 
         abstract fun notifyChange(

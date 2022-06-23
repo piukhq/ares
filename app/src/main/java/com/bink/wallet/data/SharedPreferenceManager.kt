@@ -16,7 +16,6 @@ object SharedPreferenceManager {
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
     private const val IS_LOYALTY_WALLET = "isLoyaltyWalletActive"
     private const val IS_PAYMENT_EMPTY_KEY = "isPaymentEmpty"
-    private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinBannerDismissed"
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
     private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
     private const val API_VERSION = "apiVersion"

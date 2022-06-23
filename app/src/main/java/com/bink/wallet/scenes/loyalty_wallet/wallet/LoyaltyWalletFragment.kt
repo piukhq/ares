@@ -819,20 +819,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         )
     }
 
-    private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
-        logMixpanelEvent(
-            MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
-            JSONObject().put(
-                MixpanelEvents.LPS_STATUS,
-                membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN
-            )
-                .put(
-                    MixpanelEvents.LC_ID,
-                    membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN
-                )
-        )
-    }
-
     private fun setMixpanelCardProperties(membershipCards: List<MembershipCard>) {
         setMixpanelProperty(
             MixpanelEvents.TOTAL_CARDS_PROP,

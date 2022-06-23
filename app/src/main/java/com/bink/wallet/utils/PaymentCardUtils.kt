@@ -249,10 +249,7 @@ object PaymentCardUtils {
         paymentCard: PaymentCard,
         membershipCards: MutableList<MembershipCard>
     ): Boolean {
-        countLinkedPaymentCards(paymentCard, membershipCards)?.let {
-            return it > 0
-        }
-        return false
+        return countLinkedPaymentCards(paymentCard, membershipCards) > 0
     }
 
     fun countLinkedPaymentCards(
@@ -277,11 +274,11 @@ object PaymentCardUtils {
         }
     }
 
-    fun inDateCards(paymentCards: List<PaymentCard>):List<PaymentCard>{
+    fun inDateCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
         val activeCards = mutableListOf<PaymentCard>()
-        paymentCards.forEach { pCard->
+        paymentCards.forEach { pCard ->
             pCard.card?.let {
-                if (!it.isExpired()){
+                if (!it.isExpired()) {
                     activeCards.add(pCard)
                 }
             }

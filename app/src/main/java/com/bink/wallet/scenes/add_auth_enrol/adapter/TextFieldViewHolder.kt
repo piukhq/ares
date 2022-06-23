@@ -1,3 +1,5 @@
+package com.bink.wallet.scenes.add_auth_enrol.adapter
+
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -14,8 +16,6 @@ import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
-import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
-import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
