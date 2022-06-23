@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 import com.bink.wallet.utils.ColorUtil
 import com.google.zxing.BarcodeFormat
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)

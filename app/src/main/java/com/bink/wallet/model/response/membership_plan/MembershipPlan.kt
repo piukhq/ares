@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.utils.enums.CardType
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)

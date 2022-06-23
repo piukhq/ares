@@ -3,7 +3,7 @@ package com.bink.wallet.model
 
 import android.os.Parcelable
 import com.bink.wallet.utils.JOIN_CARD
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class JoinCardItem(

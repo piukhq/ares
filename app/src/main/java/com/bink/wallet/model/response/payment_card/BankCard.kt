@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.bink.wallet.utils.StringUtils
 import com.bink.wallet.utils.md5
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
