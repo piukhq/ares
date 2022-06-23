@@ -29,10 +29,10 @@ class SignUpViewModel(
 
     val signUpResponse = MutableLiveData<SignUpResponse>()
     val signUpErrorResponse = MutableLiveData<Exception>()
-    val marketingPrefResponse = MutableLiveData<ResponseBody>()
-    val marketingPrefErrorResponse = MutableLiveData<Exception>()
+    private val marketingPrefResponse = MutableLiveData<ResponseBody>()
+    private val marketingPrefErrorResponse = MutableLiveData<Exception>()
 
-    val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+    private val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()

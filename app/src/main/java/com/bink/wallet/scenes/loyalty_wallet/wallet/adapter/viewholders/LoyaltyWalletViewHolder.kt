@@ -57,7 +57,7 @@ class LoyaltyWalletViewHolder(
         bindSecondaryColorChanges(cardBinding, Color.parseColor(item.card?.colour))
     }
 
-    fun bindVouchersToDisplay(
+    private fun bindVouchersToDisplay(
         cardBinding: CardItemBinding,
         currentMembershipPlan: MembershipPlan,
         item: MembershipCard
@@ -148,12 +148,11 @@ class LoyaltyWalletViewHolder(
     }
 
     private fun bindSecondaryColorChanges(binding: CardItemBinding, primaryColor: Int) {
-        val textColor: Int
 
-        if (ColorUtil.isColorLight(primaryColor, ColorUtil.LIGHT_THRESHOLD_TEXT)) {
-            textColor = android.R.color.black
+        val textColor: Int = if (ColorUtil.isColorLight(primaryColor, ColorUtil.LIGHT_THRESHOLD_TEXT)) {
+            android.R.color.black
         } else {
-            textColor = android.R.color.white
+            android.R.color.white
         }
 
         binding.companyName.setTextColor(binding.root.context.getColor(textColor))

@@ -163,9 +163,8 @@ class AutoResizeTextView : TextView {
 
     override fun setTextSize(unit: Int, size: Float) {
         val c = context
-        val r: Resources
 
-        r = if (c == null) {
+        val r: Resources = if (c == null) {
             Resources.getSystem()
         } else {
             c.resources

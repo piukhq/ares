@@ -857,7 +857,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun getTotalDuplicateCards(membershipCards: List<MembershipCard>): Int {
         var totalDupes = 0
-        var checkedIds = ArrayList<String?>()
+        val checkedIds = ArrayList<String?>()
         membershipCards.forEach { card ->
             if (!checkedIds.contains(card.membership_plan)) {
                 checkedIds.add(card.membership_plan)

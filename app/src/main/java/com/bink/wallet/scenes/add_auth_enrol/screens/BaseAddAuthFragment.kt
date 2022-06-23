@@ -49,8 +49,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     var membershipCardId: String? = null
     var isRetryJourney = false
     var currentMembershipPlan: MembershipPlan? = null
-    var navigationHandler: AuthNavigationHandler? = null
-    var animationHelper: AuthAnimationHelper? = null
+    private var navigationHandler: AuthNavigationHandler? = null
+    private var animationHelper: AuthAnimationHelper? = null
     protected var barcode: String? = null
     private var addAuthAdapter: AddAuthAdapter? = null
     private lateinit var account: com.bink.wallet.model.response.membership_plan.Account

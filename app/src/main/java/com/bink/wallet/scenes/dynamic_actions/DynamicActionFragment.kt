@@ -64,7 +64,7 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
     }
 
     override fun onPause() {
-        var container: ViewGroup = activity?.window?.decorView as ViewGroup
+        val container: ViewGroup = activity?.window?.decorView as ViewGroup
         if (snowList.isNotEmpty()) {
             for (snowflake in snowList) {
                 container.removeView(snowflake.snowflake)

@@ -1038,7 +1038,7 @@ class LoyaltyCardDetailsFragment :
                 earn.suffix
             )
         } else {
-            if (earn?.value?.rem(100) ?: 0 != 0f) {
+            if ((earn?.value?.rem(100) ?: 0) != 0f) {
                 getString(
                     R.string.loyalty_wallet_plr_value,
                     ValueDisplayUtils.displayValue(

@@ -24,12 +24,11 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var barcode: String? = null
 
-    var fieldValue: String? = null
+    private var fieldValue: String? = null
 
     override fun bind(item: T) {}
 
     open fun onBarcodeScanSuccess(scannedBarcode: String?) {}
-
 
     open fun addFormField(planField: PlanField) {
         position?.let {

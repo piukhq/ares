@@ -36,8 +36,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     private var directions: NavDirections? = null
     private var isAddJourney = false
     private val footerQuotient = 3
-    val unselectedCards = mutableListOf<PaymentCard>()
-    val selectedCards = mutableListOf<PaymentCard>()
+    private val unselectedCards = mutableListOf<PaymentCard>()
+    private val selectedCards = mutableListOf<PaymentCard>()
     private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
     private lateinit var pendingAdapter: PllPendingAdapter
 

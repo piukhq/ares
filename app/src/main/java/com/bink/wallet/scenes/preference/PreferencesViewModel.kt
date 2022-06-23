@@ -19,7 +19,7 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
     val preferences = MutableLiveData<ArrayList<Preference>>()
     val preferenceErrorResponse = MutableLiveData<Exception>()
     val savePreferenceError = MutableLiveData<Exception>()
-    val clearCredsPreference = Preference(CLEAR_PREF_KEY, null, null, null, null, null, null, CLEAR_CREDS_TITLE, null)
+    private val clearCredsPreference = Preference(CLEAR_PREF_KEY, null, null, null, null, null, null, CLEAR_CREDS_TITLE, null)
 
     fun getPreferences() {
         viewModelScope.launch {

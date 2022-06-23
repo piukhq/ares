@@ -9,12 +9,12 @@ object SentryUtils {
     fun logError(sentryError: SentryErrorType, exception: Exception) {
         var userInfo: String? = null
 
-        when (exception) {
+        userInfo = when (exception) {
             is HttpException -> {
                 val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
-                userInfo = "Error code: ${exception.code()} - Error Body: $errorBody"
+                "Error code: ${exception.code()} - Error Body: $errorBody"
             }
-            else -> userInfo = "Error message: ${exception.message}"
+            else -> "Error message: ${exception.message}"
         }
 
         logError(sentryError, userInfo)

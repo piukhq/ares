@@ -24,7 +24,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     override val viewModel: WalletsViewModel by viewModel()
-    val mainViewModel: MainViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     override val layoutRes: Int
         get() = R.layout.wallets_fragment

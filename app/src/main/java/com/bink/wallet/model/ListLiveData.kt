@@ -28,19 +28,6 @@ data class ListHolder<T>(val list: MutableList<T> = mutableListOf()) {
         updateType = UpdateType.INSERT
     }
 
-    fun removeItemAt(position: Int) {
-        val item = list[position]
-        list.remove(item)
-        indexChanged = position
-        updateType = UpdateType.REMOVE
-    }
-
-    fun setItem(position: Int, item: T) {
-        list.set(position, item)
-        indexChanged = position
-        updateType = UpdateType.CHANGE
-    }
-
     fun size(): Int {
         return list.size
     }

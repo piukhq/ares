@@ -188,8 +188,8 @@ fun String.dateValidation(): Boolean {
     if (new.isNotEmpty()) {
         val split = new.split(SEPARATOR_SLASH)
         if (split.size > 1 &&
-            !split[0].isBlank() &&
-            !split[1].isBlank()
+            split[0].isNotBlank() &&
+            split[1].isNotBlank()
         ) {
             val month = split[0].toInt()
             val year = split[1].toInt() + 2000

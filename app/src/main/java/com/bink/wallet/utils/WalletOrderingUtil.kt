@@ -47,7 +47,7 @@ object  WalletOrderingUtil {
         val allSavedWalletOrders = getSavedPaymentWalletOrder()
 
         for (i in 0 until allSavedWalletOrders.size) {
-            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
 
                 if (allSavedWalletOrders[i].cardIds.isNotEmpty()) {
                     for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
@@ -74,7 +74,7 @@ object  WalletOrderingUtil {
         val allSavedWalletOrders = getSavedLoyaltyWalletOrder()
 
         for (i in 0 until allSavedWalletOrders.size) {
-            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
 
                 if (allSavedWalletOrders[i].cardIds.isNotEmpty()) {
                     for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
@@ -130,7 +130,7 @@ object  WalletOrderingUtil {
         }
 
         for (i in 0 until allSavedWalletOrders.size) {
-            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
 
                 allSavedWalletOrders[i].cardIds = paymentCardIds
                 SharedPreferenceManager.paymentWalletOrder = gson.toJson(allSavedWalletOrders)
@@ -155,7 +155,7 @@ object  WalletOrderingUtil {
         }
 
         for (i in 0 until allSavedWalletOrders.size) {
-            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
 
                 allSavedWalletOrders[i].cardIds = loyaltyCardIds
                 SharedPreferenceManager.loyaltyWalletOrder = gson.toJson(allSavedWalletOrders)

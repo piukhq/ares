@@ -108,7 +108,7 @@ class PaymentCardsDetailsViewModel(
 
     private fun updatePaymentCard(cardId: String) {
         paymentCard.value?.let {
-            if (it.membership_cards.count { card -> card.id == cardId } < 1) {
+            if (it.membership_cards.isEmpty()) {
                 it.addPaymentCard(cardId)
             }
         }

@@ -99,7 +99,6 @@ class PaymentCardsDetailsFragment :
 
         binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            val dialog: AlertDialog
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
@@ -109,7 +108,7 @@ class PaymentCardsDetailsFragment :
                     }
                 }
             }
-            dialog = builder.create()
+            val dialog: AlertDialog = builder.create()
             dialog.show()
         }
 

@@ -291,7 +291,7 @@ object WebScrapableManager {
             timer?.cancel()
             timer = null
 
-            var nonDeletedCards = ArrayList<MembershipCard>()
+            val nonDeletedCards = ArrayList<MembershipCard>()
 
             if (membershipCards != null) {
                 membershipCards?.forEach { membershipCard ->
@@ -377,7 +377,7 @@ object WebScrapableManager {
         val storedScrapedCards = oldCards.filter { it.isScraped == true }
 
         for (scrapedCard in storedScrapedCards) {
-            val index = newCards.indexOfFirst { it.id.equals(scrapedCard.id) }
+            val index = newCards.indexOfFirst { it.id == scrapedCard.id }
             if (index != -1) {
                 newCards[index].balances = scrapedCard.balances
                 newCards[index].status = scrapedCard.status

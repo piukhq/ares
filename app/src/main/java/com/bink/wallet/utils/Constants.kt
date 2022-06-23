@@ -73,14 +73,14 @@ const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
 const val MAGIC_LINK_SLUG = "matalan-reward-card"
 
 val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
-val REMEMBER_DETAILS_KEY = "remember-my-details"
-val CLEAR_PREF_KEY = "clear_preferences"
-val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
-val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
-val EMAIL_COMMON_NAME = "email"
-val CLEAR_CREDS_TITLE = "Clear Stored Credentials"
+const val REMEMBER_DETAILS_KEY = "remember-my-details"
+const val CLEAR_PREF_KEY = "clear_preferences"
+const val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
+const val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
+const val EMAIL_COMMON_NAME = "email"
+const val CLEAR_CREDS_TITLE = "Clear Stored Credentials"
 
-val LINKING_SUPPORT_ADD = "ADD"
-val LINKING_SUPPORT_ENROL = "ENROL"
+const val LINKING_SUPPORT_ADD = "ADD"
+const val LINKING_SUPPORT_ENROL = "ENROL"
 
 val EAN_13_BARCODE_LENGTH_LIMIT = 12..13

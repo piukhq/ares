@@ -13,7 +13,7 @@ class AuthAnimationHelper(
 ) {
 
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
-    lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
     private val quotientFooterComposed = 3
 
     fun enableGlobalListeners(

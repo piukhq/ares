@@ -31,7 +31,7 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         get() = _paymentCards
 
     private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
-    val localPaymentCards: LiveData<List<PaymentCard>>
+    private val localPaymentCards: LiveData<List<PaymentCard>>
         get() = _localPaymentCards
 
     private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()

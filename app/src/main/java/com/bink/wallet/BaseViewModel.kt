@@ -12,8 +12,8 @@ import kotlin.coroutines.CoroutineContext
 abstract class BaseViewModel : ViewModel(), CoroutineScope {
     private val job = SupervisorJob()
 
-    val noInternetConnectionEvent = SingleLiveEvent<Unit>()
-    val connectTimeoutEvent = SingleLiveEvent<Unit>()
+    private val noInternetConnectionEvent = SingleLiveEvent<Unit>()
+    private val connectTimeoutEvent = SingleLiveEvent<Unit>()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         viewModelScope.launch {

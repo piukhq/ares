@@ -20,7 +20,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val membershipCard = MutableLiveData<MembershipCard>()
     private val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    private val localPaymentCards = MutableLiveData<List<PaymentCard>>()
     val deletedCard = MutableLiveData<String>()
     val updatedMembershipCard = MutableLiveData<MembershipCard>()
     val accountStatus = MutableLiveData<LoginStatus>()

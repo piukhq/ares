@@ -35,7 +35,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         const val DIVISOR_MILLISECONDS = 1000
     }
 
-    var userBankCard: BankCard? = null
+    private var userBankCard: BankCard? = null
     var cardNumber: String = ""
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
