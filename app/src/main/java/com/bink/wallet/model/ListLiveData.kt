@@ -12,16 +12,6 @@ class ListLiveData<T> : MutableLiveData<ListHolder<T>>() {
         value = value
     }
 
-    fun removeItemAt(position: Int) {
-        value?.removeItemAt(position)
-        value = value
-    }
-
-    fun setItem(position: Int, item: T) {
-        value?.setItem(position, item)
-        value = value
-    }
-
     operator fun get(position: Int): T? {
         return value?.list?.get(position)
     }
@@ -53,10 +43,6 @@ data class ListHolder<T>(val list: MutableList<T> = mutableListOf()) {
 
     fun size(): Int {
         return list.size
-    }
-
-    fun applyChange(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>) {
-        updateType?.notifyChange(adapter, indexChanged)
     }
 
     private enum class UpdateType {

@@ -21,7 +21,6 @@ class LoginViewModel constructor(
     val userRepository: UserRepository
 ) : BaseViewModel() {
 
-    val loginBody = MutableLiveData<LoginBody>()
     val loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
     private val _logInErrorResponse = MutableLiveData<Exception>()

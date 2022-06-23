@@ -150,7 +150,7 @@ object FormsUtil {
 
         LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
             val gson = GsonBuilder().create()
-            if (fields == null) fields = ArrayList<String>()
+            if (fields == null) fields = ArrayList()
             fields?.addAll(gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type))
             return fields
         }

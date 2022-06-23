@@ -34,11 +34,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     val deleteError: LiveData<Exception>
         get() = _deleteError
     private val _paymentCardsFetchError = MutableLiveData<Exception>()
-    val paymentCardsFetchError: LiveData<Exception>
-        get() = _paymentCardsFetchError
     private val _localPaymentStoreError = MutableLiveData<Exception>()
-    val localPaymentStoreError: LiveData<Exception>
-        get() = _localPaymentStoreError
 
     //Merger Region
     private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()

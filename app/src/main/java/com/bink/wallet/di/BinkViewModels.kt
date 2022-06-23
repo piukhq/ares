@@ -6,7 +6,6 @@ import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
-import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
@@ -106,8 +105,7 @@ val viewModelModules = module {
 
     viewModel { DebugColorSwatchesViewModel(get()) }
 
-    single { provideTermsAndConditionsRepository(get(NetworkQualifiers.BinkApiInterface)) }
-    viewModel { TermsAndConditionsViewModel(get()) }
+    viewModel { TermsAndConditionsViewModel() }
 
     viewModel { AddPaymentCardViewModel(get()) }
 
@@ -187,9 +185,6 @@ fun provideLoyaltyCardDetailsRepository(
     paymentCardDao: PaymentCardDao
 ): LoyaltyCardDetailsRepository =
     LoyaltyCardDetailsRepository(restApiService, membershipCardDao, paymentCardDao)
-
-fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
-    TermsAndConditionsRepository(restApiService)
 
 fun providePllRepository(
     restApiService: ApiService,

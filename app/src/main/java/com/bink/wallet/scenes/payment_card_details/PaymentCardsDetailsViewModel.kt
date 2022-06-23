@@ -24,12 +24,9 @@ class PaymentCardsDetailsViewModel(
     val paymentCard = MutableLiveData<PaymentCard>()
     val membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    val linkedPaymentCard = MutableLiveData<PaymentCard>()
     val deleteRequest = MutableLiveData<ResponseBody>()
 
     private val _loadCardsError = MutableLiveData<Exception>()
-    val loadCardsError: LiveData<Exception>
-        get() = _loadCardsError
 
     private val _linkError = MutableLiveData<Pair<Exception, String>>()
     val linkError: LiveData<Pair<Exception, String>>

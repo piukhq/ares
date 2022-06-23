@@ -24,7 +24,6 @@ object SharedPreferenceManager {
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_SCRAPED_TIME = "membershipCardsLastScrapedTime"
-    private const val CONTACT_US_CLICKED = "contactUsClicked"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
     private const val FIREBASE_UUID = "firebase_uuid"
@@ -41,7 +40,6 @@ object SharedPreferenceManager {
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
-    private const val HAS_BARCODE_BEEN_SCANNED = "has_barcode_been_scanned"
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
     private const val ALLOW_BACK_ON_DELETE = "allow_back_on_delete"
 
@@ -49,7 +47,6 @@ object SharedPreferenceManager {
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
     private val IS_PAYMENT_EMPTY = Pair(IS_PAYMENT_EMPTY_KEY, false)
-    private val IS_PAYMENT_JOIN_HIDDEN = Pair(IS_PAYMENT_JOIN_KEY, false)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
@@ -104,12 +101,6 @@ object SharedPreferenceManager {
             it.putBoolean(HAS_NO_ACTIVE_PAYMENT_CARD, value)
         }
 
-    var isPaymentJoinBannerDismissed: Boolean
-        get() = preferences.getBoolean(IS_PAYMENT_JOIN_HIDDEN.first, IS_PAYMENT_JOIN_HIDDEN.second)
-        set(value) = preferences.edit {
-            it.putBoolean(IS_PAYMENT_JOIN_HIDDEN.first, value)
-        }
-
     var membershipPlansLastRequestTime: Long
         get() = preferences.getLong(MEMBERSHIP_PLAN_LAST_REQUEST_TIME, 0)
         set(value) = preferences.edit {
@@ -140,11 +131,6 @@ object SharedPreferenceManager {
             it.putBoolean(IS_USER_LOGGED_IN_KEY, value)
         }
 
-    var hasContactUsBeenClicked: Boolean
-        get() = preferences.getBoolean(CONTACT_US_CLICKED, false)
-        set(value) = preferences.edit {
-            it.putBoolean(CONTACT_US_CLICKED, value)
-        }
     var didAttemptToAddPaymentCard: Boolean
         get() = preferences.getBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, false)
         set(value) = preferences.edit {
@@ -228,12 +214,6 @@ object SharedPreferenceManager {
         get() = environmentPreferences.getBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, false)
         set(value) = environmentPreferences.edit {
             it.putBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, value)
-        }
-
-    var hasBarcodeBeenScanned: Boolean
-        get() = environmentPreferences.getBoolean(HAS_BARCODE_BEEN_SCANNED, false)
-        set(value) = environmentPreferences.edit {
-            it.putBoolean(HAS_BARCODE_BEEN_SCANNED, value)
         }
 
     var cardOnBoardingState: Int

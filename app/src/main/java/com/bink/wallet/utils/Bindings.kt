@@ -88,13 +88,6 @@ fun ImageView.loadImage(item: MembershipCard?) {
 fun getIconTypeFromCard(item: MembershipCard?) =
     item?.images?.first { it.type == ImageType.ICON.type }?.url
 
-@BindingAdapter("image")
-fun ImageView.setPaymentCardImage(item: PaymentCard) {
-    if (!item.images.isNullOrEmpty()) {
-        Glide.with(context).load(item.images.first().url).into(this)
-    }
-}
-
 
 @BindingAdapter("image")
 fun ImageView.setImage(url: String) {
@@ -584,16 +577,6 @@ fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
     }
 }
 
-@BindingAdapter("loginStatus")
-fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
-    text = when (loginStatus) {
-        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
-        LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
-        LoginStatus.STATUS_PENDING -> this.context.getString(R.string.card_status_pending)
-        else -> this.context.getString(R.string.empty_string)
-    }
-}
-
 @BindingAdapter("paymentCardDetailsTitle", "paymentCard", requireAll = false)
 fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
     text = if (paymentCard.card?.isExpired() == true) {
@@ -689,15 +672,6 @@ fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String
     } else {
         preferenceLabel
     }
-}
-
-@BindingAdapter("pllEmptyPendingFaq")
-fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
-    UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
-        context.getString(R.string.pll_empty_faqs_description),
-        HERE, this, hyperlinkClick
-    )
-
 }
 
 @BindingAdapter("itemDecorationSpacing")

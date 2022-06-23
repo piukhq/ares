@@ -11,6 +11,5 @@ class DynamicActionViewModel constructor(
 ) : BaseViewModel() {
 
     private val job = Job()
-    private val scope = CoroutineScope(job + Dispatchers.Main)
 
 }

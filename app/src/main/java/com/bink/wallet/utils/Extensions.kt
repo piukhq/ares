@@ -223,12 +223,6 @@ fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun String.headerTidy(): String {
-    return this
-        .replace("=", "")
-        .replace("\n", "")
-}
-
 fun Context.validateEmail(emailValue: String?, editText: EditText) {
     editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
@@ -394,17 +388,6 @@ fun HttpException.getErrorBody(): String {
     }
 
     return errorBody
-}
-
-fun String.getSuffixForLPS(): String {
-    val debugSuffix =
-        if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
-            "_debug"
-        } else {
-            ""
-        }
-
-    return "$this${debugSuffix}"
 }
 
 fun String.readFileText(context: Context): String? {

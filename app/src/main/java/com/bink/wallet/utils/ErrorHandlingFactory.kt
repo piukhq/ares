@@ -56,7 +56,6 @@ class BaseException(
     val errorType: ErrorType,
     val serverErrorResponse: ServerErrorResponse? = null,
     val response: Response<*>? = null,
-    val httpCode: Int = 0,
     cause: Throwable? = null
 ) : RuntimeException(cause?.message, cause) {
 
@@ -75,8 +74,7 @@ class BaseException(
         fun toHttpError(response: Response<*>?, httpCode: Int) =
             BaseException(
                 errorType = ErrorType.HTTP,
-                response = response,
-                httpCode = httpCode
+                response = response
             )
 
         fun toNetworkError(cause: Throwable) =
@@ -88,8 +86,7 @@ class BaseException(
         fun toServerError(serverErrorResponse: ServerErrorResponse, httpCode: Int) =
             BaseException(
                 errorType = ErrorType.SERVER,
-                serverErrorResponse = serverErrorResponse,
-                httpCode = httpCode
+                serverErrorResponse = serverErrorResponse
             )
 
         fun toUnexpectedError(cause: Throwable) =

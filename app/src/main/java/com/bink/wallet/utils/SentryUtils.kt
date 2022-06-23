@@ -60,7 +60,6 @@ enum class LocalPointScrapingError(val issue: String) {
 }
 
 enum class InvalidPayloadType(val error: String) {
-    INVALID_HASH("Failed to encrypt hash"),
     INVALID_MONTH("Failed to encrypt expiry month"),
     INVALID_YEAR("Failed to encrypt expiry year"),
     INVALID_FIRST_SIX("Failed to encrypt first six"),

@@ -16,7 +16,6 @@ class PllPaymentCardAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onBrandHeaderClickListener: OnBrandHeaderClickListener? = null
     private lateinit var membershipCard: MembershipCard
 
     fun updateData(paymentCards: List<PaymentCard>, membershipCard: MembershipCard) {

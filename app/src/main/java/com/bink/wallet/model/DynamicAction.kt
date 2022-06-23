@@ -51,8 +51,6 @@ data class DynamicActionEvent(
 ) : Parcelable
 
 enum class DynamicActionEventType {
-    @SerializedName("launch_modal")
-    LAUNCH_MODAL
 }
 
 @Parcelize

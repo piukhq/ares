@@ -19,11 +19,10 @@ import retrofit2.HttpException
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val linkError = MutableLiveData<Exception>()
     val unlinkError = MutableLiveData<Exception>()
     val fetchError = MutableLiveData<Exception>()
-    val localFetchError = MutableLiveData<Exception>()
+    private val localFetchError = MutableLiveData<Exception>()
 
     val paymentCard = MutableLiveData<PaymentCard>()
 

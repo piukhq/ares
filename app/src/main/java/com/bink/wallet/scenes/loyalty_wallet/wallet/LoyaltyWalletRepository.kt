@@ -292,21 +292,6 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun getLocalPaymentCards(
-        localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    localPaymentCards.value = paymentCardDao.getAllAsync()
-                } catch (e: Exception) {
-                    localFetchError.value = e
-                }
-            }
-        }
-    }
-
     fun retrieveDismissedCards(
         localMembershipCards: MutableLiveData<List<BannerDisplay>>,
         fetchError: MutableLiveData<Exception>

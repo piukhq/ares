@@ -11,7 +11,6 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
@@ -364,29 +363,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     directions
                 )
             }
-        }
-    }
-
-    companion object {
-        private fun List<PaymentCard>.toPllPaymentCardWrapperList(
-            isAddJourney: Boolean,
-            membershipCard: MembershipCard
-        ): List<PllAdapterItem.PaymentCardItem> {
-            val listPaymentCards = mutableListOf<PllAdapterItem.PaymentCardItem>()
-            this.forEach { card ->
-                val isSelected = if (isAddJourney) {
-                    true
-                } else {
-                    card.isLinkedToMembershipCard(membershipCard)
-                }
-                listPaymentCards.add(
-                    PllAdapterItem.PaymentCardItem(
-                        card,
-                        isSelected
-                    )
-                )
-            }
-            return listPaymentCards
         }
     }
 

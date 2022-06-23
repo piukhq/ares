@@ -13,15 +13,6 @@ import java.util.*
 const val ACCUMULATOR = "accumulator"
 const val STAMP = "stamps"
 
-@BindingAdapter("showNumberOrBarcodeDescription")
-fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
-    text = if (isBarcodeAvailable) {
-        context.getString(R.string.barcode_description)
-    } else {
-        context.getString(R.string.card_number_description)
-    }
-}
-
 @BindingAdapter("voucherEarnSubtitle", requireAll = true)
 fun TextView.setVoucherSubText(voucherEarn: Earn) {
     text = context.getString(
