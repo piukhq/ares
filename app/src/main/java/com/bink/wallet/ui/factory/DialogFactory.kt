@@ -15,7 +15,7 @@ class DialogFactory {
             val builder = AlertDialog.Builder(activity)
             builder.setTitle(activity.getString(R.string.add_loyalty_card_permissions_denied_title))
             builder.setMessage(activity.getString(R.string.add_loyalty_card_permissions_denied_message))
-            builder.setNegativeButton(activity.getString(R.string.add_loyalty_card_permissions_denied_cta_allow)) { dialogInterface, _ ->
+            builder.setNegativeButton(activity.getString(R.string.add_loyalty_card_permissions_denied_cta_allow)) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 val uri: Uri = Uri.fromParts("package", activity.packageName, null)
@@ -23,7 +23,7 @@ class DialogFactory {
                 activity.startActivity(intent)
             }
 
-            builder.setPositiveButton(activity.getString(R.string.add_loyalty_card_permissions_denied_cta_enter)) { dialogInterface, _ ->
+            builder.setPositiveButton(activity.getString(R.string.add_loyalty_card_permissions_denied_cta_enter)) { _, _ ->
                 negativeAction()
             }
 

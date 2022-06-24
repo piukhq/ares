@@ -29,9 +29,9 @@ data class Card(
         }
     }
 
-    fun getBarcodeFormat() : BarcodeFormat?{
+    fun getBarcodeFormat(): BarcodeFormat? {
         return when (barcode_type) {
-            0, null ->  BarcodeFormat.CODE_128
+            0, null -> BarcodeFormat.CODE_128
             1 -> BarcodeFormat.QR_CODE
             2 -> BarcodeFormat.AZTEC
             3 -> BarcodeFormat.PDF_417

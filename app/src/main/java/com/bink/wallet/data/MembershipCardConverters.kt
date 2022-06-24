@@ -98,6 +98,7 @@ class MembershipCardConverters {
         val type = object : TypeToken<Account?>() {}.type
         return gson.toJson(value, type)
     }
+
     @TypeConverter
     fun toAccount(value: String?): Account? {
         val gson = Gson()
@@ -111,6 +112,7 @@ class MembershipCardConverters {
         val type = object : TypeToken<List<Voucher?>?>() {}.type
         return gson.toJson(value, type)
     }
+
     @TypeConverter
     fun toVouchers(value: String): List<Voucher?>? {
         val gson = Gson()

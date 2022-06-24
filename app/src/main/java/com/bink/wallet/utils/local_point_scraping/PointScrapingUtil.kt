@@ -142,6 +142,7 @@ object PointScrapingUtil {
         webView?.loadUrl(localPointsAgent.points_collection_url)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun getWebView(context: Context): WebView {
         return WebView(context).apply {
             settings.apply {

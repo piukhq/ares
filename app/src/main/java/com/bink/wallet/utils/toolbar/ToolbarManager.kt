@@ -8,16 +8,17 @@ class ToolbarManager constructor(
 ) {
     fun prepareToolbar() {
         builder.apply {
-            if(resId != FragmentToolbar.NO_TOOLBAR) {
+            if (resId != FragmentToolbar.NO_TOOLBAR) {
                 toolbar?.let {
-                    if(title != -1) {
+                    if (title != -1) {
                         it.setTitle(title)
                     }
-                    if(menuId != -1){
+                    if (menuId != -1) {
                         it.inflateMenu(menuId)
                     }
-                    if(menuItems.isNotEmpty() &&
-                            menuClicks.isNotEmpty()) {
+                    if (menuItems.isNotEmpty() &&
+                        menuClicks.isNotEmpty()
+                    ) {
                         for ((index, menuItemId) in menuItems.withIndex()) {
                             (it.menu.findItem(menuItemId) as MenuItem).setOnMenuItemClickListener(menuClicks[index])
                         }

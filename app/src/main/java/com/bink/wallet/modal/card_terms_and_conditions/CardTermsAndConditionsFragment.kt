@@ -68,8 +68,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
             //add-payment-card-response-success
             val accountIsNew = if (SharedPreferenceManager.addPaymentCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
-            if (paymentCard.card?.provider != null && paymentCard.status != null){
-                logEvent(ADD_PAYMENT_CARD_RESPONSE_SUCCESS,getAddPaymentCardResponseSuccessMap(paymentCard.id.toString(), paymentCard.card.provider,accountIsNew,paymentCard.status))
+            if (paymentCard.card?.provider != null && paymentCard.status != null) {
+                logEvent(ADD_PAYMENT_CARD_RESPONSE_SUCCESS, getAddPaymentCardResponseSuccessMap(paymentCard.id.toString(), paymentCard.card.provider, accountIsNew, paymentCard.status))
             }
         }
 
@@ -84,7 +84,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             binding.firstButton.isEnabled = true
             //add-payment-card-response-fail
             userBankCard?.provider?.let { provider ->
-                if(it is HttpException){
+                if (it is HttpException) {
                     val httpException = it
                     logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE, getAddPaymentCardFailMap(provider, httpException.code(), httpException.getErrorBody()))
                 } else {

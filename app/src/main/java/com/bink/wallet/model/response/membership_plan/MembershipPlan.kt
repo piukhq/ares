@@ -21,7 +21,7 @@ class MembershipPlan(
     @ColumnInfo(name = "balances") val balances: List<Balances>?,
     @ColumnInfo(name = "has_vouchers") val has_vouchers: Boolean? = null,
     @ColumnInfo(name = "card") val card: Card?,
-    @ColumnInfo(name = "content") val content : List<Content>?
+    @ColumnInfo(name = "content") val content: List<Content>?
 ) : Parcelable {
 
     constructor(id: String) : this(
@@ -54,5 +54,5 @@ class MembershipPlan(
 
     fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
 
-    fun isStoreCard():Boolean = this.getCardType() == CardType.STORE
+    fun isStoreCard(): Boolean = this.getCardType() == CardType.STORE
 }

@@ -57,13 +57,13 @@ data class DynamicActionEventBody(
     val title: String?,
     val description: String?,
     val cta: DynamicActionEventBodyCta?
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class DynamicActionEventBodyCta(
     val title: String?,
     val action: DynamicActionEventBodyCTAHandler?
-): Parcelable
+) : Parcelable
 
 enum class DynamicActionEventBodyCTAHandler {
     @SerializedName("zd_contact_us")

@@ -43,7 +43,7 @@ interface ApiService {
 
     @POST("/ubiquity/payment_cards")
     suspend fun addPaymentCardAsync(
-        @Body cardAdd: PaymentCardAdd,@Query("autoLink") autoLink:Boolean = true
+        @Body cardAdd: PaymentCardAdd, @Query("autoLink") autoLink: Boolean = true
     ): PaymentCard
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
@@ -129,7 +129,7 @@ interface ApiService {
     ): ResponseBody
 
     @PUT("/users/me")
-   suspend fun putUserDetailsAsync(
+    suspend fun putUserDetailsAsync(
         @Body userRequest: User
     ): User
 

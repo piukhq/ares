@@ -233,6 +233,7 @@ class PaymentCardsDetailsFragment :
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     private fun setActivePcdScreen(
         pCard: PaymentCard,
         membershipCards: List<MembershipCard>
@@ -348,8 +349,7 @@ class PaymentCardsDetailsFragment :
                     )
                 } else {
                     viewModel.unlinkPaymentCard(
-                        it,
-                        viewModel.paymentCard.value?.id.toString()
+                        it
                     )
                 }
             }

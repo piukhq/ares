@@ -14,7 +14,7 @@ class SecurityUtils {
         fun encryptMessage(messageToEncrypt: String, publicKeyString: String): String {
             val cipher: Cipher
             val publicKey = loadPublicKey(publicKeyString)
-            var bytes = ByteArray(0)
+            val bytes: ByteArray
             try {
                 cipher = Cipher.getInstance("RSA/ECB/OAEPPadding")
                 cipher.init(Cipher.ENCRYPT_MODE, publicKey)

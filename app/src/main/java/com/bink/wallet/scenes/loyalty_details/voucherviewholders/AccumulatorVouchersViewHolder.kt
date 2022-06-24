@@ -24,7 +24,6 @@ class AccumulatorVouchersViewHolder(
                     it.value,
                     it.prefix,
                     it.suffix,
-                    it.currency,
                     it.type
                 )
             }
@@ -45,7 +44,6 @@ class AccumulatorVouchersViewHolder(
                                 earn.value,
                                 earn.prefix,
                                 earn.suffix,
-                                earn.currency,
                                 forceTwoDecimals = true
                             )
                         }
@@ -100,8 +98,7 @@ class AccumulatorVouchersViewHolder(
                         ValueDisplayUtils.displayValue(
                             earn.target_value,
                             earn.prefix,
-                            earn.suffix,
-                            earn.currency
+                            earn.suffix
                         )
                     )
                 )
@@ -110,7 +107,6 @@ class AccumulatorVouchersViewHolder(
                         earn.target_value,
                         earn.prefix,
                         earn.suffix,
-                        earn.currency,
                         forceTwoDecimals = true
                     )
             }

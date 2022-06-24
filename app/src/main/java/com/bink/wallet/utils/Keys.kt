@@ -2,12 +2,13 @@ package com.bink.wallet.utils
 
 object Keys {
 
-        init {
-            System.loadLibrary("api_keys-lib")
-        }
-    external fun mixPanelBetaApiKey():String
+    init {
+        System.loadLibrary("api_keys-lib")
+    }
 
-    external fun mixPanelProductionApiKey():String
+    external fun mixPanelBetaApiKey(): String
 
-    external fun binkTestAuthToken():String
+    external fun mixPanelProductionApiKey(): String
+
+    external fun binkTestAuthToken(): String
 }

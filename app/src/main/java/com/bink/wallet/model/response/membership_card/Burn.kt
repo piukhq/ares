@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Burn(
-    val type : String?,
-    val value : Float?,
-    val prefix : String?,
-    val suffix : String?,
-    val currency : String?
+    val type: String?,
+    val value: Float?,
+    val prefix: String?,
+    val suffix: String?,
+    val currency: String?
 ) : Parcelable

@@ -24,7 +24,6 @@ import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.ImageType
-import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy

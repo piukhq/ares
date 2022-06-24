@@ -83,7 +83,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
-            LocalStoreUtils.clearPreferences(appContext)
+            LocalStoreUtils.clearPreferences()
             appContext.startActivity(
                 Intent(appContext, MainActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

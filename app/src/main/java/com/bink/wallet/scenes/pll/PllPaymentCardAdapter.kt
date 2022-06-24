@@ -40,10 +40,10 @@ class PllPaymentCardAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         paymentCards[position].let { paymentCard ->
-                (holder as PllPaymentCardViewHolder).bindCard(
-                    paymentCard,
-                    paymentCards.last() == paymentCard, isFromAddJourney, membershipCard
-                )
+            (holder as PllPaymentCardViewHolder).bindCard(
+                paymentCard,
+                paymentCards.last() == paymentCard, isFromAddJourney, membershipCard
+            )
         }
 
     }

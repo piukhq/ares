@@ -102,7 +102,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 handleErrorResponse()
                 showSignUpFailedDialog()
                 //Failure
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
 
                 viewModel.signUpErrorResponse.value = null
             }
@@ -114,7 +114,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //ONBOARDING END WITH FAILURE
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {
@@ -148,15 +148,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     setAnalyticsUserId(uid)
                 }
                 //ONBOARDING USER COMPLETE
-                logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
             }
 
             postServiceResponse.observeNonNull(this@SignUpFragment) {
                 getMembershipPlans()
                 //ONBOARDING SERVICE COMPLETE
-                logEvent(ONBOARDING_SERVICE_COMPLETE,getOnboardingGenericMap())
+                logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
                 //ONBOARDING END
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
             }
         }
 
@@ -291,7 +291,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
     }
 
-    private fun showSignUpFailedDialog(){
+    private fun showSignUpFailedDialog() {
 
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.error)

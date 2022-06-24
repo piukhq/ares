@@ -428,7 +428,7 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun openDatePicker(datePickerDialog: DatePickerDialog){
+    private fun openDatePicker(datePickerDialog: DatePickerDialog) {
         datePickerDialog.show()
         datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
             .setTextColor(Color.BLACK)

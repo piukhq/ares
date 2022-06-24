@@ -1,3 +1,3 @@
 package com.bink.wallet.utils
 
-data class ErrorBody(val detail:String?)
+data class ErrorBody(val detail: String?)

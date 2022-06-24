@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-object  WalletOrderingUtil {
+object WalletOrderingUtil {
 
     fun getSavedPaymentCardWallet(paymentCards: ArrayList<Any>): ArrayList<Any> {
         val rearrangedCards = ArrayList<Any>()
@@ -98,8 +98,8 @@ object  WalletOrderingUtil {
         val sortedMembershipCards = ArrayList<Any>()
         val sortedMembershipPlans = ArrayList<Any>()
 
-        for(card in unassignedCards){
-            if(card is MembershipCard) {
+        for (card in unassignedCards) {
+            if (card is MembershipCard) {
                 sortedMembershipCards.add(card)
             } else {
                 sortedMembershipPlans.add(card)

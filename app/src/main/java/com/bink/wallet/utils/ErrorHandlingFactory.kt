@@ -14,11 +14,9 @@ fun convertToBaseException(throwable: Throwable): BaseException =
 
         is HttpException -> {
             val response = throwable.response()
-            val httpCode = throwable.code()
 
             if (response?.errorBody() == null) {
                 BaseException.toHttpError(
-                    httpCode = httpCode,
                     response = response
                 )
             }
@@ -38,13 +36,11 @@ fun convertToBaseException(throwable: Throwable): BaseException =
 
             if (serverErrorResponse != null) {
                 BaseException.toServerError(
-                    serverErrorResponse = serverErrorResponse,
-                    httpCode = httpCode
+                    serverErrorResponse = serverErrorResponse
                 )
             } else {
                 BaseException.toHttpError(
-                    response = response,
-                    httpCode = httpCode
+                    response = response
                 )
             }
         }
@@ -71,7 +67,7 @@ class BaseException(
         }
 
     companion object {
-        fun toHttpError(response: Response<*>?, httpCode: Int) =
+        fun toHttpError(response: Response<*>?) =
             BaseException(
                 errorType = ErrorType.HTTP,
                 response = response
@@ -83,7 +79,7 @@ class BaseException(
                 cause = cause
             )
 
-        fun toServerError(serverErrorResponse: ServerErrorResponse, httpCode: Int) =
+        fun toServerError(serverErrorResponse: ServerErrorResponse) =
             BaseException(
                 errorType = ErrorType.SERVER,
                 serverErrorResponse = serverErrorResponse

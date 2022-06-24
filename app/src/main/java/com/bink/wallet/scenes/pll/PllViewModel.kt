@@ -13,7 +13,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.SentryErrorType
 import com.bink.wallet.utils.SentryUtils
-import okhttp3.ResponseBody
 import retrofit2.HttpException
 
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {

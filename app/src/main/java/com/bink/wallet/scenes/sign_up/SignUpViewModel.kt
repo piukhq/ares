@@ -116,10 +116,10 @@ class SignUpViewModel(
 
     fun postService(postServiceRequest: PostServiceRequest) {
         viewModelScope.launch {
-            try{
+            try {
                 val response = loginRepository.postService(postServiceRequest)
                 _postServiceResponse.value = response
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _postServiceErrorResponse.value = e
             }
         }

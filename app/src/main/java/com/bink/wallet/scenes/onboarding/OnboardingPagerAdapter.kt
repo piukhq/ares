@@ -1,14 +1,12 @@
 package com.bink.wallet.scenes.onboarding
 
-import android.os.Parcelable
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 
-
-class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
-    FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class OnboardingPagerAdapter(fragment: Fragment) :
+    FragmentStateAdapter(fragment) {
 
     companion object {
         const val ONBOARDING_PAGES_NUMBER = 3
@@ -17,20 +15,16 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
 
     private val onboardingFragments = mutableListOf<OnboardingPageFragment>()
 
-    override fun getItem(position: Int): Fragment = onboardingFragments[position]
+    override fun getItemCount(): Int = ONBOARDING_PAGES_NUMBER
 
-    override fun getCount(): Int = ONBOARDING_PAGES_NUMBER
-
-    override fun saveState(): Parcelable? {
-        return null
-    }
+    override fun createFragment(position: Int): Fragment = onboardingFragments[position]
 
     fun addFragment(fragment: OnboardingPageFragment) {
         onboardingFragments.add(fragment)
     }
 
-    open class CircularViewPagerHandler(private val viewPager: ViewPager) :
-        ViewPager.OnPageChangeListener {
+    open class CircularViewPagerHandler(private val viewPager: ViewPager2) :
+        ViewPager2.OnPageChangeCallback() {
         private var currentPosition = 0
         private var scrollState = 0
 

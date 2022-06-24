@@ -51,7 +51,7 @@ object WebScrapableManager {
 
                         userName = authoriseFields.firstOrNull {
                             (it.column
-                                                        ?: "").lowercase(Locale.getDefault()) == scrapableAgent.fields.username_field_common_name
+                                ?: "").lowercase(Locale.getDefault()) == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
                             (it.column ?: "").lowercase(Locale.getDefault()) == "password"

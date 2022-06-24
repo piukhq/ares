@@ -7,9 +7,7 @@ import retrofit2.HttpException
 object SentryUtils {
 
     fun logError(sentryError: SentryErrorType, exception: Exception) {
-        var userInfo: String? = null
-
-        userInfo = when (exception) {
+        val userInfo: String = when (exception) {
             is HttpException -> {
                 val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
                 "Error code: ${exception.code()} - Error Body: $errorBody"

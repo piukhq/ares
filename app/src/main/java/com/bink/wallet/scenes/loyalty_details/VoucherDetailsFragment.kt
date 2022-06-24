@@ -131,7 +131,7 @@ class VoucherDetailsFragment :
                         }
 
                         VoucherStates.CANCELLED.state -> {
-                            setCancelledVoucher(earn, burn)
+                            setCancelledVoucher(earn)
                             setVoucherDates(
                                 voucher.date_issued?.let {
                                     getString(
@@ -210,14 +210,12 @@ class VoucherDetailsFragment :
                         earn.target_value,
                         earn.prefix,
                         earn.suffix,
-                        earn.currency,
                         null
                     ),
                     displayValue(
                         burn.value,
                         burn.prefix,
                         burn.suffix,
-                        burn.currency,
                         burn.type
                     )
                 )
@@ -230,7 +228,7 @@ class VoucherDetailsFragment :
             setVoucherTitleAndBody(
                 getString(
                     R.string.voucher_detail_title_issued,
-                    displayValue(burn.value, burn.prefix, burn.suffix, burn.currency)
+                    displayValue(burn.value, burn.prefix, burn.suffix)
                 ),
                 contentMap[DynamicContentColumn.VOUCHER_ISSUED_DETAIL.type]
             )
@@ -242,7 +240,6 @@ class VoucherDetailsFragment :
                         burn.value,
                         burn.prefix,
                         burn.suffix,
-                        burn.currency,
                         burn.type
                     )
                 ),
@@ -252,7 +249,6 @@ class VoucherDetailsFragment :
                         burn.value,
                         burn.prefix,
                         burn.suffix,
-                        burn.currency,
                         null
                     )
                 )
@@ -274,7 +270,6 @@ class VoucherDetailsFragment :
                         burn.value,
                         burn.prefix,
                         burn.suffix,
-                        burn.currency,
                         burn.type
                     )
                 )
@@ -296,7 +291,6 @@ class VoucherDetailsFragment :
                         burn.value,
                         burn.prefix,
                         burn.suffix,
-                        burn.currency,
                         burn.type
                     )
                 )
@@ -304,7 +298,7 @@ class VoucherDetailsFragment :
         }
     }
 
-    private fun setCancelledVoucher(earn: Earn, burn: Burn) {
+    private fun setCancelledVoucher(earn: Earn) {
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_cancelled_title),

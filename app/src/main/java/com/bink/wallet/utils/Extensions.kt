@@ -7,7 +7,6 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -15,7 +14,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.IdRes
-import androidx.annotation.IntegerRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
@@ -416,7 +414,8 @@ fun MembershipPlan.canPlanBeAdded(): Boolean {
         LINKING_SUPPORT_ENROL
     ) == true
 }
-fun Fragment.getMainActivity() : MainActivity{
+
+fun Fragment.getMainActivity(): MainActivity {
     return requireActivity() as MainActivity
 }
 

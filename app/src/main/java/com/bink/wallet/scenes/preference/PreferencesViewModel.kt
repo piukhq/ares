@@ -53,7 +53,7 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
                 //Making sure email is specifically more than 1 because it will always return logged in email
                 if (fieldName == EMAIL_COMMON_NAME) {
                     if (it.size > 1) {
-                        true
+                        return true
                     }
                 } else {
                     return true

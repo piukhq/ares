@@ -13,4 +13,4 @@ data class Content(
     val column: String?,
     @Json(name = "value")
     val value: String?
-):Parcelable
+) : Parcelable

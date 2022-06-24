@@ -168,7 +168,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
             ADD_AUTH_BARCODE
         )
-            ?.observe(viewLifecycleOwner
+            ?.observe(
+                viewLifecycleOwner
             ) { result ->
                 onResult(result)
             }
@@ -228,7 +229,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
-    fun handleNavigationAfterCardCreation(membershipCard: MembershipCard, isGhost: Boolean) {
+    fun handleNavigationAfterCardCreation(membershipCard: MembershipCard) {
         if (viewModel.newMembershipCard.hasActiveObservers()) {
             viewModel.newMembershipCard.removeObservers(this)
         }
@@ -243,6 +244,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 } else {
                     navigationHandler?.navigateToPll(membershipCard)
                 }
+            }
+            else -> {
+                return
             }
         }
     }

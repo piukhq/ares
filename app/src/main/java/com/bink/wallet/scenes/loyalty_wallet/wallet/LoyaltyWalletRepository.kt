@@ -179,7 +179,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun storeAllMembershipPlans(plans: List<MembershipPlan>){
+    suspend fun storeAllMembershipPlans(plans: List<MembershipPlan>) {
         membershipPlanDao.storeAll(plans)
     }
 

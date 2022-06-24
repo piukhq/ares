@@ -29,8 +29,7 @@ fun TextView.setVoucherTitle(voucherBurn: Burn?) {
         ValueDisplayUtils.displayValue(
             voucherBurn?.value,
             voucherBurn?.prefix,
-            voucherBurn?.suffix,
-            null
+            voucherBurn?.suffix
         )
     )
 }

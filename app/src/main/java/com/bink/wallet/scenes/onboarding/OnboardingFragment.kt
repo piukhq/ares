@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
@@ -49,7 +49,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
         viewModel.clearWallets()
 
-        val adapter = OnboardingPagerAdapter(childFragmentManager)
+        val adapter = OnboardingPagerAdapter(this)
         adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
@@ -94,8 +94,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             //ONBOARDING START FOR REGISTER
             logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_REGISTER))
         }
+
         with(binding.pager) {
-            addOnPageChangeListener(object :
+            registerOnPageChangeCallback(object :
                 OnboardingPagerAdapter.CircularViewPagerHandler(this) {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
@@ -117,7 +118,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         timer = Timer()
     }
 
-    private fun scrollPagesAutomatically(pager: ViewPager?) {
+    private fun scrollPagesAutomatically(pager: ViewPager2?) {
         var currentPage = pager?.currentItem as Int
         val pagerHandler = Handler()
         val update = Runnable {

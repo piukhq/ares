@@ -66,7 +66,7 @@ class PaymentCardsDetailsViewModel(
         }
     }
 
-    fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
+    fun unlinkPaymentCard(cardId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
         membershipCard?.let { mCard ->
             paymentCard.value?.let { pCard ->

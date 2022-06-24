@@ -10,7 +10,6 @@ object ValueDisplayUtils {
         value: Float?,
         prefix: String?,
         suffix: String?,
-        currency: String?,
         type: String? = null,
         forceTwoDecimals: Boolean = false
     ): String {

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -19,6 +20,7 @@ data class PlanField(
     val alternatives: List<String>?
 ) : Parcelable {
 
+    @IgnoredOnParcel
     var alternativePlanField: PlanField? = null
 
     fun isBooleanType(): Boolean =

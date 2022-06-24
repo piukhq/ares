@@ -98,7 +98,7 @@ class AddPaymentCardFragment :
             filters = arrayOf(
                 *this.filters,
                 InputFilter.LengthFilter(
-                    enumValues<PaymentCardType>().maxByOrNull{ it.format.length }?.format?.length
+                    enumValues<PaymentCardType>().maxByOrNull { it.format.length }?.format?.length
                         ?: 0
                 )
             )

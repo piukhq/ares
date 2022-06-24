@@ -12,7 +12,7 @@ class WhoWeAreViewModel : BaseViewModel() {
     private val _nameList = MutableLiveData<Array<String>>()
     val nameList: LiveData<Array<String>> get() = _nameList
 
-    fun populateNames(res: Resources){
+    fun populateNames(res: Resources) {
         _nameList.value = res.getStringArray(R.array.dev_names)
     }
 

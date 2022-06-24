@@ -31,7 +31,7 @@ class LoyaltyDetailsTilesAdapter(var tiles: List<Images>, var onClickListener: (
         RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int, tiles: List<Images>) {
             binding.imageUrl = tiles[position].url
-            binding.tileItem.setOnClickListener{
+            binding.tileItem.setOnClickListener {
                 onClickListener(tiles[position])
             }
         }

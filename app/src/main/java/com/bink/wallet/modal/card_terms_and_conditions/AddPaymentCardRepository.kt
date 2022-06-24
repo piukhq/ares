@@ -136,8 +136,8 @@ class AddPaymentCardRepository(
                     apiService.addPaymentCardAsync(card)
                 }
                 addCardRequestMade.postValue(true)
-                    paymentCardDao.store(requestResult)
-                    mutableAddCard.value = requestResult
+                paymentCardDao.store(requestResult)
+                mutableAddCard.value = requestResult
             } catch (exception: Exception) {
                 error.value = exception
                 SentryUtils.logError(SentryErrorType.API_REJECTED, exception)

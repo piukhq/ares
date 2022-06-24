@@ -257,7 +257,7 @@ class AutoResizeTextView : TextView {
             var lastBest = start
             var lo = start
             var hi = end - 1
-            var mid = 0
+            var mid: Int
             while (lo <= hi) {
                 mid = (lo + hi).ushr(1)
                 val midValCmp = sizeTester.onTestSize(mid, availableSpace)

@@ -46,7 +46,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
                     viewModel.createGhostCardRequest(it.id, plan)
                 }
             }
-            handleNavigationAfterCardCreation(it, true)
+            handleNavigationAfterCardCreation(it)
             val status = it.status?.state
             //Is it always going to be just one?
             val reasonCode = it.status?.reason_codes?.get(0)
@@ -58,7 +58,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_REGISTER_JOURNEY,it.id,
+                        ADD_LOYALTY_CARD_REGISTER_JOURNEY, it.id,
                         status,
                         reasonCode,
                         mPlanId,
@@ -104,7 +104,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
 
         }
 
-        viewModel.loading.observeNonNull(this){
+        viewModel.loading.observeNonNull(this) {
             binding.footerComposed.progressBtnContainer.setLoading(it)
         }
     }

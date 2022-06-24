@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
@@ -109,15 +110,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                var card: MembershipCard? = null
+                var membershipCard: MembershipCard? = null
 
                 try {
-                    card = walletAdapter.membershipCards[position] as MembershipCard
+                    membershipCard = walletAdapter.membershipCards[position] as MembershipCard
                 } catch (e: ClassCastException) {
                     //User swiping membership plan
                 }
 
-                card?.let { card ->
+                membershipCard?.let { card ->
                     if (direction == RIGHT) {
                         val membershipPlanData = viewModel.membershipPlanData.value
                             ?: viewModel.localMembershipPlanData.value
@@ -303,7 +304,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
@@ -499,44 +500,42 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun setCardsData(userDataResult: UserDataResult) {
         isRefresh = false
-        when (userDataResult) {
-            is UserDataResult.UserDataSuccess -> {
-                setMixpanelCardProperties(userDataResult.result.first)
+        if (userDataResult is UserDataResult.UserDataSuccess) {
+            setMixpanelCardProperties(userDataResult.result.first)
 
-                walletItems = ArrayList()
-                walletItems.addAll(userDataResult.result.third)
-                // We should only stop loading & show membership cards if we have membership plans too
-                if (userDataResult.result.second.isNotEmpty()) {
-                    cards = userDataResult.result.first
-                    plans = userDataResult.result.second
+            walletItems = ArrayList()
+            walletItems.addAll(userDataResult.result.third)
+            // We should only stop loading & show membership cards if we have membership plans too
+            if (userDataResult.result.second.isNotEmpty()) {
+                cards = userDataResult.result.first
+                plans = userDataResult.result.second
 
-                    walletAdapter.membershipCards =
-                        WalletOrderingUtil.getSavedLoyaltyCardWallet(
-                            sortPlans(ArrayList(userDataResult.result.third))
-                        )
+                walletAdapter.membershipCards =
+                    WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                        sortPlans(ArrayList(userDataResult.result.third))
+                    )
 
-                    disableIndicators()
+                disableIndicators()
+            }
+
+            walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
+            walletAdapter.notifyDataSetChanged()
+
+            SharedPreferenceManager.loyaltyWalletPosition?.let {
+                binding.loyaltyWalletList.layoutManager?.onRestoreInstanceState(it)
+                SharedPreferenceManager.loyaltyWalletPosition = null
+            }
+
+            if (userDataResult.result.first.size > 4) {
+                RequestReviewUtil.triggerViaCards(this) {
+                    logEvent(
+                        FIREBASE_REQUEST_REVIEW,
+                        getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
+                    )
                 }
-
-                walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
-                walletAdapter.notifyDataSetChanged()
-
-                SharedPreferenceManager.loyaltyWalletPosition?.let {
-                    binding.loyaltyWalletList.layoutManager?.onRestoreInstanceState(it)
-                    SharedPreferenceManager.loyaltyWalletPosition = null
-                }
-
-                if (userDataResult.result.first.size > 4) {
-                    RequestReviewUtil.triggerViaCards(this) {
-                        logEvent(
-                            FIREBASE_REQUEST_REVIEW,
-                            getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
-                        )
-                    }
-                }
-
             }
         }
+
     }
 
     private fun sortPlans(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
