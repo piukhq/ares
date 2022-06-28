@@ -183,7 +183,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 )
                 if (!settingsItem.value.isNullOrEmpty()) {
                     Text(
-                        text = settingsItem.value ?: "",
+                        text = settingsItem.value,
                         fontFamily = nunitoSans,
                         fontWeight = FontWeight.Light,
                         fontSize = 15.sp
@@ -246,7 +246,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         }
                     ) {
                         Text(
-                            text =  stringResource(R.string.cancel_text),
+                            text = stringResource(R.string.cancel_text),
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
@@ -295,7 +295,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                             Uri.parse(getString(viewModel.getPlayStoreAppUrl(), appPackageName))
                         )
                     )
-                } catch (_: android.content.ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
@@ -387,6 +387,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     R.id.settings_to_preferences
                 )
             }
+            SettingsItemType.FOOTER -> {
+
+            }
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
@@ -409,7 +412,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         logoutMixpanel()
-        LocalStoreUtils.clearPreferences(requireContext())
+        LocalStoreUtils.clearPreferences()
         try {
             getMainActivity().forceRunApp()
         } catch (e: Exception) {

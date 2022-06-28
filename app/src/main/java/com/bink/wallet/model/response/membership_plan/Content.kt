@@ -4,7 +4,7 @@ package com.bink.wallet.model.response.membership_plan
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -13,4 +13,4 @@ data class Content(
     val column: String?,
     @Json(name = "value")
     val value: String?
-):Parcelable
+) : Parcelable

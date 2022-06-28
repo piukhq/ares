@@ -12,6 +12,7 @@ import com.bink.wallet.scenes.loyalty_details.voucherviewholders.StampVouchersVi
 import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 
 typealias OnVoucherClickListener = (Voucher) -> Unit
+
 class VouchersAdapter(
     private val vouchers: List<Voucher>
 ) :

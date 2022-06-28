@@ -5,8 +5,8 @@ import android.content.pm.LabeledIntent
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Html
 import android.view.View
+import androidx.core.text.HtmlCompat
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CheckInboxFragmentBinding
@@ -65,7 +65,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
     }
 
     private fun startButtonFadeInCountdown() {
-        if(binding.goToInbox.alpha == 1.0f) return
+        if (binding.goToInbox.alpha == 1.0f) return
         countDownTimer = object : CountDownTimer(3000, 1000) {
             override fun onFinish() {
                 binding.goToInbox.animate().alpha(1.0f)
@@ -82,7 +82,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
         val subtitlePartOne = getString(R.string.check_inbox_subtitle_part_1)
         val subtitlePartTwo = getString(R.string.check_inbox_subtitle_part_2)
         val subtitle = "$subtitlePartOne <b>$email</b>. $subtitlePartTwo"
-        binding.subtitle.text = Html.fromHtml(subtitle)
+        binding.subtitle.text = HtmlCompat.fromHtml(subtitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
     private fun showEmailClients(): Intent? {

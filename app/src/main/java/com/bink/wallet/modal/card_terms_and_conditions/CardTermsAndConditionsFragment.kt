@@ -14,16 +14,12 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -39,7 +35,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         const val DIVISOR_MILLISECONDS = 1000
     }
 
-    var userBankCard: BankCard? = null
+    private var userBankCard: BankCard? = null
     var cardNumber: String = ""
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -72,8 +68,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
             //add-payment-card-response-success
             val accountIsNew = if (SharedPreferenceManager.addPaymentCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
-            if (paymentCard.card?.provider != null && paymentCard.status != null){
-                logEvent(ADD_PAYMENT_CARD_RESPONSE_SUCCESS,getAddPaymentCardResponseSuccessMap(paymentCard.id.toString(), paymentCard.card.provider,accountIsNew,paymentCard.status))
+            if (paymentCard.card?.provider != null && paymentCard.status != null) {
+                logEvent(ADD_PAYMENT_CARD_RESPONSE_SUCCESS, getAddPaymentCardResponseSuccessMap(paymentCard.id.toString(), paymentCard.card.provider, accountIsNew, paymentCard.status))
             }
         }
 
@@ -88,7 +84,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             binding.firstButton.isEnabled = true
             //add-payment-card-response-fail
             userBankCard?.provider?.let { provider ->
-                if(it is HttpException){
+                if (it is HttpException) {
                     val httpException = it
                     logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE, getAddPaymentCardFailMap(provider, httpException.code(), httpException.getErrorBody()))
                 } else {

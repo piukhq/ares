@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -50,8 +49,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     var membershipCardId: String? = null
     var isRetryJourney = false
     var currentMembershipPlan: MembershipPlan? = null
-    var navigationHandler: AuthNavigationHandler? = null
-    var animationHelper: AuthAnimationHelper? = null
+    private var navigationHandler: AuthNavigationHandler? = null
+    private var animationHelper: AuthAnimationHelper? = null
     protected var barcode: String? = null
     private var addAuthAdapter: AddAuthAdapter? = null
     private lateinit var account: com.bink.wallet.model.response.membership_plan.Account
@@ -169,10 +168,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
             ADD_AUTH_BARCODE
         )
-            ?.observe(viewLifecycleOwner,
-                Observer { result ->
-                    onResult(result)
-                })
+            ?.observe(
+                viewLifecycleOwner
+            ) { result ->
+                onResult(result)
+            }
     }
 
     override fun onResume() {
@@ -229,7 +229,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
-    fun handleNavigationAfterCardCreation(membershipCard: MembershipCard, isGhost: Boolean) {
+    fun handleNavigationAfterCardCreation(membershipCard: MembershipCard) {
         if (viewModel.newMembershipCard.hasActiveObservers()) {
             viewModel.newMembershipCard.removeObservers(this)
         }
@@ -244,6 +244,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 } else {
                     navigationHandler?.navigateToPll(membershipCard)
                 }
+            }
+            else -> {
+                return
             }
         }
     }

@@ -86,7 +86,7 @@ object RequestReviewUtil {
         currentMinorVersion()?.let { currentMinor ->
             SharedPreferenceManager.lastReviewedMinor?.let { lastReviewedMinor ->
                 if (lastReviewedMinor.isNotEmpty()) {
-                    return currentMinor.equals(lastReviewedMinor)
+                    return currentMinor == lastReviewedMinor
                 }
             }
         }

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.scenes.add.AddFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -61,9 +59,9 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 )
             }
 
-            setOnScanItemClickListener(View.OnClickListener {
+            setOnScanItemClickListener {
                 goToScan()
-            })
+            }
 
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -101,13 +99,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
 
-        viewModel.searchText.observe(viewLifecycleOwner, Observer {
+        viewModel.searchText.observe(viewLifecycleOwner) {
             viewModel.filterBrandItems()
-        })
+        }
 
-        viewModel.activeFilters.observe(viewLifecycleOwner, Observer {
+        viewModel.activeFilters.observe(viewLifecycleOwner) {
             viewModel.filterBrandItems()
-        })
+        }
 
         viewModel.filteredBrandItems.observeNonNull(this) {
             adapter.submitList(it)

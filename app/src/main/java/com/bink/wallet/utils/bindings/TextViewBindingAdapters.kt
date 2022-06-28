@@ -8,18 +8,10 @@ import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.VoucherStates
+import java.util.*
 
 const val ACCUMULATOR = "accumulator"
 const val STAMP = "stamps"
-
-@BindingAdapter("showNumberOrBarcodeDescription")
-fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
-    text = if (isBarcodeAvailable) {
-        context.getString(R.string.barcode_description)
-    } else {
-        context.getString(R.string.card_number_description)
-    }
-}
 
 @BindingAdapter("voucherEarnSubtitle", requireAll = true)
 fun TextView.setVoucherSubText(voucherEarn: Earn) {
@@ -37,8 +29,7 @@ fun TextView.setVoucherTitle(voucherBurn: Burn?) {
         ValueDisplayUtils.displayValue(
             voucherBurn?.value,
             voucherBurn?.prefix,
-            voucherBurn?.suffix,
-            null
+            voucherBurn?.suffix
         )
     )
 }
@@ -60,8 +51,8 @@ fun TextView.setVoucherHeadline(voucher: Voucher) {
             VoucherStates.REDEEMED.state,
             VoucherStates.EXPIRED.state,
             VoucherStates.CANCELLED.state
-            -> state.capitalize()
-            VoucherStates.ISSUED.state -> context.getString(R.string.earned).capitalize()
+            -> state.replaceFirstChar { it.titlecase(Locale.getDefault()) }
+            VoucherStates.ISSUED.state -> context.getString(R.string.earned).replaceFirstChar { it.titlecase(Locale.getDefault()) }
             else ->
                 if (voucher.earn?.type == STAMP)
                     context.getString(

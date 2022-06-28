@@ -8,15 +8,12 @@ import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 
-typealias OnBrandHeaderClickListener = (String) -> Unit
-
 class PllPaymentCardAdapter(
     val paymentCards: MutableList<PaymentCard> = mutableListOf(),
     private val isFromAddJourney: Boolean
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onBrandHeaderClickListener: OnBrandHeaderClickListener? = null
     private lateinit var membershipCard: MembershipCard
 
     fun updateData(paymentCards: List<PaymentCard>, membershipCard: MembershipCard) {
@@ -43,10 +40,10 @@ class PllPaymentCardAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         paymentCards[position].let { paymentCard ->
-                (holder as PllPaymentCardViewHolder).bindCard(
-                    paymentCard,
-                    paymentCards.last() == paymentCard, isFromAddJourney, membershipCard
-                )
+            (holder as PllPaymentCardViewHolder).bindCard(
+                paymentCard,
+                paymentCards.last() == paymentCard, isFromAddJourney, membershipCard
+            )
         }
 
     }

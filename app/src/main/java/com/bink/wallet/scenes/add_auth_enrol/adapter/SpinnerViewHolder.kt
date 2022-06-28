@@ -1,3 +1,5 @@
+package com.bink.wallet.scenes.add_auth_enrol.adapter
+
 import android.view.View
 import android.widget.AdapterView
 import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
@@ -5,7 +7,6 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
-import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 
 class SpinnerViewHolder(
     val binding: AddAuthSpinnerItemBinding
@@ -16,7 +17,7 @@ class SpinnerViewHolder(
 
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
-            position?.let { FormsUtil.updateValidation(it,false) }
+            position?.let { FormsUtil.updateValidation(it, false) }
         }
 
         override fun onItemSelected(
@@ -27,8 +28,8 @@ class SpinnerViewHolder(
         ) {
             item?.let {
                 position?.let { position ->
-                    FormsUtil.updateField(position,(it.fieldType as PlanField).choice?.get(pos).toString())
-                     FormsUtil.updateValidation(position,true)
+                    FormsUtil.updateField(position, (it.fieldType as PlanField).choice?.get(pos).toString())
+                    FormsUtil.updateValidation(position, true)
                 }
             }
         }
@@ -41,9 +42,9 @@ class SpinnerViewHolder(
         val planField = item.fieldType as PlanField
         binding.planField = planField
         position?.let {
-            FormsUtil.addFormField(it,planField)
-            FormsUtil.updateField(it,planField.choice?.get(0).toString())
-            FormsUtil.updateValidation(it,true)
+            FormsUtil.addFormField(it, planField)
+            FormsUtil.updateField(it, planField.choice?.get(0).toString())
+            FormsUtil.updateValidation(it, true)
         }
 
         with(spinner) {

@@ -7,14 +7,12 @@ import retrofit2.HttpException
 object SentryUtils {
 
     fun logError(sentryError: SentryErrorType, exception: Exception) {
-        var userInfo: String? = null
-
-        when (exception) {
+        val userInfo: String = when (exception) {
             is HttpException -> {
                 val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
-                userInfo = "Error code: ${exception.code()} - Error Body: $errorBody"
+                "Error code: ${exception.code()} - Error Body: $errorBody"
             }
-            else -> userInfo = "Error message: ${exception.message}"
+            else -> "Error message: ${exception.message}"
         }
 
         logError(sentryError, userInfo)
@@ -60,7 +58,6 @@ enum class LocalPointScrapingError(val issue: String) {
 }
 
 enum class InvalidPayloadType(val error: String) {
-    INVALID_HASH("Failed to encrypt hash"),
     INVALID_MONTH("Failed to encrypt expiry month"),
     INVALID_YEAR("Failed to encrypt expiry year"),
     INVALID_FIRST_SIX("Failed to encrypt first six"),

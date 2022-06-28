@@ -23,8 +23,6 @@ class WalletsViewModel(
     val fetchError: LiveData<Exception>
         get() = _fetchError
     private val _loadCardsError = MutableLiveData<Exception>()
-    val loadCardsError: LiveData<Exception>
-        get() = _loadCardsError
 
     fun fetchMembershipCards() {
         val shouldMakePeriodicCall =

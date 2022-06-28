@@ -18,12 +18,7 @@ import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 
 class PaymentWalletRepository(
@@ -43,7 +38,7 @@ class PaymentWalletRepository(
                 storePaymentsCards(requestResult, fetchError)
 
                 SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
-                SharedPreferenceManager.isPaymentEmpty = requestResult.isNullOrEmpty()
+                SharedPreferenceManager.isPaymentEmpty = requestResult.isEmpty()
                 SharedPreferenceManager.hasNoActivePaymentCards =
                     MembershipPlanUtils.hasNoActiveCards(requestResult)
 
@@ -72,8 +67,8 @@ class PaymentWalletRepository(
             val idsFromApi = cards.map { cardsFromApi -> cardsFromApi.id }
 
             // List if id's which are in the database but not in the api data.
-            val difference = idsFromApi?.let { cardIdsInDb.minus(it) }
-            difference?.let {
+            val difference = idsFromApi.let { cardIdsInDb.minus(it.toSet()) }
+            difference.let {
                 if (it.isNotEmpty()) {
                     it.forEach { cardId ->
                         withContext(Dispatchers.IO) {

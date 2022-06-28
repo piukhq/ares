@@ -9,13 +9,10 @@ import android.graphics.RectF;
 import java.util.Stack;
 
 public class CardViewStyleKit {
-    public static void drawCanvas(Canvas canvas, int firstColor, int secondColor) {
-        CardViewStyleKit.drawCanvas(canvas, new RectF(0f, 0f, 240f, 120f), ResizingBehavior.AspectFit, firstColor, secondColor);
-    }
 
     public static void drawCanvas(Canvas canvas, RectF targetFrame, ResizingBehavior resizing, int firstColor, int secondColor) {
         // General Declarations
-        Stack<Matrix> currentTransformation = new Stack<Matrix>();
+        Stack<Matrix> currentTransformation = new Stack<>();
         currentTransformation.push(new Matrix());
         Paint paint = CacheForCanvas.paint;
 
@@ -113,12 +110,12 @@ public class CardViewStyleKit {
     }
 
     private static class CacheForCanvas {
-        private static Paint paint = new Paint();
-        private static RectF originalFrame = new RectF(0f, 0f, 240f, 120f);
-        private static RectF resizedFrame = new RectF();
-        private static RectF rectangleRect = new RectF();
-        private static Path rectanglePath = new Path();
-        private static RectF rectangle2Rect = new RectF();
-        private static Path rectangle2Path = new Path();
+        private static final Paint paint = new Paint();
+        private static final RectF originalFrame = new RectF(0f, 0f, 240f, 120f);
+        private static final RectF resizedFrame = new RectF();
+        private static final RectF rectangleRect = new RectF();
+        private static final Path rectanglePath = new Path();
+        private static final RectF rectangle2Rect = new RectF();
+        private static final Path rectangle2Path = new Path();
     }
 }

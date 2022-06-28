@@ -24,7 +24,6 @@ import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.ImageType
-import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -35,13 +34,12 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
-private const val HERE = "here"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -88,13 +86,6 @@ fun ImageView.loadImage(item: MembershipCard?) {
 fun getIconTypeFromCard(item: MembershipCard?) =
     item?.images?.first { it.type == ImageType.ICON.type }?.url
 
-@BindingAdapter("image")
-fun ImageView.setPaymentCardImage(item: PaymentCard) {
-    if (!item.images.isNullOrEmpty()) {
-        Glide.with(context).load(item.images.first().url).into(this)
-    }
-}
-
 
 @BindingAdapter("image")
 fun ImageView.setImage(url: String) {
@@ -128,7 +119,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
         val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
-        val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
 
         membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
             barcodeNumberLength?.let {
@@ -177,7 +167,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
     }
 }
 
-fun View.shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
+fun shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
     viewModel?.shouldShowLabel?.value = showMessage
 }
 
@@ -234,9 +224,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
         val cardNumber = card?.card?.membership_id ?: ""
         val barcode = card?.card?.barcode ?: ""
-        val barcodeFormat = card?.card?.getBarcodeFormat()
 
-        when (barcodeFormat) {
+        when (val barcodeFormat = card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
             BarcodeFormat.AZTEC -> {
                 binding.tapCard.text =
@@ -350,7 +339,6 @@ private fun LoyaltyCardHeader.loadNoBarcodeState(
 }
 
 private fun shouldShowBarcode(barcodeFormat: BarcodeFormat, barcode: String): Boolean {
-    val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
     val barcodeNumberLength = barcode.length
 
     return when (barcodeFormat) {
@@ -586,16 +574,6 @@ fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
     }
 }
 
-@BindingAdapter("loginStatus")
-fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
-    text = when (loginStatus) {
-        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
-        LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
-        LoginStatus.STATUS_PENDING -> this.context.getString(R.string.card_status_pending)
-        else -> this.context.getString(R.string.empty_string)
-    }
-}
-
 @BindingAdapter("paymentCardDetailsTitle", "paymentCard", requireAll = false)
 fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
     text = if (paymentCard.card?.isExpired() == true) {
@@ -691,15 +669,6 @@ fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String
     } else {
         preferenceLabel
     }
-}
-
-@BindingAdapter("pllEmptyPendingFaq")
-fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
-    UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
-        context.getString(R.string.pll_empty_faqs_description),
-        HERE, this, hyperlinkClick
-    )
-
 }
 
 @BindingAdapter("itemDecorationSpacing")

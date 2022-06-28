@@ -2,7 +2,7 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)

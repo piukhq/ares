@@ -97,7 +97,7 @@ class PaymentCardWalletFragment :
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
             val paymentCards = walletAdapter.paymentCards
-            if (!paymentCards.isNullOrEmpty() && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
+            if (paymentCards.isNotEmpty() && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
                 try {
                     deleteDialog(paymentCards[position] as PaymentCard)
                 } catch (e: ClassCastException) {

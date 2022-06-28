@@ -13,8 +13,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import kotlinx.coroutines.*
 
 class LoyaltyWalletRepository(
@@ -179,7 +179,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun storeAllMembershipPlans(plans: List<MembershipPlan>){
+    suspend fun storeAllMembershipPlans(plans: List<MembershipPlan>) {
         membershipPlanDao.storeAll(plans)
     }
 
@@ -292,21 +292,6 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun getLocalPaymentCards(
-        localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    localPaymentCards.value = paymentCardDao.getAllAsync()
-                } catch (e: Exception) {
-                    localFetchError.value = e
-                }
-            }
-        }
-    }
-
     fun retrieveDismissedCards(
         localMembershipCards: MutableLiveData<List<BannerDisplay>>,
         fetchError: MutableLiveData<Exception>
@@ -391,7 +376,7 @@ class LoyaltyWalletRepository(
             val idFromApi = membershipCards?.map { card -> card.id }
 
             //list of Id's which are available in database but not in return api
-            val difference = idFromApi?.let { cardIdInDb.minus(it) }
+            val difference = idFromApi?.let { cardIdInDb.minus(it.toSet()) }
             difference?.let {
                 if (it.isNotEmpty()) {
                     deleteFromDb(it)

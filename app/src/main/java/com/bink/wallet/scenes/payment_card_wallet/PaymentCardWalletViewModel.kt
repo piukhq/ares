@@ -28,8 +28,6 @@ class PaymentCardWalletViewModel(
     val deleteError: LiveData<Exception> get() = _deleteError
     private val _deleteCardError = MutableLiveData<Exception>()
     val deleteCardError: LiveData<Exception> get() = _deleteCardError
-    private val _addError = MutableLiveData<Exception>()
-    val addError: LiveData<Exception> get() = _addError
     val loyaltyUpdateDone = MutableLiveData<Boolean>()
     val paymentUpdateDone = MutableLiveData<Boolean>()
 

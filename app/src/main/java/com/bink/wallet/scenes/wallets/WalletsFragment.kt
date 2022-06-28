@@ -7,7 +7,6 @@ import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
-import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -24,14 +23,13 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     override val viewModel: WalletsViewModel by viewModel()
-    val mainViewModel: MainViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     override val layoutRes: Int
         get() = R.layout.wallets_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
         viewModel.fetchStoredMembershipPlans()

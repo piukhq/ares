@@ -6,5 +6,4 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 data class MembershipCardAndPlan(
     val membershipCards: List<MembershipCard>?,
     val membershipPlans: List<MembershipPlan>?
-) {
-}
+)
