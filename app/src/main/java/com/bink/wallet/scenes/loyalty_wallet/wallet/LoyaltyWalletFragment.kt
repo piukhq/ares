@@ -100,7 +100,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 //Store current card being moved
                 card?.let {
-                    return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    val moveItem = walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    if (moveItem) {
+                        binding.sortText.text = "Custom"
+                    }
+                    return moveItem
                 }
                 return false
             }
@@ -439,16 +443,24 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             )
         }
 
-        binding.sortButton.setOnClickListener {
-            PopupMenu(requireContext(), it).apply {
+        binding.sortButton.setOnClickListener { view ->
+            PopupMenu(requireContext(), view).apply {
                 menuInflater.inflate(R.menu.wallet_sort_menu, menu)
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.custom_item -> {
-
+                            binding.sortText.text = "Custom"
                         }
                         R.id.newest_item -> {
-
+                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            val sortedCards = unsortedCards.sortedByDescending { it.id }
+                            val listAsAny = ArrayList<Any>()
+                            listAsAny.addAll(sortedCards)
+                            WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
+                            viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                            }
+                            binding.sortText.text = "Newest"
                         }
                     }
                     false
@@ -532,6 +544,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     WalletOrderingUtil.getSavedLoyaltyCardWallet(
                         sortPlans(ArrayList(userDataResult.result.third))
                     )
+
+                setSortButtonState()
 
                 disableIndicators()
             }
@@ -870,6 +884,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
         return totalDupes
+    }
+
+    private fun setSortButtonState() {
+        if(WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>())){
+            binding.sortText.text = getString(R.string.menu_custom)
+        } else {
+            binding.sortText.text = getString(R.string.menu_newest)
+        }
     }
 
     override fun onDestroyView() {

@@ -52,11 +52,11 @@
                     tools:ignore="ContentDescription" />
 
                 <TextView
+                    android:id="@+id/sort_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Custom"
                     android:textColor="#ADC3CC"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/sort_button_text_size" />
 
             </LinearLayout>
 

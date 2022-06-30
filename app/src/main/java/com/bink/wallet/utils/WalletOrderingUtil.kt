@@ -168,6 +168,24 @@ object WalletOrderingUtil {
         SharedPreferenceManager.loyaltyWalletOrder = gson.toJson(allSavedWalletOrders)
     }
 
+    fun hasCustomWalletState(cards: List<MembershipCard>): Boolean {
+        val savedWallet = getSavedLoyaltyWalletOrder()
+        val cardAsNewest = cards.sortedByDescending { it.id }
+
+        for (i in 0 until savedWallet.size) {
+            if (savedWallet[i].userId == getUserEmail()) {
+                //Check to see if the wallet is the same order in newest as it is in the saved wallet
+                //If it isn't, we know the user has a custom format.
+                for (x in 0 until savedWallet[i].cardIds.size) {
+                    if (savedWallet[i].cardIds[x] != cardAsNewest[x].id.toLong()) {
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
 
     private fun getSavedLoyaltyWalletOrder(): ArrayList<WalletOrder> {
         val gson = Gson()
