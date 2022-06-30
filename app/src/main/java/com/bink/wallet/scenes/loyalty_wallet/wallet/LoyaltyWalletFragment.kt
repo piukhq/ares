@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
@@ -324,7 +325,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             walletAdapter.paymentCards = it.toMutableList()
         }
 
-
         viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
         }
@@ -355,18 +355,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         manageRecyclerView()
 
         viewModel.fetchLocalPaymentCards()
-
-        binding.swipeLayout.setOnRefreshListener {
-            isRefresh = true
-            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
-                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
-                }
-            } else {
-                isRefresh = false
-                disableIndicators()
-            }
-        }
 
         viewModel.loadCardsError.observeNonNull(this) {
             handleServerDownError(it)
@@ -421,6 +409,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             WebScrapableManager.newlyAddedCard.value = null
         }
 
+        binding.swipeLayout.setOnRefreshListener {
+            isRefresh = true
+            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                }
+            } else {
+                isRefresh = false
+                disableIndicators()
+            }
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -437,6 +437,24 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 this,
                 LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
             )
+        }
+
+        binding.sortButton.setOnClickListener {
+            PopupMenu(requireContext(), it).apply {
+                menuInflater.inflate(R.menu.wallet_sort_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.custom_item -> {
+
+                        }
+                        R.id.newest_item -> {
+
+                        }
+                    }
+                    false
+                }
+                show()
+            }
         }
     }
 
