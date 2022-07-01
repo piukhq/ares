@@ -102,7 +102,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 card?.let {
                     val moveItem = walletAdapter.onItemMove(currentPosition, target.adapterPosition)
                     if (moveItem) {
-                        binding.sortText.text = "Custom"
+                        setSortButtonState()
                     }
                     return moveItem
                 }
@@ -449,18 +449,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.custom_item -> {
-                            binding.sortText.text = "Custom"
+                            setSortButtonState(true)
                         }
                         R.id.newest_item -> {
                             val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
-                            val sortedCards = unsortedCards.sortedByDescending { it.id }
-                            val listAsAny = ArrayList<Any>()
-                            listAsAny.addAll(sortedCards)
-                            WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
-                            viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
-                                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                            if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
+                                requireContext().showDialog(
+                                    title = getString(R.string.newest_sort_title),
+                                    message = getString(R.string.newest_sort_warning),
+                                    positiveBtn = getString(R.string.ok),
+                                    negativeBtn = getString(R.string.cancel_text),
+                                    positiveCallback = { sortByNewest(unsortedCards) },
+                                    negativeCallback = { })
+                            } else {
+                                sortByNewest(unsortedCards)
                             }
-                            binding.sortText.text = "Newest"
                         }
                     }
                     false
@@ -468,6 +471,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 show()
             }
         }
+    }
+
+    private fun sortByNewest(unsortedCards: List<MembershipCard>) {
+        val sortedCards = unsortedCards.sortedByDescending { it.id }
+        //If we directly cast to ArrayList<Any> we will get Error: java.util.Arrays$ArrayList cannot be cast to java.util.ArrayList
+        val listAsAny = ArrayList<Any>()
+        listAsAny.addAll(sortedCards)
+        //Save the new Order
+        WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
+        //Refresh the list
+        viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+            logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+        }
+        setSortButtonState()
     }
 
     override fun onPause() {
@@ -886,12 +903,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return totalDupes
     }
 
-    private fun setSortButtonState() {
-        if(WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>())){
-            binding.sortText.text = getString(R.string.menu_custom)
+    private fun setSortButtonState(forceToCustom: Boolean = false) {
+        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forceToCustom) {
+            getString(R.string.menu_custom)
         } else {
-            binding.sortText.text = getString(R.string.menu_newest)
+            getString(R.string.menu_newest)
         }
+        setMixpanelProperty(
+            MixpanelEvents.WALLET_SORT,
+            sortType
+        )
+        binding.sortText.text = sortType
     }
 
     override fun onDestroyView() {

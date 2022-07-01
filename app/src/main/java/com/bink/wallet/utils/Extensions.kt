@@ -421,4 +421,30 @@ fun Fragment.getMainActivity(): MainActivity {
 
 fun isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
 
+fun Context.showDialog(
+    title: String? = null,
+    message: String? = null,
+    positiveBtn: String? = null,
+    negativeBtn: String? = null,
+    cancelable: Boolean = false,
+    positiveCallback: () -> Unit = {},
+    negativeCallback: () -> Unit = {}
+) {
+    val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+    builder.apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton(positiveBtn) { _, _ ->
+            positiveCallback()
+        }
+        setNegativeButton(negativeBtn) { _, _ ->
+            negativeCallback()
+        }
+        setCancelable(cancelable)
+        create()
+    }
+    builder.show()
+}
+
+
 
