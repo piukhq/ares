@@ -86,7 +86,7 @@ class ContinueWithEmailFragment :
             }
         )
 
-        binding.checkboxTermsConditions.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxTermsConditions.setOnCheckedChangeListener { _, _ ->
             binding.signUpButton.isEnabled = false
             validateCredentials()
         }

@@ -129,7 +129,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //SHOULD WE COUNT THIS AS END OF JOURNEY?
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(

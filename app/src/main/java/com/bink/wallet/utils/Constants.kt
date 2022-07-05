@@ -7,16 +7,7 @@ const val WEEKS = "weeks"
 const val MONTHS = "months"
 const val YEARS = "years"
 
-const val NUMBER_MINUTES_IN_HOUR = 60
-const val NUMBER_SECONDS_IN_MINUTE = 60
-const val NUMBER_HOURS_IN_DAY = 24
-const val NUMBER_DAYS_IN_WEEK = 7
-const val NUMBER_WEEKS_IN_MONTH = 5
-const val NUMBER_MONTHS_IN_YEAR = 12
-
 const val ONE_THOUSAND = 1000
-
-val ENVIRONMENTS_TO_DEBUG = listOf("debug", "beta", "mr", "nightly")
 
 const val EMPTY_STRING = ""
 const val SPACE = " "
@@ -36,16 +27,12 @@ const val CONTENT_TYPE = "application/json;v=1.1"
 
 const val FLOAT_ZERO = 0f
 const val FLOAT_ONE_HUNDRED = 100f
-const val INT_ZERO = 0
 const val INT_ONE_HUNDRED = 100
-const val LONG_ZERO = 0L
 
 const val PREFERENCE_MARKETING_SLUG = "marketing-bink"
 
 const val SESSION_HANDLER_NAVIGATION_KEY = "SESSION_HANDLER_NAVIGATION_KEY"
 const val SESSION_HANDLER_DESTINATION_ONBOARDING = "SESSION_HANDLER_DESTINATION_ONBOARDING"
-
-const val CERT_PINNING_ERROR = "SSLPeerUnverifiedException"
 
 const val CERT_PINNING_GENERAL_ERROR = "SSL"
 
@@ -75,9 +62,6 @@ const val CAMERA_REQUEST_CODE = 101
 
 const val PLAN_ALREADY_EXISTS = "PLAN_ALREADY_LINKED"
 
-const val PROD_ARTICLE_ID = 360016688220
-const val SANDBOX_ARTICLE_ID = 360016721639
-
 const val PAYMENT_CARD_STATUS_PENDING = "pending"
 
 const val UPDATE_REQUEST_CODE = 102
@@ -89,12 +73,14 @@ const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
 const val MAGIC_LINK_SLUG = "matalan-reward-card"
 
 val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
-val REMEMBER_DETAILS_KEY = "remember-my-details"
-val CLEAR_PREF_KEY = "clear_preferences"
-val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
-val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
-val EMAIL_COMMON_NAME = "email"
-val CLEAR_CREDS_TITLE = "Clear Stored Credentials"
+const val REMEMBER_DETAILS_KEY = "remember-my-details"
+const val CLEAR_PREF_KEY = "clear_preferences"
+const val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
+const val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
+const val EMAIL_COMMON_NAME = "email"
+const val CLEAR_CREDS_TITLE = "Clear Stored Credentials"
 
-val LINKING_SUPPORT_ADD = "ADD"
-val LINKING_SUPPORT_ENROL = "ENROL"
+const val LINKING_SUPPORT_ADD = "ADD"
+const val LINKING_SUPPORT_ENROL = "ENROL"
+
+val EAN_13_BARCODE_LENGTH_LIMIT = 12..13

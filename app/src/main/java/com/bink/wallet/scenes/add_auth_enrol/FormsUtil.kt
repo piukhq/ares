@@ -13,7 +13,6 @@ import com.bink.wallet.utils.enums.TypeOfField
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import java.util.*
 
 object FormsUtil {
 
@@ -151,7 +150,7 @@ object FormsUtil {
 
         LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
             val gson = GsonBuilder().create()
-            if (fields == null) fields = ArrayList<String>()
+            if (fields == null) fields = ArrayList()
             fields?.addAll(gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type))
             return fields
         }

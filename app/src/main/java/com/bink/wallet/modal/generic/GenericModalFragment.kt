@@ -118,7 +118,7 @@ open class GenericModalFragment :
             }
             title.text = parameters.title
 
-            if (parameters.description2.trim().isNotEmpty() && parameters.description.trim().isEmpty()){
+            if (parameters.description2.trim().isNotEmpty() && parameters.description.trim().isEmpty()) {
                 description.visibility = View.GONE
             }
 

@@ -27,21 +27,9 @@ class FragmentToolbar(
 
         fun withId(@IdRes resId: Int) = apply { this.resId = resId }
 
-        fun withTitle(title: Int) = apply { this.title = title }
-
-        fun withMenu(@MenuRes menuId: Int) = apply { this.menuId = menuId }
-
         fun shouldDisplayBack(activity: FragmentActivity) = apply { this.activity = activity }
 
         fun with(toolbar: Toolbar?) = apply { this.toolbar = toolbar }
-
-        fun withMenuItems(
-            menuItems: MutableList<Int>,
-            menuClicks: MutableList<MenuItem.OnMenuItemClickListener?>
-        ) = apply {
-            this.menuItems.addAll(menuItems)
-            this.menuClicks.addAll(menuClicks)
-        }
 
         fun build() =
             FragmentToolbar(resId, title, menuId, menuItems, menuClicks, activity, toolbar)

@@ -10,7 +10,7 @@ import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPendingAdapter(
     var paymentCards: MutableList<PaymentCard>,
-    val clickListener : () -> Unit
+    val clickListener: () -> Unit
 ) :
     RecyclerView.Adapter<PllPendingAdapter.PendingCardsViewHolder>() {
 

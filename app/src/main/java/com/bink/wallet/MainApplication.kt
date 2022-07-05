@@ -4,7 +4,6 @@ import android.app.Application
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.dataModule
 import com.bink.wallet.di.networkModule
-import com.bink.wallet.di.utilsModule
 import com.bink.wallet.di.viewModelModules
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.enums.BackendVersion
@@ -32,7 +31,7 @@ class MainApplication : Application() {
             if (SharedPreferenceManager.storedBackendVersion.isNullOrEmpty()) {
                 SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
             }
-            modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
+            modules(listOf(viewModelModules, networkModule, dataModule))
         }
     }
 }

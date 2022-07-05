@@ -7,7 +7,7 @@ import com.bink.wallet.modal.generic.GenericModalFragment
 /**
  */
 class JoinUnavailableFragment : GenericModalFragment() {
-    var link: String = ""
+    private var link: String = ""
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

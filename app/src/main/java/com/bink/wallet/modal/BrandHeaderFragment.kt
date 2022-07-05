@@ -19,7 +19,7 @@ class BrandHeaderFragment : GenericModalFragment() {
 
     override fun onFirstButtonClicked() {
         url?.let {
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 findNavController().navigate(BrandHeaderFragmentDirections.globalToWeb(it))
                 return
             }

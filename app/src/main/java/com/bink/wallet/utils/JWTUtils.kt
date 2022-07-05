@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
-import android.util.Base64.*
+import android.util.Base64.URL_SAFE
+import android.util.Base64.decode
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject

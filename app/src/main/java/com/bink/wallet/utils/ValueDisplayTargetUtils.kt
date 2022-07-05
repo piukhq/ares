@@ -9,25 +9,23 @@ fun Context.displayVoucherEarnAndTarget(voucher: Voucher): String {
         if (target_value != FLOAT_ZERO) {
             val earn = voucher.earn
             earn.value?.let { earn_value ->
-                return  getString(
+                return getString(
                     R.string.loyalty_wallet_plr_value,
                     ValueDisplayUtils.displayValue(
                         earn_value,
                         earn.prefix,
-                        null,
-                        earn.currency
+                        null
                     ),
                     ValueDisplayUtils.displayValue(
                         target_value,
                         earn.prefix,
-                        earn.suffix,
-                        earn.currency
+                        earn.suffix
                     )
                 )
-                }
-
             }
+
         }
+    }
     return EMPTY_STRING
 }
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -86,11 +87,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (isFirstLaunch) {
             if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
-                firebaseAnalytics.setCurrentScreen(
-                    this,
-                    SPLASH_VIEW,
-                    SPLASH_VIEW
-                )
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, SPLASH_VIEW)
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
             }
             isFirstLaunch = false
         }
@@ -144,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 //do nothing (back button action is prohibited here)
             }
             R.id.delete_account_screen -> {
-                if(SharedPreferenceManager.allowBackOnDeleteFragment){
+                if (SharedPreferenceManager.allowBackOnDeleteFragment) {
                     super.onBackPressed()
                 }
             }
@@ -153,8 +152,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun forceRunApp() {
-        Handler().postDelayed({
-            LocalStoreUtils.clearPreferences(this)
+        Handler(Looper.getMainLooper()).postDelayed({
+            LocalStoreUtils.clearPreferences()
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
             launchIntent?.addFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP
