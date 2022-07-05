@@ -1,15 +1,35 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.os.Bundle
-import android.view.View
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardRewardsHistoryBinding
+import com.bink.wallet.model.response.membership_card.Burn
+import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.bindings.STAMP
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,44 +48,135 @@ class LoyaltyCardRewardsHistoryFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         arguments?.let {
-            viewModel.membershipPlan.value =
-                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            viewModel.membershipCard.value =
-                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
-        binding.membershipPlan = viewModel.membershipPlan.value
-        binding.executePendingBindings()
-        setupVouchers()
+        binding.title.text = viewModel.membershipPlan.value?.account?.company_name
+
+        binding.composeView.setContent {
+            LoyaltyCardRewardsHistory(vouchers = viewModel.getFilteredVouchers())
+        }
     }
 
-    private fun setupVouchers() {
-        with(binding.recycler) {
-            visibility = View.VISIBLE
-            layoutManager = LinearLayoutManager(requireContext())
-            isNestedScrollingEnabled = true
-            viewModel.membershipCard.value?.vouchers?.filterNot {
-                listOf(
-                    VoucherStates.IN_PROGRESS.state,
-                    VoucherStates.ISSUED.state
-                ).contains(it.state)
-            }?.sortedByDescending {
-                if ((it.date_redeemed ?: 0L) != 0L) {
-                    it.date_redeemed
-                } else {
-                    it.expiry_date
-                }
-            }?.let { vouchers ->
-                adapter = VouchersAdapter(
-                    vouchers
-                ).apply {
-                    setOnVoucherClickListener { voucher ->
-                        viewVoucherDetails(voucher)
+    @Composable
+    private fun LoyaltyCardRewardsHistory(vouchers: List<Voucher>?) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = getString(R.string.rewards_history),
+                fontSize = 25.sp,
+                fontFamily = nunitoSans,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                text = getString(R.string.your_past_rewards),
+                fontSize = 18.sp,
+                fontFamily = nunitoSans,
+            )
+
+            if (vouchers.isNullOrEmpty()) {
+                EmptyState()
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(items = vouchers) { voucher ->
+                        Voucher(voucher = voucher)
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun EmptyState() {
+        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium)), horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(painterResource(R.drawable.ic_empty_wallet), contentDescription = "Empty Wallet", modifier = Modifier.size(dimensionResource(id = R.dimen.rewards_history_image_size)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+            Text(
+                text = getString(R.string.no_rewards),
+                fontSize = 18.sp,
+                fontFamily = nunitoSans,
+                textAlign = TextAlign.Center
+            )
+
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun Voucher(voucher: Voucher) {
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+        Card(modifier = Modifier.fillMaxWidth(), onClick = { viewVoucherDetails(voucher) }) {
+            Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
+                Text(
+                    text = getVoucherTitle(voucher.burn),
+                    fontSize = 18.sp,
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.blue_accent)
+                )
+                Text(
+                    text = getVoucherSubTitle(voucher.earn),
+                    fontSize = 14.sp,
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Light
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                Text(
+                    text = getVoucherHeadline(voucher),
+                    fontSize = 25.sp,
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
+    }
+
+    private fun getVoucherTitle(voucherBurn: Burn?): String {
+        return getString(
+            R.string.voucher_stamp_title,
+            ValueDisplayUtils.displayValue(
+                voucherBurn?.value,
+                voucherBurn?.prefix,
+                voucherBurn?.suffix,
+                null
+            )
+        )
+    }
+
+    private fun getVoucherSubTitle(voucherEarn: Earn?): String {
+        return getString(
+            R.string.voucher_stamp_subtext,
+            voucherEarn?.target_value?.toInt(),
+            voucherEarn?.suffix
+        )
+    }
+
+    private fun getVoucherHeadline(voucher: Voucher): String {
+        voucher.state?.let { state ->
+            return when (state) {
+                VoucherStates.REDEEMED.state,
+                VoucherStates.EXPIRED.state,
+                VoucherStates.CANCELLED.state
+                -> state.capitalize()
+                VoucherStates.ISSUED.state -> getString(R.string.earned).capitalize()
+                else ->
+                    if (voucher.earn?.type == STAMP)
+                        getString(
+                            R.string.voucher_stamp_in_progress_headline,
+                            ValueDisplayUtils.displayFormattedHeadline(voucher.earn)
+                        ) else getString(
+                        R.string.voucher_accumulator_in_progress_headline,
+                        ValueDisplayUtils.displayFormattedHeadline(voucher.earn)
+                    )
+            }
+        }
+
+        return ""
     }
 
     private fun viewVoucherDetails(voucher: Voucher) {
