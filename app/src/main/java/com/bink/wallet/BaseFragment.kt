@@ -55,8 +55,6 @@ import io.sentry.Sentry
 import io.sentry.protocol.User
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 import java.util.*
 
 
@@ -80,12 +78,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     private lateinit var destinationListener: NavController.OnDestinationChangedListener
 
     open lateinit var bottomNavigation: BottomNavigationView
-
-    open val windowFullscreenHandler: WindowFullscreenHandler by inject {
-        parametersOf(
-            requireActivity()
-        )
-    }
 
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
@@ -117,7 +109,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 override fun handleOnBackPressed() {
                     if (findNavController().currentDestination?.label != getString(R.string.root)) {
                         view?.hideKeyboard()
-                        windowFullscreenHandler.toNormalScreen()
                         findNavController().popBackStack()
                     } else {
                         requireActivity().finish()

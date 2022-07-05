@@ -253,7 +253,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun handleToolbarAction() {
         view?.hideKeyboard()
-        windowFullscreenHandler.toNormalScreen()
     }
 
     override fun onPause() {
