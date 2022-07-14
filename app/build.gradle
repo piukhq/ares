@@ -173,6 +173,8 @@ kapt {
 }
 
 dependencies {
+    def fragment_version = "1.5.0"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     kapt("androidx.lifecycle:lifecycle-compiler:2.3.1")
@@ -184,6 +186,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation"androidx.fragment:fragment-ktx:$fragment_version"
 
     implementation "androidx.security:security-crypto:1.1.0-alpha01"
 

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,26 +20,83 @@ fun Fragment.requestCameraPermissionAndNavigate(
     shouldNavigateToScanLoyaltyCard: Boolean,
     navigateToScanLoyaltyCard: (() -> Unit)?
 ) {
-    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
-    val permission = activity?.let {
-        ContextCompat.checkSelfPermission(
-            it,
-            Manifest.permission.CAMERA
-        )
-    }
 
-    if (permission != PackageManager.PERMISSION_GRANTED) {
-        requestPermissions(
-            arrayOf(Manifest.permission.CAMERA),
-            CAMERA_REQUEST_CODE
-        )
-    } else {
-        if (shouldNavigateToScanLoyaltyCard) {
-            navigateToScanLoyaltyCard?.invoke()
-        } else {
-            openScanPaymentCard()
+    // Do we already have permission
+    when {
+        ContextCompat.checkSelfPermission(
+            this.requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED -> {
+            // You can use the API that requires the permission.
+            if (!shouldNavigateToScanLoyaltyCard) {
+                openScanPaymentCard()
+            } else {
+                navigateToScanLoyaltyCard?.invoke()
+            }
+
+        }
+        ActivityCompat.shouldShowRequestPermissionRationale(
+            this.requireActivity(),
+            Manifest.permission.CAMERA
+        ) -> {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected. In this UI,
+            // include a "cancel" or "no thanks" button that allows the user to
+            // continue using your app without granting the permission.
+
+        }
+        else -> {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+            val requestPermissionLauncher =
+                registerForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { isGranted: Boolean ->
+                    if (isGranted) {
+                        // Permission is granted. Continue the action or workflow in your
+                        // app.
+                        if (!shouldNavigateToScanLoyaltyCard) {
+                            openScanPaymentCard()
+                        } else {
+                            navigateToScanLoyaltyCard?.invoke()
+                        }
+                    } else {
+                        // Explain to the user that the feature is unavailable because the
+                        // features requires a permission that the user has denied. At the
+                        // same time, respect the user's decision. Don't link to system
+                        // settings in an effort to convince the user to change their
+                        // decision.
+                    }
+                }
+
+            requestPermissionLauncher.launch(
+                Manifest.permission.CAMERA
+            )
         }
     }
+
+
+
+//    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
+//    val permission = activity?.let {
+//        ContextCompat.checkSelfPermission(
+//            it,
+//            Manifest.permission.CAMERA
+//        )
+//    }
+//
+//    if (permission != PackageManager.PERMISSION_GRANTED) {
+//        requestPermissions(
+//            arrayOf(Manifest.permission.CAMERA),
+//            CAMERA_REQUEST_CODE
+//        )
+//    } else {
+//        if (shouldNavigateToScanLoyaltyCard) {
+//            navigateToScanLoyaltyCard?.invoke()
+//        } else {
+//            openScanPaymentCard()
+//        }
+//    }
 }
 
 fun Fragment.requestPermissionsResult(
