@@ -711,6 +711,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                         ?: MixpanelEvents.VALUE_UNKNOWN
                                 ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
                             )
+                            WalletOrderingUtil.deleteLoyaltyCardFromOrder(membershipCard.id.toLong())
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
