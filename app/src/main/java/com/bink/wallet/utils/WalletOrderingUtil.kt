@@ -176,15 +176,40 @@ object WalletOrderingUtil {
             if (savedWallet[i].userId == getUserEmail()) {
                 //Check to see if the wallet is the same order in newest as it is in the saved wallet
                 //If it isn't, we know the user has a custom format.
-                for (x in 0 until savedWallet[i].cardIds.size) {
-                    if (savedWallet[i].cardIds[x] != cardAsNewest[x].id.toLong()) {
-                        return true
+
+                //We also clear all new cards from this check.
+                val currentlySavedList = cardAsNewest.filter { savedWallet[i].cardIds.contains(it.id.toLong()) }
+
+                try {
+                    for (x in 0 until savedWallet[i].cardIds.size) {
+                        if (savedWallet[i].cardIds[x] != currentlySavedList[x].id.toLong()) {
+                            return true
+                        }
+
                     }
+                } catch (e: IndexOutOfBoundsException) {
+                    //If this is hit, we know that the list is currently set as newest and its been caused by a new card being added.
+                    return false
                 }
+
             }
         }
 
         return false
+    }
+
+    fun deleteLoyaltyCardFromOrder(cardId: Long) {
+        val gson = Gson()
+        val allSavedWalletOrders = getSavedLoyaltyWalletOrder()
+        for (i in 0 until allSavedWalletOrders.size) {
+            if (allSavedWalletOrders[i].userId == getUserEmail()) {
+
+                allSavedWalletOrders[i].cardIds.remove(cardId)
+                SharedPreferenceManager.loyaltyWalletOrder = gson.toJson(allSavedWalletOrders)
+
+                return
+            }
+        }
     }
 
     private fun getSavedLoyaltyWalletOrder(): ArrayList<WalletOrder> {
