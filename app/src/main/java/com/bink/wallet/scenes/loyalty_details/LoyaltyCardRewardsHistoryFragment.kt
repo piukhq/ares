@@ -1,9 +1,11 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.os.Bundle
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -11,6 +13,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -27,6 +31,7 @@ import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.bindings.STAMP
+import com.bink.wallet.utils.dateFormatTransactionTime
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.nunitoSans
@@ -132,8 +137,55 @@ class LoyaltyCardRewardsHistoryFragment :
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.ExtraBold
                 )
+                DisplayVoucherCount(voucher = voucher)
+                val dateToDisplay =
+                    if (voucher.state == VoucherStates.REDEEMED.state) voucher.date_redeemed else voucher.expiry_date
+                dateToDisplay?.let {
+                    Text(
+                        text = setTimestamp(dateToDisplay, getString(R.string.voucher_entry_date)),
+                        fontSize = 14.sp,
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+            }
+
+        }
+    }
+
+    @Composable
+    private fun DisplayVoucherCount(voucher: Voucher) {
+        val colour = if (voucher.state == VoucherStates.REDEEMED.state) {
+            colorResource(id = R.color.voucher_redeemed_background)
+        } else {
+            colorResource(id = R.color.blue_inactive)
+        }
+
+        LazyRow(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)) {
+            voucher.earn?.target_value?.toInt()?.let {
+                items(it) {
+                    Row(
+                        Modifier
+                            .size(18.dp)
+                    ) {
+                        Canvas(modifier = Modifier.fillMaxSize()) {
+                            val canvasWidth = size.width
+                            val canvasHeight = size.height
+
+                            drawCircle(
+                                color = colour,
+                                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+                                radius = size.minDimension / 2,
+                                style = Stroke(18F)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(13.dp))
+                }
             }
         }
+
     }
 
     private fun getVoucherTitle(voucherBurn: Burn?): String {
@@ -188,5 +240,9 @@ class LoyaltyCardRewardsHistoryFragment :
         if (directions != null) {
             findNavController().navigateIfAdded(this, directions)
         }
+    }
+
+    private fun setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false): String {
+        return String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
     }
 }

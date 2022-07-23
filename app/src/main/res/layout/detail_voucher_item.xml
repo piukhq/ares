@@ -69,8 +69,6 @@
                         android:layout_marginTop="@dimen/voucher_subtitle_bottom"
                         android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:fontFamily="@font/nunito_sans_extrabold"
-                        android:text="@{voucher.headline}"
-                        app:voucherHeadline="@{voucher}"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
                         app:layout_constraintStart_toStartOf="parent"
