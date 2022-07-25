@@ -11,7 +11,7 @@ import com.bink.wallet.utils.enums.LoyaltyCardLinkStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)

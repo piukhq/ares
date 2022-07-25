@@ -131,7 +131,7 @@ class DeleteAccountFragment : BaseFragment<DeleteAccountViewModel, DeleteAccount
 
     private fun clearUserDetails() {
         logoutMixpanel()
-        LocalStoreUtils.clearPreferences(requireContext())
+        LocalStoreUtils.clearPreferences()
         try {
             getMainActivity().forceRunApp()
         } catch (e: Exception) {

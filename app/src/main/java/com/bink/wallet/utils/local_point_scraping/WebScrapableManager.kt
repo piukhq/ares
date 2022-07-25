@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import java.util.*
 
 object WebScrapableManager {
 
@@ -50,10 +51,10 @@ object WebScrapableManager {
 
                         userName = authoriseFields.firstOrNull {
                             (it.column
-                                ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
+                                ?: "").lowercase(Locale.getDefault()) == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
-                            (it.column ?: "").toLowerCase() == "password"
+                            (it.column ?: "").lowercase(Locale.getDefault()) == "password"
                         }?.value
 
                         request.account.authorise_fields!!.removeAll { it.value == userName }
@@ -290,7 +291,7 @@ object WebScrapableManager {
             timer?.cancel()
             timer = null
 
-            var nonDeletedCards = ArrayList<MembershipCard>()
+            val nonDeletedCards = ArrayList<MembershipCard>()
 
             if (membershipCards != null) {
                 membershipCards?.forEach { membershipCard ->
@@ -307,7 +308,7 @@ object WebScrapableManager {
              **/
 
             if (isAddCard) {
-                if (!nonDeletedCards.isNullOrEmpty()) {
+                if (nonDeletedCards.isNotEmpty()) {
                     nonDeletedCards[0].let { newCard ->
                         newlyAddedCard.value = newCard
                     }
@@ -376,7 +377,7 @@ object WebScrapableManager {
         val storedScrapedCards = oldCards.filter { it.isScraped == true }
 
         for (scrapedCard in storedScrapedCards) {
-            val index = newCards.indexOfFirst { it.id.equals(scrapedCard.id) }
+            val index = newCards.indexOfFirst { it.id == scrapedCard.id }
             if (index != -1) {
                 newCards[index].balances = scrapedCard.balances
                 newCards[index].status = scrapedCard.status

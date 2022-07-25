@@ -49,7 +49,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         versionCode buildNumber
-        versionName "2.3.17"
+        versionName "2.3.18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }

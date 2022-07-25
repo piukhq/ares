@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.CLEAR_PREF_KEY
 import com.bink.wallet.utils.UtilFunctions
-import java.lang.NumberFormatException
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,

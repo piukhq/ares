@@ -9,12 +9,12 @@ class ColorUtil {
     companion object {
 
         const val LIGHT_THRESHOLD_TEXT = 0.8f
-        const val LIGHT_THRESHOLD = 0.5f
-        const val COLOR_CHANGE_PERCENTAGE = 30.0f
-        const val HEX_FORMAT = "#%02x%02x%02x"
-        const val HEX_ALPHA_FORMAT = "#%02x%02x%02x%02x"
-        const val ALPHA_PERCENT = 70.0f
-        const val MAX_RGB_SCALE = 255
+        private const val LIGHT_THRESHOLD = 0.5f
+        private const val COLOR_CHANGE_PERCENTAGE = 30.0f
+        private const val HEX_FORMAT = "#%02x%02x%02x"
+        private const val HEX_ALPHA_FORMAT = "#%02x%02x%02x%02x"
+        private const val ALPHA_PERCENT = 70.0f
+        private const val MAX_RGB_SCALE = 255
 
         // The algorithm used here is from http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
         fun isColorLight(color: Int, threshold: Float = LIGHT_THRESHOLD): Boolean {
@@ -79,16 +79,13 @@ class ColorUtil {
             val newGreen = min(max(0f, updatedGreen), MAX_RGB_SCALE.toFloat())
             val newBlue = min(max(0f, updatedBlue), MAX_RGB_SCALE.toFloat())
 
-            val newHex: String
-
-            if (shouldDarkenColour) {
-                newHex =
-                    String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
+            val newHex: String = if (shouldDarkenColour) {
+                String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
             } else {
                 // If the colour is deemed dark therefore meaning we need to lighten the secondary
-                // color, we'll also add an opacity to the hex. 
+                // color, we'll also add an opacity to the hex.
                 val alpha = (MAX_RGB_SCALE * ALPHA_PERCENT / 100).toInt()
-                newHex = String.format(
+                String.format(
                     HEX_ALPHA_FORMAT,
                     alpha,
                     newRed.toInt(),

@@ -10,15 +10,15 @@ object StringUtils {
         return (1..length)
             .map { Random.nextInt(0, charPool.size) }
             .map(charPool::get)
-            .joinToString("");
+            .joinToString("")
     }
 }
 
-val ENCRYPTION_TYPE_MD5 = "MD5"
-val ENCRYPTION_PAD_CHAR = '0'
-val ENCRYPTION_SIGN_NUM = 1
-val ENCRYPTION_RADIX = 16
-val ENCRYPTION_LENGTH = 32
+const val ENCRYPTION_TYPE_MD5 = "MD5"
+const val ENCRYPTION_PAD_CHAR = '0'
+const val ENCRYPTION_SIGN_NUM = 1
+const val ENCRYPTION_RADIX = 16
+const val ENCRYPTION_LENGTH = 32
 
 fun String.md5(): String {
     val md = MessageDigest.getInstance(ENCRYPTION_TYPE_MD5)

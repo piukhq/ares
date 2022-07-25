@@ -51,7 +51,7 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { newMembershipCard ->
-            handleNavigationAfterCardCreation(newMembershipCard, false)
+            handleNavigationAfterCardCreation(newMembershipCard)
             val status = newMembershipCard.status?.state
             //Is it always going to be just one?
             val reasonCode = newMembershipCard.status?.reason_codes?.get(0)

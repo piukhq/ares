@@ -188,8 +188,8 @@ fun String.dateValidation(): Boolean {
     if (new.isNotEmpty()) {
         val split = new.split(SEPARATOR_SLASH)
         if (split.size > 1 &&
-            !split[0].isBlank() &&
-            !split[1].isBlank()
+            split[0].isNotBlank() &&
+            split[1].isNotBlank()
         ) {
             val month = split[0].toInt()
             val year = split[1].toInt() + 2000
@@ -249,16 +249,13 @@ object PaymentCardUtils {
         paymentCard: PaymentCard,
         membershipCards: MutableList<MembershipCard>
     ): Boolean {
-        countLinkedPaymentCards(paymentCard, membershipCards)?.let {
-            return it > 0
-        }
-        return false
+        return countLinkedPaymentCards(paymentCard, membershipCards) > 0
     }
 
     fun countLinkedPaymentCards(
         paymentCard: PaymentCard,
         membershipCards: MutableList<MembershipCard>
-    ): Int? {
+    ): Int {
         val membershipCardIds = mutableListOf<String>()
         membershipCards.forEach { membershipCard ->
             membershipCardIds.add(membershipCard.id)
@@ -277,11 +274,11 @@ object PaymentCardUtils {
         }
     }
 
-    fun inDateCards(paymentCards: List<PaymentCard>):List<PaymentCard>{
+    fun inDateCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
         val activeCards = mutableListOf<PaymentCard>()
-        paymentCards.forEach { pCard->
+        paymentCards.forEach { pCard ->
             pCard.card?.let {
-                if (!it.isExpired()){
+                if (!it.isExpired()) {
                     activeCards.add(pCard)
                 }
             }

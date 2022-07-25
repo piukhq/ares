@@ -3,11 +3,9 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
-import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.DebugMenuEditTextBinding
@@ -18,7 +16,6 @@ import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
-import com.bink.wallet.utils.local_point_scraping.PointScrapingUtil
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,9 +46,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             recycler.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        viewModel.logOutResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.logOutResponse.observe(viewLifecycleOwner) {
             viewModel.clearData()
-        })
+        }
 
         viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(
             requireContext(),
@@ -117,7 +114,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 BackendVersion.VERSION_3.name
             )
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 
@@ -146,7 +143,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 "4"
             )
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 
@@ -178,7 +175,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         adb.setView(editTextView)
 
         var selection = -1
-        adb.setSingleChoiceItems(items, selection) { d, n ->
+        adb.setSingleChoiceItems(items, selection) { _, n ->
             selection = n
         }
 

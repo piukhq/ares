@@ -14,11 +14,9 @@ fun convertToBaseException(throwable: Throwable): BaseException =
 
         is HttpException -> {
             val response = throwable.response()
-            val httpCode = throwable.code()
 
             if (response?.errorBody() == null) {
                 BaseException.toHttpError(
-                    httpCode = httpCode,
                     response = response
                 )
             }
@@ -38,13 +36,11 @@ fun convertToBaseException(throwable: Throwable): BaseException =
 
             if (serverErrorResponse != null) {
                 BaseException.toServerError(
-                    serverErrorResponse = serverErrorResponse,
-                    httpCode = httpCode
+                    serverErrorResponse = serverErrorResponse
                 )
             } else {
                 BaseException.toHttpError(
-                    response = response,
-                    httpCode = httpCode
+                    response = response
                 )
             }
         }
@@ -56,7 +52,6 @@ class BaseException(
     val errorType: ErrorType,
     val serverErrorResponse: ServerErrorResponse? = null,
     val response: Response<*>? = null,
-    val httpCode: Int = 0,
     cause: Throwable? = null
 ) : RuntimeException(cause?.message, cause) {
 
@@ -72,11 +67,10 @@ class BaseException(
         }
 
     companion object {
-        fun toHttpError(response: Response<*>?, httpCode: Int) =
+        fun toHttpError(response: Response<*>?) =
             BaseException(
                 errorType = ErrorType.HTTP,
-                response = response,
-                httpCode = httpCode
+                response = response
             )
 
         fun toNetworkError(cause: Throwable) =
@@ -85,11 +79,10 @@ class BaseException(
                 cause = cause
             )
 
-        fun toServerError(serverErrorResponse: ServerErrorResponse, httpCode: Int) =
+        fun toServerError(serverErrorResponse: ServerErrorResponse) =
             BaseException(
                 errorType = ErrorType.SERVER,
-                serverErrorResponse = serverErrorResponse,
-                httpCode = httpCode
+                serverErrorResponse = serverErrorResponse
             )
 
         fun toUnexpectedError(cause: Throwable) =

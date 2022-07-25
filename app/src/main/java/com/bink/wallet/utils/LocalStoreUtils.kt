@@ -42,7 +42,7 @@ object LocalStoreUtils {
         return null
     }
 
-    fun removeKey(secretKey: String){
+    fun removeKey(secretKey: String) {
         encryptedSharedPreferences.edit().let {
             it.remove(secretKey)
             it.apply()
@@ -65,7 +65,7 @@ object LocalStoreUtils {
         return encryptedSharedPreferences.contains(key)
     }
 
-    fun clearPreferences(context: Context) {
+    fun clearPreferences() {
         SharedPreferenceManager.clear()
         encryptedSharedPreferences.edit().let {
             it.clear()

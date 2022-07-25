@@ -20,8 +20,8 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class MembershipCardDaoTest {
 
-    lateinit var database: BinkDatabase
-    lateinit var cardsDB: MembershipCardDao
+    private lateinit var database: BinkDatabase
+    private lateinit var cardsDB: MembershipCardDao
 
     @Before
     fun setup() {

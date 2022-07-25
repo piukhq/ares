@@ -35,11 +35,11 @@ class DebugMenuViewModel(
 
     fun logOut() {
         viewModelScope.launch {
-            try{
+            try {
                 _logOutResponse.value = loginRepository.logOut()
                 loyaltyWalletRepository.clearMembershipCards()
                 paymentWalletRepository.clearPaymentCards()
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _logOutErrorResponse.value = e
             }
         }

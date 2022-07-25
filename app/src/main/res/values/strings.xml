@@ -46,7 +46,7 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Show this barcode at the store, just like you would a physical loyalty card.</string>
+    <string name="barcode_description">Show this barcode in-store just like you would a physical loyalty card.</string>
     <string name="barcode_description_no_barcode">Share this number in-store just like you would a physical loyalty card.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
@@ -607,7 +607,6 @@
     <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
 
     <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
-    <string name="card_scan_scan_card"></string>
     <string name="bouncer_card_scan_instructions">Tap the screen to focus the camera on the card. It will scan automatically.</string>
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>

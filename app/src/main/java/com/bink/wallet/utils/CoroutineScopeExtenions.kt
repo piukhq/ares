@@ -13,13 +13,12 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_ACTIVE
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import java.util.*
 
 val firebaseAnalytics = Firebase.analytics
 
-suspend fun CoroutineScope.generateUuidForPaymentCards(
+suspend fun generateUuidForPaymentCards(
     cards: List<PaymentCard>,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao
@@ -55,7 +54,7 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
     }
 }
 
-suspend fun CoroutineScope.generateUuidFromCardLinkageState(
+suspend fun generateUuidFromCardLinkageState(
     card: PaymentCard,
     paymentCardDao: PaymentCardDao
 ) {
@@ -70,7 +69,7 @@ suspend fun CoroutineScope.generateUuidFromCardLinkageState(
 
 }
 
-suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
+suspend fun generateUuidForMembershipCardPullToRefresh(
     membershipCardFromApi: MembershipCard,
     membershipCardDao: MembershipCardDao,
     paymentCardDao: PaymentCardDao
@@ -96,7 +95,7 @@ suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
     }
 }
 
-suspend fun CoroutineScope.generateUuidForMembershipCards(
+suspend fun generateUuidForMembershipCards(
     cards: List<MembershipCard>,
     membershipCardDao: MembershipCardDao,
     paymentCardDao: PaymentCardDao
@@ -132,7 +131,7 @@ suspend fun CoroutineScope.generateUuidForMembershipCards(
 
 }
 
-suspend fun CoroutineScope.logFirebaseEvent(
+fun logFirebaseEvent(
     name: String,
     parameters: Map<String, Any>,
     firebaseAnalytics: FirebaseAnalytics
@@ -151,7 +150,7 @@ suspend fun CoroutineScope.logFirebaseEvent(
     firebaseAnalytics.logEvent(name, bundle)
 }
 
-suspend fun CoroutineScope.failedEvent(
+fun failedEvent(
     eventName: String,
     firebaseAnalytics: FirebaseAnalytics
 ) {
@@ -162,7 +161,7 @@ suspend fun CoroutineScope.failedEvent(
     firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
 }
 
-suspend fun CoroutineScope.logStatusChange(
+suspend fun logStatusChange(
     cardFromApi: PaymentCard,
     firebaseAnalytics: FirebaseAnalytics
 ) {
@@ -187,7 +186,7 @@ suspend fun CoroutineScope.logStatusChange(
     }
 }
 
-suspend fun CoroutineScope.logLoyaltyCardStatusChange(
+suspend fun logLoyaltyCardStatusChange(
     card: MembershipCard,
     firebaseAnalytics: FirebaseAnalytics
 ) {
@@ -209,7 +208,7 @@ suspend fun CoroutineScope.logLoyaltyCardStatusChange(
     }
 }
 
-suspend fun CoroutineScope.logPllActive(
+suspend fun logPllActive(
     membershipCardInDb: MembershipCard,
     membershipFromApi: MembershipCard,
     paymentCardDao: PaymentCardDao
@@ -237,7 +236,7 @@ suspend fun CoroutineScope.logPllActive(
     }
 }
 
-suspend fun CoroutineScope.logPllActivePaymentCard(
+suspend fun logPllActivePaymentCard(
     paymentCardInDb: PaymentCard,
     paymentCardFromApi: PaymentCard,
     membershipCardDao: MembershipCardDao
@@ -249,7 +248,7 @@ suspend fun CoroutineScope.logPllActivePaymentCard(
         val loyaltyCardId = loyaltyCard.id
         //Use the id to get that payment card's uuid
         val loyaltyCardUuid = membershipCardDao.getAllAsync()
-            .firstOrNull { card -> card.id.toString() == loyaltyCardId }?.uuid
+            .firstOrNull { card -> card.id == loyaltyCardId }?.uuid
         val paymentCardUuid = paymentCardInDb.uuid
 
         if (paymentCardUuid == null || loyaltyCardUuid == null) {

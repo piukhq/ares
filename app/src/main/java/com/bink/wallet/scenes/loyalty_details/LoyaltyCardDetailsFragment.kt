@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -59,7 +60,7 @@ class LoyaltyCardDetailsFragment :
     private var scrollY = 0
     private var isFromPll = false
     private var isAnimating = false
-    private var handler = Handler()
+    private var handler = Handler(Looper.getMainLooper())
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -342,8 +343,7 @@ class LoyaltyCardDetailsFragment :
                             ValueDisplayUtils.displayValue(
                                 balance?.value?.toFloat(),
                                 balance?.prefix,
-                                balance?.suffix,
-                                null
+                                balance?.suffix
                             )
                     }
                 }
@@ -1038,14 +1038,13 @@ class LoyaltyCardDetailsFragment :
                 earn.suffix
             )
         } else {
-            if (earn?.value?.rem(100) ?: 0 != 0f) {
+            if ((earn?.value?.rem(100) ?: 0) != 0f) {
                 getString(
                     R.string.loyalty_wallet_plr_value,
                     ValueDisplayUtils.displayValue(
                         earn?.value,
                         earn?.prefix,
                         earn?.suffix,
-                        earn?.currency,
                         forceTwoDecimals = true
                     ),
                     earn?.prefix + earn?.target_value?.toInt()

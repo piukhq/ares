@@ -163,9 +163,8 @@ class AutoResizeTextView : TextView {
 
     override fun setTextSize(unit: Int, size: Float) {
         val c = context
-        val r: Resources
 
-        r = if (c == null) {
+        val r: Resources = if (c == null) {
             Resources.getSystem()
         } else {
             c.resources
@@ -258,7 +257,7 @@ class AutoResizeTextView : TextView {
             var lastBest = start
             var lo = start
             var hi = end - 1
-            var mid = 0
+            var mid: Int
             while (lo <= hi) {
                 mid = (lo + hi).ushr(1)
                 val midValCmp = sizeTester.onTestSize(mid, availableSpace)

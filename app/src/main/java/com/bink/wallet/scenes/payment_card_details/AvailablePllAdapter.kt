@@ -17,7 +17,7 @@ class AvailablePllAdapter(
     private val currentPaymentCard: PaymentCard,
     private val plans: List<MembershipPlan> = ArrayList(),
     private val membershipCards: List<MembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Triple<String?, Boolean,MembershipPlan?>,Int?) -> Unit ,
+    private val onLinkStatusChange: (Triple<String?, Boolean, MembershipPlan?>, Int?) -> Unit,
     private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
 ) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
 
@@ -39,22 +39,18 @@ class AvailablePllAdapter(
             val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             if (isLastItem) {
-                binding.root.context.matchSeparator(binding.separator.id, binding.itemLayout)
+                matchSeparator(binding.separator.id, binding.itemLayout)
             }
             binding.membershipCard = item
 
             binding.toggle.isChecked =
-                if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item) else false
+                isLinkedToPaymentCard(item)
 
-            if (isLinkedToPaymentCard(item) != null) {
-                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item))
-            } else {
-                binding.toggle.displayCustomSwitch(false)
-            }
+            binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item))
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 if (isNetworkAvailable(binding.root.context, true)) {
-                    onLinkStatusChange(Triple(item.id, isChecked,currentMembershipPlan),adapterPosition)
+                    onLinkStatusChange(Triple(item.id, isChecked, currentMembershipPlan), adapterPosition)
                     binding.toggle.displayCustomSwitch(isChecked)
                 } else {
                     binding.toggle.isChecked = !isChecked

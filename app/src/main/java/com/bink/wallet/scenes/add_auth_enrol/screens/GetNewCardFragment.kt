@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
@@ -37,7 +36,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         setViewsContent()
 
         viewModel.newMembershipCard.observeNonNull(this) {
-            handleNavigationAfterCardCreation(it, false)
+            handleNavigationAfterCardCreation(it)
             val status = it.status?.state
             //Is it always going to be just one?
             val reasonCode = it.status?.reason_codes?.get(0)
@@ -49,7 +48,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ENROL_JOURNEY,it.id, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
             }
@@ -97,7 +96,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
             }
         }
 
-        viewModel.loading.observeNonNull(this){
+        viewModel.loading.observeNonNull(this) {
             binding.footerComposed.progressBtnContainer.setLoading(it)
         }
 

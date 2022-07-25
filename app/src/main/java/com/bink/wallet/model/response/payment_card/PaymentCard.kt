@@ -6,9 +6,9 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -22,7 +22,9 @@ data class PaymentCard(
     @ColumnInfo(name = "account") val account: Account?,
     @ColumnInfo(name = "uuid") var uuid: String? = null
 ) : Parcelable {
-    @Ignore var isSelected: Boolean = false
+    @IgnoredOnParcel
+    @Ignore
+    var isSelected: Boolean = false
 
     fun addPaymentCard(cardId: String) {
         (membership_cards as ArrayList<PaymentMembershipCard>).add(

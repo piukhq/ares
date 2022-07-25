@@ -13,8 +13,7 @@ import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.EMAIL_REGEX
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_FALSE
@@ -22,18 +21,8 @@ import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_TRUE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setTermsAndPrivacyUrls
-import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.validateEmail
-import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
@@ -113,7 +102,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 handleErrorResponse()
                 showSignUpFailedDialog()
                 //Failure
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
 
                 viewModel.signUpErrorResponse.value = null
             }
@@ -125,7 +114,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //ONBOARDING END WITH FAILURE
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {
@@ -159,15 +148,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     setAnalyticsUserId(uid)
                 }
                 //ONBOARDING USER COMPLETE
-                logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
             }
 
             postServiceResponse.observeNonNull(this@SignUpFragment) {
                 getMembershipPlans()
                 //ONBOARDING SERVICE COMPLETE
-                logEvent(ONBOARDING_SERVICE_COMPLETE,getOnboardingGenericMap())
+                logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
                 //ONBOARDING END
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
             }
         }
 
@@ -302,7 +291,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
     }
 
-    private fun showSignUpFailedDialog(){
+    private fun showSignUpFailedDialog() {
 
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.error)

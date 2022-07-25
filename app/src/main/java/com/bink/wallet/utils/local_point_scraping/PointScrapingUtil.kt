@@ -14,6 +14,7 @@ import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
@@ -141,12 +142,13 @@ object PointScrapingUtil {
         webView?.loadUrl(localPointsAgent.points_collection_url)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun getWebView(context: Context): WebView {
         return WebView(context).apply {
             settings.apply {
                 javaScriptEnabled = true
-                cacheMode = WebSettings.LOAD_NO_CACHE;
-                setAppCacheEnabled(false);
+                cacheMode = WebSettings.LOAD_NO_CACHE
+                setAppCacheEnabled(false)
             }
             clearCache(true)
             clearFormData()
@@ -169,7 +171,7 @@ object PointScrapingUtil {
         callback: (String?) -> Unit
     ) {
         val storageRef =
-            Firebase.storage.reference.child("local-points-collection/${site.merchant.toLowerCase()}.js")
+            Firebase.storage.reference.child("local-points-collection/${site.merchant.lowercase(Locale.getDefault())}.js")
 
         storageRef.getBytes(1024 * 1024).addOnSuccessListener {
             val javascriptClass = String(it, StandardCharsets.UTF_8)

@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol.view_models
 
 import com.bink.wallet.R
-import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
@@ -59,7 +58,7 @@ class AddCardViewModel constructor(
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
-        val account: Account? = FormsUtil.getAccount()
+        val account = FormsUtil.getAccount()
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
 
