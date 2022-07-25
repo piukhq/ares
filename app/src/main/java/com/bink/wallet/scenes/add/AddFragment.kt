@@ -2,8 +2,10 @@ package com.bink.wallet.scenes.add
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -28,6 +30,30 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val marginPercent = 75
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                requestPermissionsResult(
+                    { navigateToScanLoyaltyCard() },
+                    { navigateToAddPaymentCard() },
+                    { navigateToBrowseBrands() },
+                    isGranted
+                )
+
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+                Log.d("Permmision", "ask about reason")
+            }
+        }
+
     override fun onResume() {
         super.onResume()
         logScreenView(ADD_OPTIONS_VIEW)
@@ -48,13 +74,16 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         binding.paymentCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
                 false,
-                null
+                null,
+                requestPermissionLauncher
             )
         }
         binding.loyaltyCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
-                true
-            ) { navigateToScanLoyaltyCard() }
+                true,
+                { navigateToScanLoyaltyCard() },
+                requestPermissionLauncher
+            )
         }
     }
 
@@ -79,13 +108,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         grantResults: IntArray
     ) {
 
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            { navigateToScanLoyaltyCard() },
-            { navigateToAddPaymentCard() },
-            { navigateToBrowseBrands() })
+//        requestPermissionsResult(
+//            requestCode,
+//            permissions,
+//            grantResults,
+//            { navigateToScanLoyaltyCard() },
+//            { navigateToAddPaymentCard() },
+//            { navigateToBrowseBrands() })
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
