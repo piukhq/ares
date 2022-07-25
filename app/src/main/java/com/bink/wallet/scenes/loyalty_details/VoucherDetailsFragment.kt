@@ -22,6 +22,7 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class VoucherDetailsFragment :
     BaseFragment<VoucherDetailsViewModel, VoucherDetailsFragmentBinding>() {
@@ -60,10 +61,12 @@ class VoucherDetailsFragment :
                 voucher.burn?.let { burn ->
                     if (voucher.state == VoucherStates.EXPIRED.state || voucher.state == VoucherStates.REDEEMED.state || voucher.state == VoucherStates.CANCELLED.state) {
                         binding.code.visibility = View.GONE
-
                     } else {
-                        binding.code.textAndShow(voucher.code)
-
+                        if (voucher.code?.lowercase(Locale.getDefault())?.contains("due:") == true) {
+                            binding.code.textAndShow((voucher.code.replace("....".toRegex(), "$0 ")).replace("  ", " "))
+                        } else {
+                            binding.code.textAndShow(voucher.code)
+                        }
                     }
                     when (voucher.state) {
                         VoucherStates.IN_PROGRESS.state -> {
@@ -302,12 +305,12 @@ class VoucherDetailsFragment :
     }
 
     private fun setCancelledVoucher(earn: Earn, burn: Burn) {
-            if (earn.type == STAMP_VOUCHER_EARN_TYPE){
-                setVoucherTitleAndBody(
-                    getString(R.string.voucher_stamp_cancelled_title),
-                    contentMap[DynamicContentColumn.VOUCHER_CANCELLED_DETAIL.type]
-                )
-            }
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
+            setVoucherTitleAndBody(
+                getString(R.string.voucher_stamp_cancelled_title),
+                contentMap[DynamicContentColumn.VOUCHER_CANCELLED_DETAIL.type]
+            )
+        }
     }
 
     private fun setColumnAndValue(contentList: List<Content>?) {

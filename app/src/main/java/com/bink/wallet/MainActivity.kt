@@ -59,13 +59,13 @@ class MainActivity : AppCompatActivity() {
             this
         ) { options: SentryAndroidOptions ->
             options.environment =
-                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+                if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
             options.setDebug(BuildConfig.DEBUG)
             options.release =
                 "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
         }
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             if (BuildConfig.SECURE_FLAGS) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         getMembershipPlans()
         super.onResume()
         if (isFirstLaunch) {
-            if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+            if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
                 firebaseAnalytics.setCurrentScreen(
                     this,
                     SPLASH_VIEW,
@@ -142,6 +142,11 @@ class MainActivity : AppCompatActivity() {
             R.id.magic_link_result_fragment,
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
+            }
+            R.id.delete_account_screen -> {
+                if(SharedPreferenceManager.allowBackOnDeleteFragment){
+                    super.onBackPressed()
+                }
             }
             else -> super.onBackPressed()
         }

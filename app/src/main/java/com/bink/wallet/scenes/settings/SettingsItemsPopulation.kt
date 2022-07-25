@@ -68,6 +68,14 @@ object SettingsItemsPopulation {
         )
         itemsList.add(
             SettingsItem(
+                res.getString(R.string.settings_menu_delete_acc),
+                null,
+                SettingsItemType.DELETE_ACC,
+                null
+            )
+        )
+        itemsList.add(
+            SettingsItem(
                 res.getString(R.string.settings_menu_about),
                 null,
                 SettingsItemType.HEADER,

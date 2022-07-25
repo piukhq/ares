@@ -20,10 +20,10 @@ object WebScrapableManager {
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
-    val localPointsCollection = RemoteConfigUtil().localPointsCollection
-    val scrapableAgents = localPointsCollection?.agents ?: ArrayList()
+    private val localPointsCollection = RemoteConfigUtil().localPointsCollection
+    private val scrapableAgents = localPointsCollection?.agents ?: ArrayList()
 
-    val deletedCards = ArrayList<String>()
+    private val deletedCards = ArrayList<String>()
 
     var currentAgent: LocalPointsAgent? = null
 
@@ -78,6 +78,12 @@ object WebScrapableManager {
 
     }
 
+    /**
+     * When starting tryScrapeCards we pass an index as a parameter to make sure
+     * that we loop through all available cards, specifically for a refresh in the
+     * loyalty wallet.
+     */
+
     fun tryScrapeCards(
         index: Int,
         cards: List<MembershipCard>,
@@ -93,6 +99,10 @@ object WebScrapableManager {
         timer?.cancel()
         timer = null
         currentAgent = null
+
+        /**
+         * We start a 60 second timer to ensure that there is a timeout period.
+         */
 
         if (timer == null) {
             timer = object : CountDownTimer(60000, 1000) {
@@ -123,6 +133,15 @@ object WebScrapableManager {
                 }
             }
         }
+
+        /**
+         * After the null checks we:
+         * > start the 60 seccond timer
+         * > initialize the current card we need
+         * > ensure the user has credentials for said card
+         * > ensure there is an available agent stored in remote config for the merchant
+         * > perform a scrape
+         */
 
         try {
             timer?.start()
@@ -157,6 +176,11 @@ object WebScrapableManager {
                     tryScrapeCards(index + 1, cards, context, isAddCard, currentStatus, callback)
                 } else {
 
+                    /**
+                     * We then assign the current status for analytic purposes
+                     * and proceed to scrape
+                     */
+
                     currentStatus(true, "", false, "")
 
                     PointScrapingUtil.performNewScrape(
@@ -179,6 +203,13 @@ object WebScrapableManager {
 
                             logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
+                            /**
+                             * Once we have the response there are two outcomes.
+                             * If we have the points string, we then return the value
+                             * If we have the error message, we return a failed status
+                             * We then proceed to try scrape the following card in the list
+                             */
+
                             pointScrapeResponse.pointsString?.let { points ->
                                 if (membershipCards != null) {
                                     val balance = CardBalance(
@@ -187,6 +218,7 @@ object WebScrapableManager {
                                         agent.loyalty_scheme.balance_prefix,
                                         agent.loyalty_scheme.balance_suffix,
                                         (System.currentTimeMillis() / 1000)
+
                                     )
                                     membershipCards!![index].balances = arrayListOf(balance)
                                     membershipCards!![index].status =
@@ -223,7 +255,14 @@ object WebScrapableManager {
                                     }
                                 }
 
-                                tryScrapeCards(index + 1, cards, context, isAddCard,currentStatus, callback)
+                                tryScrapeCards(
+                                    index + 1,
+                                    cards,
+                                    context,
+                                    isAddCard,
+                                    currentStatus,
+                                    callback
+                                )
                             }
 
                         } else {
@@ -242,7 +281,11 @@ object WebScrapableManager {
             }
 
         } catch (e: IndexOutOfBoundsException) {
-            //Ran through all cards, return updated values
+
+            /**
+             * We determine when we're done by causing an out of bounds exception.
+             */
+
             logDebug("LocalPointScrape", "Index out of bounds")
             timer?.cancel()
             timer = null
@@ -257,9 +300,11 @@ object WebScrapableManager {
                 }
             }
 
-            //Check to see if we're using the add card journey
-            //If we are we return the first card in the list to add in to the loyalty wallet
-            //If we aren't then we return the whole list
+            /**
+             * Check to see if we're using the add card journey
+             * If we are we return the first card in the list to add in to the loyalty wallet
+             * If we aren't then we return the whole list
+             **/
 
             if (isAddCard) {
                 if (!nonDeletedCards.isNullOrEmpty()) {

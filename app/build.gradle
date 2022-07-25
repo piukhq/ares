@@ -49,7 +49,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         versionCode buildNumber
-        versionName "2.3.16"
+        versionName "2.3.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }
@@ -296,7 +296,8 @@ dependencies {
 
     /** MixPanel**/
     implementation 'com.mixpanel.android:mixpanel-android:5.+'
-
-
+    
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.1.0")
 
 }

@@ -1,6 +1,9 @@
 package com.bink.wallet
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -181,7 +184,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     )
                 } else {
 
-                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(
+                    if (emailFromJson?.lowercase(Locale.ENGLISH) != emailFromLocal.lowercase(
                             Locale.ENGLISH
                         )
                     ) {
@@ -390,7 +393,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected fun logScreenView(screenName: String) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             getMainActivity().firebaseAnalytics.setCurrentScreen(
                 requireActivity(),
                 screenName,
@@ -448,7 +451,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     private fun logFirebaseEvent(identifierValue: String) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             val bundle = Bundle()
             bundle.putString(ANALYTICS_IDENTIFIER, identifierValue)
             getMainActivity().firebaseAnalytics.logEvent(
@@ -793,6 +796,28 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         if (this.isAdded) {
             findNavController().removeOnDestinationChangedListener(destinationListener)
+        }
+    }
+
+    protected fun contactSupport(){
+        try {
+            startActivity(Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse(getString(R.string.contact_us_mailto))
+                putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(getString(R.string.contact_us_email_address))
+                )
+                putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    getString(R.string.contact_us_email_subject, BuildConfig.VERSION_NAME)
+                )
+            })
+        } catch (ex: ActivityNotFoundException) {
+            requireContext().displayModalPopup(
+                getString(R.string.contact_us_no_email_title),
+                getString(R.string.contact_us_no_email_message),
+                buttonText = R.string.ok
+            )
         }
     }
 }

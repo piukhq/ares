@@ -269,7 +269,7 @@ object PaymentCardUtils {
     }
 
     fun cardStatus(status: String): String {
-        return when (status.toLowerCase(Locale.getDefault())) {
+        return when (status.lowercase(Locale.getDefault())) {
             "pending" -> PENDING_CARD
             "failed" -> FAILED_CARD
             else -> PENDING_CARD

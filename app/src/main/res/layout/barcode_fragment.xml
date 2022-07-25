@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel" />
-    </data>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/screen"
@@ -31,123 +23,20 @@
             android:layout_marginStart="@dimen/title_margin"
             android:layout_marginTop="@dimen/title_margin"
             android:layout_marginBottom="@dimen/title_margin"
-            android:text="@{viewModel.membershipPlan.account.company_name}"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"
             app:layout_constraintEnd_toEndOf="@+id/toolbar"
             app:layout_constraintStart_toStartOf="@+id/toolbar"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
-            android:layout_width="0dp"
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/barcode_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/barcode_margin_top"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:adjustViewBounds="true"
-                    app:isVisible="@{viewModel.isBarcodeAvailable}"
-                    app:membershipCard="@{viewModel.barcode}"
-                    app:viewModel="@{viewModel}"
-                    tools:ignore="ContentDescription"
-                    tools:src="@android:drawable/bottom_bar" />
-
-                <TextView
-                    android:id="@+id/barcode_not_displayed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/barcode_margin_top"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:text="@string/no_barcode_displayed"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/size_sub_headline"
-                    android:visibility="gone" />
-
-
-                <TextView
-                    android:id="@+id/barcode_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:text="@string/barcode_label"
-                    android:textSize="@dimen/size_headline"
-                    android:textStyle="bold"
-                    app:isVisible="@{viewModel.isBarcodeAvailable}" />
-
-                <TextView
-                    android:id="@+id/barcode_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:text="@{viewModel.barcodeNumber}"
-                    android:textSize="@dimen/size_sub_headline"
-                    android:textStyle="bold"
-                    app:isVisible="@{viewModel.isBarcodeAvailable}"
-                    tools:text="1234 5678 1233 2722" />
-
-                <TextView
-                    android:id="@+id/card_number_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/title_margin"
-                    android:text="@string/barcode_card_number"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/size_headline"
-                    android:textStyle="bold"
-                    app:isVisible="@{viewModel.isCardNumberAvailable}" />
-
-                <TextView
-                    android:id="@+id/card_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/number_margin_top"
-                    android:text="@{viewModel.cardNumber}"
-                    android:textColor="@color/blue_accent"
-                    android:textSize="@dimen/size_sub_headline"
-                    android:textStyle="bold"
-                    app:isVisible="@{viewModel.isCardNumberAvailable}"
-                    tools:text="1234 5678 9101" />
-
-                <TextView
-                    android:id="@+id/barcode_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:textSize="@dimen/size_sub_headline"
-                    app:showNumberOrBarcodeDescription="@{viewModel.isBarcodeAvailable}"
-                    tools:text="@string/barcode_description" />
-
-                <TextView
-                    android:id="@+id/barcode_added_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/date_margin_top"
-                    android:textSize="@dimen/size_body"
-                    app:isVisible="@{viewModel.isBarcodeAvailable}" />
-
-
-            </LinearLayout>
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
