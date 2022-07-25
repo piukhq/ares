@@ -45,6 +45,8 @@
     <dimen name="company_name_margin">30dp</dimen>
     <dimen name="rewards_history_image_size">100dp</dimen>
     <dimen name="voucher_item_size">24dp</dimen>
+    <dimen name="voucher_circle_size">18dp</dimen>
+    <dimen name="voucher_circle_start_padding">4dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>

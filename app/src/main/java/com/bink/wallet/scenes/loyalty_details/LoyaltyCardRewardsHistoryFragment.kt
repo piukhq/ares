@@ -161,12 +161,13 @@ class LoyaltyCardRewardsHistoryFragment :
             colorResource(id = R.color.blue_inactive)
         }
 
-        LazyRow(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)) {
+        LazyRow(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))) {
             voucher.earn?.target_value?.toInt()?.let {
                 items(it) {
                     Row(
                         Modifier
-                            .size(18.dp)
+                            .padding(start = dimensionResource(id = R.dimen.voucher_circle_start_padding))
+                            .size(dimensionResource(id = R.dimen.voucher_circle_size))
                     ) {
                         Canvas(modifier = Modifier.fillMaxSize()) {
                             val canvasWidth = size.width
@@ -181,7 +182,7 @@ class LoyaltyCardRewardsHistoryFragment :
                         }
                     }
 
-                    Spacer(modifier = Modifier.width(13.dp))
+                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
                 }
             }
         }
