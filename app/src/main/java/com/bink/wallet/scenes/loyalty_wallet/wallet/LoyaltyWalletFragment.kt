@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
@@ -99,7 +100,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 //Store current card being moved
                 card?.let {
-                    return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    val moveItem = walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    if (moveItem) {
+                        setSortButtonState()
+                    }
+                    return moveItem
                 }
                 return false
             }
@@ -324,7 +329,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             walletAdapter.paymentCards = it.toMutableList()
         }
 
-
         viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
         }
@@ -355,18 +359,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         manageRecyclerView()
 
         viewModel.fetchLocalPaymentCards()
-
-        binding.swipeLayout.setOnRefreshListener {
-            isRefresh = true
-            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
-                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
-                }
-            } else {
-                isRefresh = false
-                disableIndicators()
-            }
-        }
 
         viewModel.loadCardsError.observeNonNull(this) {
             handleServerDownError(it)
@@ -421,6 +413,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             WebScrapableManager.newlyAddedCard.value = null
         }
 
+        binding.swipeLayout.setOnRefreshListener {
+            isRefresh = true
+            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                }
+            } else {
+                isRefresh = false
+                disableIndicators()
+            }
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -438,6 +442,49 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
             )
         }
+
+        binding.sortButton.setOnClickListener { view ->
+            PopupMenu(requireContext(), view).apply {
+                menuInflater.inflate(R.menu.wallet_sort_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.custom_item -> {
+                            setSortButtonState(true)
+                        }
+                        R.id.newest_item -> {
+                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
+                                requireContext().showDialog(
+                                    title = getString(R.string.newest_sort_title),
+                                    message = getString(R.string.newest_sort_warning),
+                                    positiveBtn = getString(R.string.ok),
+                                    negativeBtn = getString(R.string.cancel_text),
+                                    positiveCallback = { sortByNewest(unsortedCards) },
+                                    negativeCallback = { })
+                            } else {
+                                sortByNewest(unsortedCards)
+                            }
+                        }
+                    }
+                    false
+                }
+                show()
+            }
+        }
+    }
+
+    private fun sortByNewest(unsortedCards: List<MembershipCard>) {
+        val sortedCards = unsortedCards.sortedByDescending { it.id }
+        //If we directly cast to ArrayList<Any> we will get Error: java.util.Arrays$ArrayList cannot be cast to java.util.ArrayList
+        val listAsAny = ArrayList<Any>()
+        listAsAny.addAll(sortedCards)
+        //Save the new Order
+        WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
+        //Refresh the list
+        viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+            logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+        }
+        setSortButtonState()
     }
 
     override fun onPause() {
@@ -514,6 +561,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     WalletOrderingUtil.getSavedLoyaltyCardWallet(
                         sortPlans(ArrayList(userDataResult.result.third))
                     )
+
+                setSortButtonState()
 
                 disableIndicators()
             }
@@ -662,6 +711,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                         ?: MixpanelEvents.VALUE_UNKNOWN
                                 ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
                             )
+                            WalletOrderingUtil.deleteLoyaltyCardFromOrder(membershipCard.id.toLong())
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
@@ -852,6 +902,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
         return totalDupes
+    }
+
+    private fun setSortButtonState(forceToCustom: Boolean = false) {
+        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forceToCustom) {
+            getString(R.string.menu_custom)
+        } else {
+            getString(R.string.menu_newest)
+        }
+        setMixpanelProperty(
+            MixpanelEvents.WALLET_SORT,
+            sortType
+        )
+        binding.sortText.text = sortType
     }
 
     override fun onDestroyView() {
