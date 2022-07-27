@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -17,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -101,6 +103,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
             DebugItemType.CARD_ON_BOARDING -> {
                 displayStatePicker()
+            }
+            DebugItemType.RESET_CACHE -> {
+                clearCache()
             }
         }
     }
@@ -195,6 +200,11 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()
+    }
+
+    private fun clearCache() {
+        Glide.get(requireContext()).clearMemory()
+        Toast.makeText(requireContext(), "Glide cache cleared", Toast.LENGTH_SHORT).show()
     }
 
     private fun applyChanges() {

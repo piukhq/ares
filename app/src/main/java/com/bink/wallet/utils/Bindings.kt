@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.zxing.BarcodeFormat
@@ -252,10 +253,6 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         loadNoBarcodeState(plan, card)
 
     } else {
-        binding.cardPlaceholderText.text = context.getString(
-            R.string.loyalty_card_details_header_placeholder_text,
-            plan?.account?.company_name
-        )
         binding.container.setBackgroundColor(Color.parseColor(card?.card?.colour))
 
         var brandImage: String? = card?.getHeroImage()?.url
@@ -269,6 +266,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
         Glide.with(context)
             .load(brandImage)
+            .transition(DrawableTransitionOptions.withCrossFade(500))
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -290,8 +288,6 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                     )
                     (binding.brandImage.layoutParams as ConstraintLayout.LayoutParams)
                         .dimensionRatio = "${resource?.minimumWidth}:${resource?.minimumHeight}"
-                    binding.container.setBackgroundColor(Color.TRANSPARENT)
-                    binding.cardPlaceholderText.visibility = View.GONE
                     return false
                 }
 
