@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -54,6 +55,28 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     protected var barcode: String? = null
     private var addAuthAdapter: AddAuthAdapter? = null
     private lateinit var account: com.bink.wallet.model.response.membership_plan.Account
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                requestPermissionsResult(
+                    { navigateToScanLoyaltyCard() },
+                    null,
+                    null,
+                    isGranted
+                )
+
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -272,14 +295,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            { navigateToScanLoyaltyCard() },
-            null,
-            null
-        )
+//        requestPermissionsResult(
+//            requestCode,
+//            permissions,
+//            grantResults,
+//            { navigateToScanLoyaltyCard() },
+//            null,
+//            null
+//        )
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -303,8 +326,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private fun onScannerActivated(account: com.bink.wallet.model.response.membership_plan.Account) {
         this.account = account
         requestCameraPermissionAndNavigate(
-            true
-        ) { navigateToScanLoyaltyCard() }
+            true,
+            { navigateToScanLoyaltyCard() },
+            requestPermissionLauncher,
+            null,
+            null
+        )
     }
 
     private fun navigateToScanLoyaltyCard() {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,28 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
     private val filtersAdapter = BrandsFiltersAdapter()
     override val layoutRes = R.layout.browse_brands_fragment
     override val viewModel: BrowseBrandsViewModel by viewModel()
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                requestPermissionsResult(
+                    null,
+                    null,
+                    null,
+                    isGranted
+                )
+
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+            }
+        }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -130,10 +153,23 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
     }
 
     private fun goToScan() {
-        requestCameraPermissionAndNavigate(true) {
-            val directions = BrowseBrandsFragmentDirections.browseToAdd(args.membershipPlans, args.membershipCards, null, isFromAddAuth = true)
-            findNavController().navigateIfAdded(this, directions)
-        }
+        requestCameraPermissionAndNavigate(
+            true,
+            { navigateToScanLoyaltyCard() },
+            requestPermissionLauncher,
+            null,
+            null
+        )
+    }
+
+    private fun navigateToScanLoyaltyCard() {
+        val directions = BrowseBrandsFragmentDirections.browseToAdd(
+            args.membershipPlans,
+            args.membershipCards,
+            null,
+            isFromAddAuth = true
+        )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     companion object {

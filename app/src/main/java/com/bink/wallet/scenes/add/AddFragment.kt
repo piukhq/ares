@@ -50,7 +50,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 // same time, respect the user's decision. Don't link to system
                 // settings in an effort to convince the user to change their
                 // decision.
-                Log.d("Permmision", "ask about reason")
             }
         }
 
@@ -75,14 +74,18 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             requestCameraPermissionAndNavigate(
                 false,
                 null,
-                requestPermissionLauncher
+                requestPermissionLauncher,
+                { navigateToAddPaymentCard() },
+                { navigateToBrowseBrands() }
             )
         }
         binding.loyaltyCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
                 true,
                 { navigateToScanLoyaltyCard() },
-                requestPermissionLauncher
+                requestPermissionLauncher,
+                { navigateToAddPaymentCard() },
+                { navigateToBrowseBrands() }
             )
         }
     }

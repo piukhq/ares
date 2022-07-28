@@ -463,14 +463,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            null,
-            { navigateToAddPaymentCard() },
-            null
-        )
+//        requestPermissionsResult(
+//            requestCode,
+//            permissions,
+//            grantResults,
+//            null,
+//            { navigateToAddPaymentCard() },
+//            null
+//        )
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -618,7 +618,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
             }
             else ->
-                requestCameraPermissionAndNavigate(false, null)
+                openScanPaymentCard()
+//                requestCameraPermissionAndNavigate(false, null)
 
         }
     }
