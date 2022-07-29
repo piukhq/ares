@@ -20,7 +20,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -68,7 +67,7 @@ class LoyaltyCardRewardsHistoryFragment :
 
     @Composable
     private fun LoyaltyCardRewardsHistory(vouchers: List<Voucher>?) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
             Text(
                 text = getString(R.string.rewards_history),
                 fontSize = 25.sp,
@@ -214,7 +213,7 @@ class LoyaltyCardRewardsHistoryFragment :
             return when (state) {
                 VoucherStates.REDEEMED.state,
                 VoucherStates.EXPIRED.state,
-                VoucherStates.CANCELLED.state
+                VoucherStates.CANCELLED.state,
                 -> state.capitalize()
                 VoucherStates.ISSUED.state -> getString(R.string.earned).capitalize()
                 else ->
