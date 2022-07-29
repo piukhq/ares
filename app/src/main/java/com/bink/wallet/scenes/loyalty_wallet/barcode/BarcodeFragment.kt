@@ -1,12 +1,12 @@
 package com.bink.wallet.scenes.loyalty_wallet.barcode
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
@@ -66,13 +67,17 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     @Composable
     fun BarcodeScreen(membershipCard: MembershipCard, membershipPlan: MembershipPlan) {
+        var barcode = MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(id = R.dimen.margin_padding_size_large))
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(membershipCard, membershipPlan)
+            if (barcode == null && viewModel.forceShowBarcode.value) {
+                barcode = MembershipPlanUtils.createBarcode(requireContext(), membershipCard)
+            }
+            Header(membershipPlan, barcode)
 
             if (!membershipCard.card?.membership_id.isNullOrEmpty()) {
                 MembershipNumber(membershipCard.card?.membership_id!!)
@@ -82,14 +87,17 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 BarcodeNumber(membershipCard.card?.barcode!!)
             }
 
+            if (barcode == null) {
+                ShowBarcodeButton()
+            }
+
             ReportIssueButton()
         }
     }
 
     @Composable
-    fun Header(membershipCard: MembershipCard, membershipPlan: MembershipPlan) {
+    fun Header(membershipPlan: MembershipPlan, barcode: Bitmap?) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            val barcode = MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))
             if (barcode == null) {
                 getIconTypeFromPlan(membershipPlan)?.let { url ->
                     ImageViaUrl(
@@ -148,6 +156,52 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     }
 
     @Composable
+    fun ShowBarcodeButton() {
+        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+
+        Button(
+            modifier = Modifier.clip(RoundedCornerShape(dimensionResource(id = R.dimen.force_barcode_rounding))),
+            contentPadding = PaddingValues(),
+            onClick = {
+                viewModel.forceShowBarcode.value = true
+                setMixpanelProperty(
+                    MixpanelEvents.FORCE_BARCODE,
+                    "true"
+                )
+                Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
+                //TODO: Update user preferences
+            },
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F), Color(0xFF194B53)))),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column {
+                    Row {
+                        Text(
+                            text = getString(R.string.show_barcode_title),
+                            fontFamily = nunitoSans,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_small))
+                        )
+                    }
+
+                    Text(
+                        text = getString(R.string.show_barcode_body),
+                        fontFamily = nunitoSans,
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
     fun NumberRow(text: String) {
         val textAsList = text.split("").filter { it != " " && it != "" }
         GridItems(
@@ -190,13 +244,20 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     @Composable
     fun ReportIssueButton() {
-        GradientButton(
-            text = "Report Issue",
+
+        Text(
             modifier = Modifier
-                .fillMaxWidth(),
-            onClick = {
-                showDialog.value = true
-            }
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.margin_padding_size_large))
+                .clickable {
+                    showDialog.value = true
+                },
+            text = stringResource(R.string.report_issue),
+            fontFamily = nunitoSans,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center
         )
 
         if (showDialog.value) {
