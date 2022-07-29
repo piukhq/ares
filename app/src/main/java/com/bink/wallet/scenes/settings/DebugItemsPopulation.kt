@@ -63,6 +63,15 @@ object DebugItemsPopulation {
                 DebugItemType.CARD_ON_BOARDING
             )
         )
+
+        itemsList.add(
+            DebugItem(
+                res.getString(R.string.clear_image_title),
+                res.getString(R.string.clear_image_body),
+                DebugItemType.RESET_CACHE
+            )
+        )
+
         return itemsList
     }
 
