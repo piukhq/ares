@@ -21,9 +21,11 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bink.wallet.BaseFragment
@@ -168,7 +170,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     MixpanelEvents.FORCE_BARCODE,
                     "true"
                 )
-                viewModel.setBarcodePreference{
+                viewModel.setBarcodePreference {
                     Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
                 }
             },
@@ -179,15 +181,19 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 contentAlignment = Alignment.Center,
             ) {
                 Column {
-                    Row {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                        .padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_small))
+                    ) {
                         Text(
                             text = getString(R.string.show_barcode_title),
                             fontFamily = nunitoSans,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
                             fontSize = 20.sp,
-                            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_small))
-                        )
+                            modifier = Modifier
+                                .weight(1f))
+
+                        Image(painterResource(R.drawable.ic_barcode), contentDescription = "Barcode", modifier = Modifier.size(25.dp))
                     }
 
                     Text(
