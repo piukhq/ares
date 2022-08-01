@@ -168,8 +168,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     MixpanelEvents.FORCE_BARCODE,
                     "true"
                 )
-                Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
-                //TODO: Update user preferences
+                viewModel.setBarcodePreference{
+                    Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
+                }
             },
         ) {
             Box(
@@ -244,7 +245,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     @Composable
     fun ReportIssueButton() {
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()
