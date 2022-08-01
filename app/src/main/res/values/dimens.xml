@@ -231,5 +231,6 @@
     <dimen name="sort_button_size">25dp</dimen>
     <dimen name="settings_button_size">30dp</dimen>
     <dimen name="force_barcode_rounding">25dp</dimen>
+    <dimen name="barcode_icon_size">25dp</dimen>
 
 </resources>

@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bink.wallet.BaseFragment
@@ -170,9 +169,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     MixpanelEvents.FORCE_BARCODE,
                     "true"
                 )
-                viewModel.setBarcodePreference {
-                    Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_SHORT).show()
-                }
+                viewModel.setBarcodePreference()
+                Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_LONG).show()
             },
         ) {
             Box(
@@ -193,7 +191,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                             modifier = Modifier
                                 .weight(1f))
 
-                        Image(painterResource(R.drawable.ic_barcode), contentDescription = "Barcode", modifier = Modifier.size(25.dp))
+                        Image(painterResource(R.drawable.ic_barcode), contentDescription = "Barcode", modifier = Modifier.size(dimensionResource(id = R.dimen.barcode_icon_size)))
                     }
 
                     Text(

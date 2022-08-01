@@ -23,7 +23,7 @@ class BarcodeViewModel(private var loginRepository: LoginRepository) : BaseViewM
         getPreferences()
     }
 
-    fun setBarcodePreference(callback: () -> Unit) {
+    fun setBarcodePreference() {
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -32,7 +32,6 @@ class BarcodeViewModel(private var loginRepository: LoginRepository) : BaseViewM
                             ALWAYS_SHOW_BARCODE_KEY, 1
                         ).toString()
                     )
-                    callback()
                 }
             } catch (e: Exception) {
 
