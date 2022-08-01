@@ -56,15 +56,15 @@ class MainActivity : AppCompatActivity() {
 
         mixpanel = MixpanelAPI.getInstance(this, mixpanelKey)
 
-//        SentryAndroid.init(
-//            this
-//        ) { options: SentryAndroidOptions ->
-//            options.environment =
-//                if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
-//            options.setDebug(BuildConfig.DEBUG)
-//            options.release =
-//                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
-//        }
+        SentryAndroid.init(
+            this
+        ) { options: SentryAndroidOptions ->
+            options.environment =
+                if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+            options.setDebug(BuildConfig.DEBUG)
+            options.release =
+                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+        }
 
         if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             if (BuildConfig.SECURE_FLAGS) {

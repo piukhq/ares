@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.add
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,18 +71,18 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         }
         binding.paymentCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
+                requestPermissionLauncher,
                 false,
                 null,
-                requestPermissionLauncher,
                 { navigateToAddPaymentCard() },
                 { navigateToBrowseBrands() }
             )
         }
         binding.loyaltyCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
+                requestPermissionLauncher,
                 true,
                 { navigateToScanLoyaltyCard() },
-                requestPermissionLauncher,
                 { navigateToAddPaymentCard() },
                 { navigateToBrowseBrands() }
             )
@@ -103,23 +102,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             data,
             { navigateToAddPaymentCard(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-
-//        requestPermissionsResult(
-//            requestCode,
-//            permissions,
-//            grantResults,
-//            { navigateToScanLoyaltyCard() },
-//            { navigateToAddPaymentCard() },
-//            { navigateToBrowseBrands() })
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun setCardMarginRelativeToButton() {

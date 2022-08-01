@@ -290,22 +290,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onDestroy()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-//        requestPermissionsResult(
-//            requestCode,
-//            permissions,
-//            grantResults,
-//            { navigateToScanLoyaltyCard() },
-//            null,
-//            null
-//        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
         showRememberMyDetailsView()
@@ -326,9 +310,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private fun onScannerActivated(account: com.bink.wallet.model.response.membership_plan.Account) {
         this.account = account
         requestCameraPermissionAndNavigate(
+            requestPermissionLauncher,
             true,
             { navigateToScanLoyaltyCard() },
-            requestPermissionLauncher,
             null,
             null
         )

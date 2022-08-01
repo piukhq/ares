@@ -127,7 +127,13 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCardNonModal.setOnClickListener {
-            requestCameraPermissionAndNavigate(false, null, requestPermissionLauncher, {navigateToAddPaymentCards()}, null)
+            requestCameraPermissionAndNavigate(
+                requestPermissionLauncher,
+                false,
+                null,
+                { navigateToAddPaymentCards() },
+                null
+            )
         }
 
         binding.addPaymentCardModal.setOnClickListener {
@@ -143,22 +149,6 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             data,
             { navigateToAddPaymentCards(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-//        requestPermissionsResult(
-//            requestCode,
-//            permissions,
-//            grantResults,
-//            null,
-//            { navigateToAddPaymentCards() },
-//            null
-//        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun navigateToAddPaymentCards(cardNumber: String = "") {

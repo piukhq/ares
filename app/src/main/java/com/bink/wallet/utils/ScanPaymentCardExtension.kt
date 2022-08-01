@@ -4,9 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,37 +17,14 @@ import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
 
 fun Fragment.requestCameraPermissionAndNavigate(
+    requestPermissionLauncher: ActivityResultLauncher<String>?,
     shouldNavigateToScanLoyaltyCard: Boolean,
     navigateToScanLoyaltyCard: (() -> Unit)?,
-    requestPermissionLauncher: ActivityResultLauncher<String>?,
     navigateToAddPaymentCard: (() -> Unit)?,
     navigateToBrowseBrands: (() -> Unit)?
 ) {
 
     SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
-
-//    val requestPermissionLauncher =
-//        registerForActivityResult(
-//            ActivityResultContracts.RequestPermission()
-//        ) { isGranted: Boolean ->
-//            if (isGranted) {
-//                // Permission is granted. Continue the action or workflow in your
-//                // app.
-//                if (!shouldNavigateToScanLoyaltyCard) {
-//                    openScanPaymentCard()
-//                } else {
-//                    navigateToScanLoyaltyCard?.invoke()
-//                }
-//            } else {
-//                // Explain to the user that the feature is unavailable because the
-//                // features requires a permission that the user has denied. At the
-//                // same time, respect the user's decision. Don't link to system
-//                // settings in an effort to convince the user to change their
-//                // decision.
-//                Log.d("Permmision","ask about reason")
-//            }
-//        }
-
 
     when {
         ContextCompat.checkSelfPermission(
@@ -84,28 +59,6 @@ fun Fragment.requestCameraPermissionAndNavigate(
             )
         }
     }
-
-
-//    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
-//    val permission = activity?.let {
-//        ContextCompat.checkSelfPermission(
-//            it,
-//            Manifest.permission.CAMERA
-//        )
-//    }
-//
-//    if (permission != PackageManager.PERMISSION_GRANTED) {
-//        requestPermissions(
-//            arrayOf(Manifest.permission.CAMERA),
-//            CAMERA_REQUEST_CODE
-//        )
-//    } else {
-//        if (shouldNavigateToScanLoyaltyCard) {
-//            navigateToScanLoyaltyCard?.invoke()
-//        } else {
-//            openScanPaymentCard()
-//        }
-//    }
 }
 
 fun Fragment.onRequestDenied(

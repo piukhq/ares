@@ -379,9 +379,9 @@ class PaymentCardWalletFragment :
             }
             else -> {
                 requestCameraPermissionAndNavigate(
+                    requestPermissionLauncher,
                     false,
                     null,
-                    requestPermissionLauncher,
                     { navigateToPaymentAddPaymentCard() }, null
                 )
             }
@@ -396,22 +396,6 @@ class PaymentCardWalletFragment :
             data,
             { navigateToPaymentAddPaymentCard(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-//        requestPermissionsResult(
-//            requestCode,
-//            permissions,
-//            grantResults,
-//            null,
-//            { navigateToPaymentAddPaymentCard() },
-//            null
-//        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun navigateToPaymentAddPaymentCard(cardNumber: String = "") {

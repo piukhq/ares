@@ -154,9 +154,9 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     private fun goToScan() {
         requestCameraPermissionAndNavigate(
+            requestPermissionLauncher,
             true,
             { navigateToScanLoyaltyCard() },
-            requestPermissionLauncher,
             null,
             null
         )

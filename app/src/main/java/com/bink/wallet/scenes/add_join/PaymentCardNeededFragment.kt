@@ -42,9 +42,9 @@ class PaymentCardNeededFragment : GenericModalFragment() {
 
     override fun onFirstButtonClicked() {
         requestCameraPermissionAndNavigate(
+            requestPermissionLauncher,
             false,
             null,
-            requestPermissionLauncher,
             { navigateToAddPaymentCard() },
             null
         )
@@ -58,22 +58,6 @@ class PaymentCardNeededFragment : GenericModalFragment() {
             data,
             { navigateToAddPaymentCard(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-//        requestPermissionsResult(
-//            requestCode,
-//            permissions,
-//            grantResults,
-//            null,
-//            { navigateToAddPaymentCard() },
-//            null
-//        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun navigateToAddPaymentCard(cardNumber: String = "") {
