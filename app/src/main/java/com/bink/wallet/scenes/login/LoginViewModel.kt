@@ -1,10 +1,6 @@
 package com.bink.wallet.scenes.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.PostServiceRequest
@@ -25,7 +21,6 @@ class LoginViewModel constructor(
     val userRepository: UserRepository
 ) : BaseViewModel() {
 
-    val loginBody = MutableLiveData<LoginBody>()
     val loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
     private val _logInErrorResponse = MutableLiveData<Exception>()
@@ -34,7 +29,7 @@ class LoginViewModel constructor(
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
-    val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+    private val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -95,10 +90,10 @@ class LoginViewModel constructor(
 
     fun postService(postServiceRequest: PostServiceRequest) {
         viewModelScope.launch {
-            try{
+            try {
                 val response = loginRepository.postService(postServiceRequest)
                 _postServiceResponse.value = response
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _postServiceErrorResponse.value = e
             }
         }

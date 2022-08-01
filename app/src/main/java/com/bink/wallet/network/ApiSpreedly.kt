@@ -2,7 +2,6 @@ package com.bink.wallet.network
 
 import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.response.SpreedlyResponse
-import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST

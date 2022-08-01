@@ -1,21 +1,20 @@
 package com.bink.wallet.scenes.dynamic_actions
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.graphics.Point
-import android.net.Uri
+import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.view.Display
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.getSystemService
 import com.bink.wallet.BaseFragment
-import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DynamicActionFragmentBinding
 import com.bink.wallet.model.DynamicActionEventBodyCTAHandler
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -69,7 +68,7 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
     }
 
     override fun onPause() {
-        var container: ViewGroup = activity?.window?.decorView as ViewGroup
+        val container: ViewGroup = activity?.window?.decorView as ViewGroup
         if (snowList.isNotEmpty()) {
             for (snowflake in snowList) {
                 container.removeView(snowflake.snowflake)
@@ -82,10 +81,11 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
 
     private fun setUpSnowEffect() {
         val point = Point()
-        activity?.windowManager?.defaultDisplay?.getRealSize(point)
+        val defaultDisplay = requireActivity().getSystemService<DisplayManager>()?.getDisplay(Display.DEFAULT_DISPLAY)
+        defaultDisplay?.getRealSize(point)
 
         val container: ViewGroup = activity?.window?.decorView as ViewGroup
-        val bgHandler = Handler()
+        val bgHandler = Handler(Looper.getMainLooper())
 
         for (i in 0 until 200) {
             snowList.add(Snow(requireContext(), point.x.toFloat(), point.y.toFloat(), container))

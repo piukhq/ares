@@ -50,7 +50,7 @@
     <string name="barcode_description_no_barcode">Share this number in-store just like you would a physical loyalty card.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
-    <string name="membership_number_title">Membership number</string>
+    <string name="membership_number_title">%s number</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
     <string name="card_status_pending">Pending</string>
     <string name="card_status_retry">Retry</string>
@@ -359,6 +359,8 @@
     <string name="security_and_privacy_copy_2">Bink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
     <string name="how_it_works_title">How it works</string>
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
+    <string name="clear_image_title">Clear image cache</string>
+    <string name="clear_image_body">Resetting glide memory</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Sign up not supported</string>
@@ -402,7 +404,6 @@
     <string name="already_logged_in_subtitle">Would you like to log in with %s?</string>
     <string name="pcd_expired_card_title">Payment card expired</string>
     <string name="pcd_expired_card_description">Your payment card has expired. Please use the “Delete this card” action below to remove it from your wallet and add your new payment card if applicable. If you have any concerns, please read the FAQs or you can get in touch with Bink by pressing Contact us.</string>
-
 
 
     <!-- Payment Card entry -->
@@ -608,7 +609,6 @@
     <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
 
     <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
-    <string name="card_scan_scan_card"></string>
     <string name="bouncer_card_scan_instructions">Tap the screen to focus the camera on the card. It will scan automatically.</string>
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
@@ -636,6 +636,11 @@
     <string name="contact_us">Contact Us</string>
     <string name="account_delete_failed">Account deletion failed, please contact us</string>
     <string name="account_delete_success">Account deletion is successful</string>
+    <string name="menu_newest">Newest</string>
+    <string name="menu_custom">Custom</string>
+    <string name="newest_sort_title">Changing Sort</string>
+
+    <string name="newest_sort_warning">Some of your cards have been ordered manually. Press OK to change the sort order, but please note that your manual ordering of cards will be lost.</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

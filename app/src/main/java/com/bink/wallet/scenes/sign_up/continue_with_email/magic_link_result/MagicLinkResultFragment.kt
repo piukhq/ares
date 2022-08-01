@@ -1,9 +1,9 @@
 package com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result
 
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import android.widget.Toolbar
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -96,7 +96,8 @@ class MagicLinkResultFragment :
 
         with(binding) {
             title.text = getString(R.string.magic_link_success)
-            subtitle.text = Html.fromHtml(subtitleText)
+            subtitle.text = HtmlCompat.fromHtml(subtitleText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
 
             continueButton.setOnClickListener {
                 viewModel.postConsent()
@@ -110,7 +111,7 @@ class MagicLinkResultFragment :
     }
 
     private fun showErrorUi(isExpired: Boolean) {
-        LocalStoreUtils.clearPreferences(requireContext())
+        LocalStoreUtils.clearPreferences()
 
         with(binding) {
             errorTitle.text =

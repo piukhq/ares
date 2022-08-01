@@ -11,7 +11,7 @@ class StringUtilsTests {
 
     @Test
     fun testRandomRegex() {
-        assert(StringUtils.randomString(100).matches(Regex("[A-Za-z0-9]*")));
+        assert(StringUtils.randomString(100).matches(Regex("[A-Za-z0-9]*")))
 
     }
 }

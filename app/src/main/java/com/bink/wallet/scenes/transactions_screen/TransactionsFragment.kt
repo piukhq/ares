@@ -49,7 +49,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                             true,
                             viewModel.membershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            viewModel.membershipPlan.value?.account?.plan_summary?:"",
+                            viewModel.membershipPlan.value?.account?.plan_summary ?: "",
                             description2 = planDescription,
                             firstButtonText = getString(R.string.go_to_site)
                         ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
@@ -86,10 +86,10 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
 
                 val currentTransactionHistoryVisit = TransactionHistory(membershipCard.id, membershipCard.membership_transactions?.size ?: 0)
 
-                val previousMatchingVisit = previousTransactionHistoryVisitList.firstOrNull { it.membershipId.equals(membershipCard.id) }
+                val previousMatchingVisit = previousTransactionHistoryVisitList.firstOrNull { it.membershipId == membershipCard.id }
 
                 if (previousMatchingVisit != null) {
-                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize < membershipCard.membership_transactions?.size ?: 0
+                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize < (membershipCard.membership_transactions?.size ?: 0)
                     previousTransactionHistoryVisitList.remove(previousMatchingVisit)
                 } else {
                     SharedPreferenceManager.hasNewTransactions = false

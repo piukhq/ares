@@ -2,7 +2,7 @@ package com.bink.wallet.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 data class DynamicAction(
     val name: String?,
@@ -50,23 +50,20 @@ data class DynamicActionEvent(
     val body: DynamicActionEventBody?
 ) : Parcelable
 
-enum class DynamicActionEventType {
-    @SerializedName("launch_modal")
-    LAUNCH_MODAL
-}
+enum class DynamicActionEventType
 
 @Parcelize
 data class DynamicActionEventBody(
     val title: String?,
     val description: String?,
     val cta: DynamicActionEventBodyCta?
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class DynamicActionEventBodyCta(
     val title: String?,
     val action: DynamicActionEventBodyCTAHandler?
-): Parcelable
+) : Parcelable
 
 enum class DynamicActionEventBodyCTAHandler {
     @SerializedName("zd_contact_us")

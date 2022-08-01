@@ -19,7 +19,7 @@ class CardTermsAndConditionsViewModel(private val repository: AddPaymentCardRepo
         get() = _addCardRequestMade
 
     fun sendAddCard(card: PaymentCardAdd, cardNumber: String) {
-        repository.sendAddCard(card, cardNumber, paymentCard, error,_addCardRequestMade)
+        repository.sendAddCard(card, cardNumber, paymentCard, error, _addCardRequestMade)
     }
 
     fun fetchLocalMembershipCards() {

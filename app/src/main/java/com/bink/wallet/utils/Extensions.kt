@@ -7,7 +7,6 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -15,13 +14,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.IdRes
-import androidx.annotation.IntegerRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.BuildConfig
@@ -38,12 +35,6 @@ import java.util.*
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
-
-fun Context.toPixelFromDip(@IntegerRes resId: Int) =
-    toPixelFromDip(resources.getInteger(resId).toFloat())
-
-fun Context.toDipFromPixel(value: Float) =
-    value / (resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
 fun NavController.navigateIfAdded(
     fragment: Fragment, @IdRes resId: Int,
@@ -115,9 +106,9 @@ fun Context.displayModalPopup(
 }
 
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Unit) {
-    this.observe(owner, Observer {
+    this.observe(owner) {
         it?.let(observer)
-    })
+    }
 }
 
 fun LiveData<Exception>.observeErrorNonNull(
@@ -128,7 +119,7 @@ fun LiveData<Exception>.observeErrorNonNull(
     isUserDriven: Boolean,
     observer: ((t: Exception) -> Unit)?
 ) {
-    this.observe(owner, Observer {
+    this.observe(owner) {
         it?.let {
             if (((it is HttpException)
                         && it.code() >= ApiErrorUtils.SERVER_ERROR)
@@ -155,7 +146,7 @@ fun LiveData<Exception>.observeErrorNonNull(
         observer?.let { safeObserver ->
             it?.let(safeObserver)
         }
-    })
+    }
 }
 
 fun LiveData<Exception>.observeErrorNonNull(
@@ -224,12 +215,6 @@ fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun String.headerTidy(): String {
-    return this
-        .replace("=", "")
-        .replace("\n", "")
-}
-
 fun Context.validateEmail(emailValue: String?, editText: EditText) {
     editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
@@ -269,7 +254,7 @@ fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
     setOnClickListener(safeClickListener)
 }
 
-fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
+fun matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
     val constraintSet = ConstraintSet()
     constraintSet.clone(parentLayout)
     constraintSet.connect(
@@ -397,17 +382,6 @@ fun HttpException.getErrorBody(): String {
     return errorBody
 }
 
-fun String.getSuffixForLPS(): String {
-    val debugSuffix =
-        if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
-            "_debug"
-        } else {
-            ""
-        }
-
-    return "$this${debugSuffix}"
-}
-
 fun String.readFileText(context: Context): String? {
     return try {
         context.assets?.open(this)?.bufferedReader().use {
@@ -440,10 +414,37 @@ fun MembershipPlan.canPlanBeAdded(): Boolean {
         LINKING_SUPPORT_ENROL
     ) == true
 }
-fun Fragment.getMainActivity() : MainActivity{
+
+fun Fragment.getMainActivity(): MainActivity {
     return requireActivity() as MainActivity
 }
 
-fun Context.isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
+fun isProduction() = BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
+
+fun Context.showDialog(
+    title: String? = null,
+    message: String? = null,
+    positiveBtn: String? = null,
+    negativeBtn: String? = null,
+    cancelable: Boolean = false,
+    positiveCallback: () -> Unit = {},
+    negativeCallback: () -> Unit = {}
+) {
+    val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+    builder.apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton(positiveBtn) { _, _ ->
+            positiveCallback()
+        }
+        setNegativeButton(negativeBtn) { _, _ ->
+            negativeCallback()
+        }
+        setCancelable(cancelable)
+        create()
+    }
+    builder.show()
+}
+
 
 

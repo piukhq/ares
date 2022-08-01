@@ -32,8 +32,8 @@ class LoginUnitTest : KoinTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    var loginData = MutableLiveData<LoginBody>()
-    val authError = MutableLiveData<Exception>()
+    private var loginData = MutableLiveData<LoginBody>()
+    private val authError = MutableLiveData<Exception>()
     private val loginRepository: LoginRepository = mock()
     private val loyaltyWalletRepository: LoyaltyWalletRepository = mock()
     private val userRepository: UserRepository = mock()

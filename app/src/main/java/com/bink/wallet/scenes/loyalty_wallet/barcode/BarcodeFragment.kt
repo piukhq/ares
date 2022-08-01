@@ -75,7 +75,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             Header(membershipCard, membershipPlan)
 
             if (!membershipCard.card?.membership_id.isNullOrEmpty()) {
-                MembershipNumber(membershipCard.card?.membership_id!!)
+                MembershipNumber(membershipPlan.account?.plan_name_card ?: "", membershipCard.card?.membership_id!!)
             }
 
             if (!membershipCard.card?.barcode.isNullOrEmpty() && membershipCard.card?.barcode != membershipCard.card?.membership_id) {
@@ -114,13 +114,13 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     }
 
     @Composable
-    fun MembershipNumber(text: String) {
+    fun MembershipNumber(title: String, text: String) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.membership_number_title),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.membership_number_title, title),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp

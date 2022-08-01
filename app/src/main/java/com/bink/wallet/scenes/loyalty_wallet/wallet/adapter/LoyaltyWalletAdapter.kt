@@ -20,7 +20,6 @@ import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyW
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -53,21 +52,21 @@ class LoyaltyWalletAdapter(
         return when (viewType) {
 
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(
-                LoyaltyWalletItemBinding.inflate(inflater,parent,false),
+                LoyaltyWalletItemBinding.inflate(inflater, parent, false),
                 onClickListener,
                 membershipPlans,
                 paymentCards
             )
 
             CARD_ON_BOARDING_SEE -> CardOnBoardingSeeViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
+                CardOnboardingSeeStoreBinding.inflate(inflater, parent, false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans
             )
 
             CARD_ON_BOARDING_STORE -> CardOnBoardingStoreViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
+                CardOnboardingSeeStoreBinding.inflate(inflater, parent, false),
                 onClickListener,
                 onCardLinkClickListener,
                 onPlaceholderClickListener,
@@ -75,7 +74,7 @@ class LoyaltyWalletAdapter(
             )
 
             else -> CardOnBoardingLinkViewHolder(
-                CardOnboardingItemBinding.inflate(inflater,parent,false),
+                CardOnboardingItemBinding.inflate(inflater, parent, false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans

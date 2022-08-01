@@ -13,17 +13,15 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.SentryErrorType
 import com.bink.wallet.utils.SentryUtils
-import okhttp3.ResponseBody
 import retrofit2.HttpException
 
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val linkError = MutableLiveData<Exception>()
     val unlinkError = MutableLiveData<Exception>()
     val fetchError = MutableLiveData<Exception>()
-    val localFetchError = MutableLiveData<Exception>()
+    private val localFetchError = MutableLiveData<Exception>()
 
     val paymentCard = MutableLiveData<PaymentCard>()
 
@@ -32,14 +30,14 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         get() = _paymentCards
 
     private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
-    val localPaymentCards: LiveData<List<PaymentCard>>
+    private val localPaymentCards: LiveData<List<PaymentCard>>
         get() = _localPaymentCards
 
     private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()
     val paymentCardsMerger: LiveData<List<PaymentCard>>
         get() = _paymentCardsMerger
 
-    val _unlinkErrors = MutableLiveData<ArrayList<Exception>>()
+    private val _unlinkErrors = MutableLiveData<ArrayList<Exception>>()
     val unlinkErrors: LiveData<ArrayList<Exception>>
         get() = _unlinkErrors
 

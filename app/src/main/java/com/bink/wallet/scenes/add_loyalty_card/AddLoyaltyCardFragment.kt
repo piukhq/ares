@@ -1,7 +1,8 @@
 package com.bink.wallet.scenes.add_loyalty_card
 
 import android.app.Activity
-import android.content.Context
+import android.content.Context.VIBRATOR_MANAGER_SERVICE
+import android.content.Context.VIBRATOR_SERVICE
 import android.os.*
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -211,16 +212,24 @@ class AddLoyaltyCardFragment :
         title: String = getString(R.string.enter_manually),
         text: String = getString(R.string.enter_manually_cant_scan)
     ) {
-        val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-        if (Build.VERSION.SDK_INT >= 26) {
-            vibrator?.vibrate(
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = requireActivity().getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            requireActivity().getSystemService(VIBRATOR_SERVICE) as Vibrator
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            vibrator.vibrate(
                 VibrationEffect.createOneShot(
                     VIBRATION_DURATION,
                     VibrationEffect.DEFAULT_AMPLITUDE
                 )
             )
         } else {
-            vibrator?.vibrate(VIBRATION_DURATION)
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(VIBRATION_DURATION)
         }
 
         binding.bottomView.enterText.text = title

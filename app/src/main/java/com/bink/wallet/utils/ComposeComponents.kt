@@ -73,7 +73,7 @@ fun GradientButton(
     ) {
         Box(
             modifier = Modifier
-                .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F),Color(0xFF194B53))))
+                .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F), Color(0xFF194B53))))
                 .then(modifier),
             contentAlignment = Alignment.Center,
         ) {
@@ -84,7 +84,7 @@ fun GradientButton(
                 color = Color.White,
                 fontSize = 18.sp,
                 modifier = Modifier.padding(16.dp)
-                )
+            )
         }
     }
 }

@@ -5,9 +5,10 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
+import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
@@ -99,7 +100,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 //Store current card being moved
                 card?.let {
-                    return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    val moveItem = walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                    if (moveItem) {
+                        setSortButtonState()
+                    }
+                    return moveItem
                 }
                 return false
             }
@@ -110,15 +115,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                var card: MembershipCard? = null
+                var membershipCard: MembershipCard? = null
 
                 try {
-                    card = walletAdapter.membershipCards[position] as MembershipCard
+                    membershipCard = walletAdapter.membershipCards[position] as MembershipCard
                 } catch (e: ClassCastException) {
                     //User swiping membership plan
                 }
 
-                card?.let { card ->
+                membershipCard?.let { card ->
                     if (direction == RIGHT) {
                         val membershipPlanData = viewModel.membershipPlanData.value
                             ?: viewModel.localMembershipPlanData.value
@@ -304,7 +309,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
@@ -323,7 +328,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.localPaymentCards.observeNonNull(this) {
             walletAdapter.paymentCards = it.toMutableList()
         }
-
 
         viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
@@ -355,18 +359,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         manageRecyclerView()
 
         viewModel.fetchLocalPaymentCards()
-
-        binding.swipeLayout.setOnRefreshListener {
-            isRefresh = true
-            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
-                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
-                }
-            } else {
-                isRefresh = false
-                disableIndicators()
-            }
-        }
 
         viewModel.loadCardsError.observeNonNull(this) {
             handleServerDownError(it)
@@ -421,16 +413,28 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             WebScrapableManager.newlyAddedCard.value = null
         }
 
+        binding.swipeLayout.setOnRefreshListener {
+            isRefresh = true
+            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+                }
+            } else {
+                isRefresh = false
+                disableIndicators()
+            }
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
+        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner) {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
-        })
+        }
 
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(
@@ -438,6 +442,49 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
             )
         }
+
+        binding.sortButton.setOnClickListener { view ->
+            PopupMenu(requireContext(), view).apply {
+                menuInflater.inflate(R.menu.wallet_sort_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.custom_item -> {
+                            setSortButtonState(true)
+                        }
+                        R.id.newest_item -> {
+                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
+                                requireContext().showDialog(
+                                    title = getString(R.string.newest_sort_title),
+                                    message = getString(R.string.newest_sort_warning),
+                                    positiveBtn = getString(R.string.ok),
+                                    negativeBtn = getString(R.string.cancel_text),
+                                    positiveCallback = { sortByNewest(unsortedCards) },
+                                    negativeCallback = { })
+                            } else {
+                                sortByNewest(unsortedCards)
+                            }
+                        }
+                    }
+                    false
+                }
+                show()
+            }
+        }
+    }
+
+    private fun sortByNewest(unsortedCards: List<MembershipCard>) {
+        val sortedCards = unsortedCards.sortedByDescending { it.id }
+        //If we directly cast to ArrayList<Any> we will get Error: java.util.Arrays$ArrayList cannot be cast to java.util.ArrayList
+        val listAsAny = ArrayList<Any>()
+        listAsAny.addAll(sortedCards)
+        //Save the new Order
+        WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
+        //Refresh the list
+        viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+            logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+        }
+        setSortButtonState()
     }
 
     override fun onPause() {
@@ -500,44 +547,44 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun setCardsData(userDataResult: UserDataResult) {
         isRefresh = false
-        when (userDataResult) {
-            is UserDataResult.UserDataSuccess -> {
-                setMixpanelCardProperties(userDataResult.result.first)
+        if (userDataResult is UserDataResult.UserDataSuccess) {
+            setMixpanelCardProperties(userDataResult.result.first)
 
-                walletItems = ArrayList()
-                walletItems.addAll(userDataResult.result.third)
-                // We should only stop loading & show membership cards if we have membership plans too
-                if (userDataResult.result.second.isNotEmpty()) {
-                    cards = userDataResult.result.first
-                    plans = userDataResult.result.second
+            walletItems = ArrayList()
+            walletItems.addAll(userDataResult.result.third)
+            // We should only stop loading & show membership cards if we have membership plans too
+            if (userDataResult.result.second.isNotEmpty()) {
+                cards = userDataResult.result.first
+                plans = userDataResult.result.second
 
-                    walletAdapter.membershipCards =
-                        WalletOrderingUtil.getSavedLoyaltyCardWallet(
-                            sortPlans(ArrayList(userDataResult.result.third))
-                        )
+                walletAdapter.membershipCards =
+                    WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                        sortPlans(ArrayList(userDataResult.result.third))
+                    )
 
-                    disableIndicators()
+                setSortButtonState()
+
+                disableIndicators()
+            }
+
+            walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
+            walletAdapter.notifyDataSetChanged()
+
+            SharedPreferenceManager.loyaltyWalletPosition?.let {
+                binding.loyaltyWalletList.layoutManager?.onRestoreInstanceState(it)
+                SharedPreferenceManager.loyaltyWalletPosition = null
+            }
+
+            if (userDataResult.result.first.size > 4) {
+                RequestReviewUtil.triggerViaCards(this) {
+                    logEvent(
+                        FIREBASE_REQUEST_REVIEW,
+                        getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
+                    )
                 }
-
-                walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
-                walletAdapter.notifyDataSetChanged()
-
-                SharedPreferenceManager.loyaltyWalletPosition?.let {
-                    binding.loyaltyWalletList.layoutManager?.onRestoreInstanceState(it)
-                    SharedPreferenceManager.loyaltyWalletPosition = null
-                }
-
-                if (userDataResult.result.first.size > 4) {
-                    RequestReviewUtil.triggerViaCards(this) {
-                        logEvent(
-                            FIREBASE_REQUEST_REVIEW,
-                            getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
-                        )
-                    }
-                }
-
             }
         }
+
     }
 
     private fun sortPlans(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
@@ -664,6 +711,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                         ?: MixpanelEvents.VALUE_UNKNOWN
                                 ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
                             )
+                            WalletOrderingUtil.deleteLoyaltyCardFromOrder(membershipCard.id.toLong())
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
@@ -820,20 +868,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         )
     }
 
-    private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
-        logMixpanelEvent(
-            MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
-            JSONObject().put(
-                MixpanelEvents.LPS_STATUS,
-                membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN
-            )
-                .put(
-                    MixpanelEvents.LC_ID,
-                    membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN
-                )
-        )
-    }
-
     private fun setMixpanelCardProperties(membershipCards: List<MembershipCard>) {
         setMixpanelProperty(
             MixpanelEvents.TOTAL_CARDS_PROP,
@@ -858,7 +892,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun getTotalDuplicateCards(membershipCards: List<MembershipCard>): Int {
         var totalDupes = 0
-        var checkedIds = ArrayList<String?>()
+        val checkedIds = ArrayList<String?>()
         membershipCards.forEach { card ->
             if (!checkedIds.contains(card.membership_plan)) {
                 checkedIds.add(card.membership_plan)
@@ -868,6 +902,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
         return totalDupes
+    }
+
+    private fun setSortButtonState(forceToCustom: Boolean = false) {
+        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forceToCustom) {
+            getString(R.string.menu_custom)
+        } else {
+            getString(R.string.menu_newest)
+        }
+        setMixpanelProperty(
+            MixpanelEvents.WALLET_SORT,
+            sortType
+        )
+        binding.sortText.text = sortType
     }
 
     override fun onDestroyView() {

@@ -16,7 +16,6 @@ import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.getCardTypeFromProvider
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class PaymentCardWalletAdapter(
@@ -72,11 +71,11 @@ class PaymentCardWalletAdapter(
 
         return when (viewType) {
             PAYMENT_CARD -> {
-                val binding = PaymentCardWalletItemBinding.inflate(inflater,parent,false)
+                val binding = PaymentCardWalletItemBinding.inflate(inflater, parent, false)
                 PaymentCardWalletHolder(binding)
             }
             else -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater,parent,false)
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater, parent, false)
                 PaymentCardWalletJoinHolder(binding)
             }
         }

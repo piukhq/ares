@@ -31,7 +31,7 @@ class LoyaltyCardTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    lateinit var viewModel: LoyaltyViewModel
+    private lateinit var viewModel: LoyaltyViewModel
     private lateinit var loyaltyWalletRepository: LoyaltyWalletRepository
     private lateinit var paymentWalletRepository: PaymentWalletRepository
 
@@ -113,7 +113,7 @@ class LoyaltyCardTest {
                 .then {
                     (viewModel.membershipPlanData.apply {
                         postValue(
-                            asList(
+                            listOf(
                                 MembershipPlan(
                                     "1234",
                                     "plan",

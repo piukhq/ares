@@ -10,7 +10,6 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
-import com.bink.wallet.scenes.settings.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,12 +24,9 @@ class PaymentCardsDetailsViewModel(
     val paymentCard = MutableLiveData<PaymentCard>()
     val membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    val linkedPaymentCard = MutableLiveData<PaymentCard>()
     val deleteRequest = MutableLiveData<ResponseBody>()
 
     private val _loadCardsError = MutableLiveData<Exception>()
-    val loadCardsError: LiveData<Exception>
-        get() = _loadCardsError
 
     private val _linkError = MutableLiveData<Pair<Exception, String>>()
     val linkError: LiveData<Pair<Exception, String>>
@@ -70,7 +66,7 @@ class PaymentCardsDetailsViewModel(
         }
     }
 
-    fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
+    fun unlinkPaymentCard(cardId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
         membershipCard?.let { mCard ->
             paymentCard.value?.let { pCard ->
@@ -112,7 +108,7 @@ class PaymentCardsDetailsViewModel(
 
     private fun updatePaymentCard(cardId: String) {
         paymentCard.value?.let {
-            if (it.membership_cards.count { card -> card.id == cardId } < 1) {
+            if (it.membership_cards.isEmpty()) {
                 it.addPaymentCard(cardId)
             }
         }

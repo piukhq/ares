@@ -1,10 +1,6 @@
 package com.bink.wallet.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Dao

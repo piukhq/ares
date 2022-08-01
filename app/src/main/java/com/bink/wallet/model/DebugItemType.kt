@@ -1,7 +1,7 @@
 package com.bink.wallet.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 enum class DebugItemType : Parcelable {
@@ -11,5 +11,6 @@ enum class DebugItemType : Parcelable {
     BACKEND_VERSION,
     COLOR_SWATCHES,
     FORCE_CRASH,
-    CARD_ON_BOARDING
+    CARD_ON_BOARDING,
+    RESET_CACHE
 }
