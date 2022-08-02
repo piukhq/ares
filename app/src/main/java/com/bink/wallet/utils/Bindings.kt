@@ -444,7 +444,7 @@ fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Bo
     }
 }
 
-private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
+fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
     SimpleDateFormat(
         getDateFormat(shortMonth),
         Locale.ENGLISH

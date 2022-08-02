@@ -534,6 +534,7 @@
     <string name="spent">spent</string>
     <string name="earned">earned</string>
     <string name="your_past_rewards">Your past rewards</string>
+    <string name="no_rewards">No rewards to display. Come back after you\'ve earned vouchers to see your issued, redeemed or expired rewards</string>
     <string name="collecting">Collecting</string>
     <string name="towards_rewards">Towards rewards</string>
     <string name="voucher_spent">Spent:</string>
