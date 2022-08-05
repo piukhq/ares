@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.pll
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -32,6 +33,29 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     override val viewModel: PllEmptyViewModel by viewModel()
 
     private lateinit var pendingAdapter: PllPendingAdapter
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                requestPermissionsResult(
+                    null,
+                    { navigateToAddPaymentCards() },
+                    null,
+                    isGranted
+                )
+
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+            }
+        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -103,7 +127,13 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCardNonModal.setOnClickListener {
-            requestCameraPermissionAndNavigate(false, null)
+            requestCameraPermissionAndNavigate(
+                requestPermissionLauncher,
+                false,
+                null,
+                { navigateToAddPaymentCards() },
+                null
+            )
         }
 
         binding.addPaymentCardModal.setOnClickListener {
@@ -119,22 +149,6 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             data,
             { navigateToAddPaymentCards(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            null,
-            { navigateToAddPaymentCards() },
-            null
-        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun navigateToAddPaymentCards(cardNumber: String = "") {
