@@ -640,8 +640,9 @@
     <string name="newest_sort_warning">Some of your cards have been ordered manually. Press OK to change the sort order, but please note that your manual ordering of cards will be lost.</string>
     <string name="preferences_updated">Preferences Updated</string>
     <string name="show_barcode_title">Showing Barcode</string>
-    <string name="show_barcode_body">For some brands, we do not automatically display a barcode if you add your loyalty card manually (without scanning). This is because we cannot guarantee it will work in store\n\nPress here to show barcode anyway</string>
+    <string name="show_barcode_body">For some brands, we do not automatically display a barcode if you add your loyalty card manually (without scanning). This is because we cannot guarantee it will work in store.\n\nPress here to show barcode anyway</string>
     <string name="report_issue">Report Issue</string>
+    <string name="click_here">Press here</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

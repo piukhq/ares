@@ -23,6 +23,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -194,8 +196,18 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                         Image(painterResource(R.drawable.ic_barcode), contentDescription = "Barcode", modifier = Modifier.size(dimensionResource(id = R.dimen.barcode_icon_size)))
                     }
 
+                    val clickHere = stringResource(id = R.string.click_here)
+                    val body = stringResource(id = R.string.show_barcode_body)
+                    val start = body.indexOf(clickHere)
+                    val spanStyles = listOf(
+                        AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+                            start = start,
+                            end = start + clickHere.length
+                        )
+                    )
+
                     Text(
-                        text = getString(R.string.show_barcode_body),
+                        text = AnnotatedString(text = body, spanStyles = spanStyles),
                         fontFamily = nunitoSans,
                         color = Color.White,
                         fontSize = 12.sp,
