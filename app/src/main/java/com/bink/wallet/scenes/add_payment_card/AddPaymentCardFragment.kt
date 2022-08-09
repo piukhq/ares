@@ -59,7 +59,7 @@ class AddPaymentCardFragment :
 
     private fun validateCardNumber() {
         binding.cardNumber.error =
-            if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+            if (PaymentAccountUtil.cardValidation(binding.cardNumber.text.toString()).type == PaymentCardType.NONE.type) {
                 getString(R.string.incorrect_card_error)
             } else {
                 null
@@ -148,10 +148,10 @@ class AddPaymentCardFragment :
                     getString(R.string.country_code_gb),
                     getString(R.string.currency_code_gbp),
                     binding.cardName.text.toString(),
-                    cardNo.cardValidation().type,
-                    cardNo.cardValidation().type,
-                    PaymentAccountUtil().randomString(BankCard.TOKEN_LENGTH),
-                    PaymentAccountUtil().fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                    PaymentAccountUtil.cardValidation(cardNo).type,
+                    PaymentAccountUtil.cardValidation(cardNo).type,
+                    PaymentAccountUtil.randomString(BankCard.TOKEN_LENGTH),
+                    PaymentAccountUtil.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                 )
 
                 findNavController().navigate(

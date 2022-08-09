@@ -65,21 +65,6 @@ fun String.presentedCardType(): PaymentCardType {
     return PaymentCardType.NONE
 }
 
-fun String.cardValidation(): PaymentCardType {
-    if (!isValidLuhnFormat()) {
-        return PaymentCardType.NONE
-    }
-    val sanitizedInput = ccSanitize()
-    val paymentType = sanitizedInput.presentedCardType()
-    return if (sanitizedInput.length == paymentType.len &&
-        sanitizedInput.isValidLuhnFormat()
-    ) {
-        paymentType
-    } else {
-        PaymentCardType.NONE
-    }
-}
-
 fun String.numberSanitize() = replace(REGEX_DECIMAL_ONLY.toRegex(), EMPTY_STRING)
 
 fun String.ccSanitize() = replace(SPACE, EMPTY_STRING)
