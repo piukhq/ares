@@ -137,7 +137,7 @@ class AddPaymentCardFragment :
 
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                val cardNo = PaymentAccountUtil.numberSanitize(binding.cardNumber.text.toString())
                 val cardExp = binding.cardExpiry.text.toString().split("/")
 
                 val bankCard = BankCard(
@@ -282,23 +282,25 @@ class AddPaymentCardFragment :
 
     private fun cardExpiryErrorCheck(text: String): String? {
         with(text) {
-            if (!dateValidation()) {
+            if (PaymentAccountUtil.dateValidation(this)) {
                 return getString(R.string.incorrect_card_expiry)
             }
-            if (!formatDate().contentEquals(text))
-                binding.cardExpiry.setText(formatDate())
+            if (!PaymentAccountUtil.formatDate(this).contentEquals(text))
+                binding.cardExpiry.setText(PaymentAccountUtil.formatDate(this))
         }
         return null
     }
 
     private fun cardSwitcher(card: String) {
-        with(card.presentedCardType()) {
-            binding.topLayout.background = ContextCompat.getDrawable(
-                requireContext(),
-                background
-            )
-            binding.topLayoutBrand.setImageResource(logo)
-            binding.bottomLayoutBrand.setImageResource(subLogo)
+        PaymentAccountUtil.presentedCardType(card).type.convertToPaymentCardType()?.let { paymentCardType ->
+            with(paymentCardType) {
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    background
+                )
+                binding.topLayoutBrand.setImageResource(logo)
+                binding.bottomLayoutBrand.setImageResource(subLogo)
+            }
         }
     }
 

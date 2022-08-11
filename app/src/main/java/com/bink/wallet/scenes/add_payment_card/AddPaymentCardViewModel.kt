@@ -9,7 +9,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.combineNonNull
-import com.bink.wallet.utils.dateValidation
 import com.bink.wallet.utils.enums.PaymentCardType
 
 class AddPaymentCardViewModel(private val repository: AddPaymentCardRepository) :
@@ -37,7 +36,7 @@ class AddPaymentCardViewModel(private val repository: AddPaymentCardRepository) 
         expiryDate: String,
         cardHolder: String,
     ): Boolean = PaymentAccountUtil.cardValidation(cardNumber).type != PaymentCardType.NONE.type &&
-            expiryDate.dateValidation() &&
+            PaymentAccountUtil.dateValidation(expiryDate) &&
             cardHolder.isNotEmpty()
 
 
