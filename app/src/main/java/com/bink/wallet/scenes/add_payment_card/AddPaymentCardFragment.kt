@@ -282,7 +282,7 @@ class AddPaymentCardFragment :
 
     private fun cardExpiryErrorCheck(text: String): String? {
         with(text) {
-            if (PaymentAccountUtil.dateValidation(this)) {
+            if (!PaymentAccountUtil.dateValidation(this)) {
                 return getString(R.string.incorrect_card_expiry)
             }
             if (!PaymentAccountUtil.formatDate(this).contentEquals(text))
