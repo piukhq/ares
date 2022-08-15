@@ -406,8 +406,9 @@
         <action
             android:id="@+id/detail_to_add_join"
             app:destination="@+id/add_join" />
-
-
+        <action
+            android:id="@+id/detail_to_locations"
+            app:destination="@id/loyalty_card_locations" />
         <action
             android:id="@+id/detail_to_rewards_history"
             app:destination="@id/loyalty_card_rewards_history" />
@@ -426,6 +427,11 @@
             android:id="@+id/detail_to_home"
             app:destination="@+id/home_wallet" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/loyalty_card_locations"
+        android:name="com.bink.wallet.scenes.loyalty_details.locations.LoyaltyCardLocationsFragment"
+        tools:layout="@layout/loyalty_card_location_fragment">
     </fragment>
 
     <fragment

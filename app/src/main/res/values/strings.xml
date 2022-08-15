@@ -646,6 +646,7 @@
     <string name="show_barcode_body">For some brands, we do not automatically display a barcode if you add your loyalty card manually (without scanning). This is because we cannot guarantee it will work in store.\n\nPress here to show barcode anyway</string>
     <string name="report_issue">Report Issue</string>
     <string name="click_here">Press here</string>
+    <string name="show_locations">Show %s Locations</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">
