@@ -9,6 +9,8 @@
         </intent>
     </queries>
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -54,6 +56,10 @@
                     android:scheme="bink" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAlpZd63ObX4aLnFFPstsVKryOkc-m33DQ" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
