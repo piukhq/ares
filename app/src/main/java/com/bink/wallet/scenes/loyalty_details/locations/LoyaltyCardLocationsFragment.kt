@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -34,6 +33,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardLocationFragmentBinding
 import com.bink.wallet.model.tescolocations.Properties
+import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.noRippleClickable
 import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.showDialog
@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.compose.*
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -122,6 +123,13 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
             }
         }
 
+        logMixpanelEvent(
+            MixpanelEvents.SHOW_LOCATIONS,
+            JSONObject().put(
+                MixpanelEvents.BRAND_NAME,
+                "Tesco"
+            )
+        )
     }
 
     @Composable
@@ -164,9 +172,26 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                     .background(Color.White)
                     .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
                     .noRippleClickable {
-                        val intent = Intent(Intent.ACTION_VIEW,
-                            Uri.parse("geo:0,0?q=${properties.latitude},${properties.longitude} (${"${properties.locationName} - ${properties.city}"})"))
-                        startActivity(intent)
+
+                        logMixpanelEvent(
+                            MixpanelEvents.SHOW_LOCATIONS,
+                            JSONObject().put(
+                                MixpanelEvents.SHOW_DIRECTIONS,
+                                "Tesco"
+                            )
+                        )
+
+                        try {
+                            val intent = Intent(Intent.ACTION_VIEW,
+                                Uri.parse("geo:0,0?q=${properties.latitude},${properties.longitude} (${"${properties.locationName} - ${properties.city}"})"))
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            requireContext().showDialog(
+                                title = getString(R.string.error),
+                                message = getString(R.string.map_error),
+                                positiveBtn = getString(R.string.ok))
+                        }
+
                     },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center) {
@@ -187,7 +212,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                         )
 
                         Text(
-                            text = stringResource(R.string.map_location_directions_text),
+                            text = getString(R.string.map_location_directions_text),
                             fontFamily = nunitoSans,
                             fontSize = 18.sp
                         )

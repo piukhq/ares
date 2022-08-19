@@ -808,7 +808,9 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLocationModuleClickListener() {
-        val companyName = viewModel.membershipPlan.value?.account?.company_name
+        val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
+        val isLocationModuleEnabled = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
+        if (!isLocationModuleEnabled.isNullOrEmpty()) binding.showLocationWrapper.visibility = View.VISIBLE
         with(binding) {
             locationsTitle.text = getString(R.string.show_locations, companyName)
             Glide.with(requireContext()).load(R.drawable.location_gif).into(locationsGif)
