@@ -237,5 +237,6 @@
     <dimen name="force_barcode_rounding">25dp</dimen>
     <dimen name="barcode_icon_size">25dp</dimen>
     <dimen name="map_location_card_icon_size">30dp</dimen>
+    <dimen name="location_gif_size">50dp</dimen>
 
 </resources>

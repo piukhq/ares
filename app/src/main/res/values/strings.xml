@@ -655,6 +655,7 @@
     <string name="map_location_directions_text">Press for directions</string>
     <string name="map_error">Cannot show directions for this location, try again later</string>
     <string name="beta_feature_title">Beta Features</string>
+    <string name="location_sub_title">Find your nearest store</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

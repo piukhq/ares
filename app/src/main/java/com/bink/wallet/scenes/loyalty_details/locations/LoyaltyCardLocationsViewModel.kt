@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.loyalty_details.locations
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.bink.wallet.BaseViewModel
@@ -28,7 +27,6 @@ class LoyaltyCardLocationsViewModel : BaseViewModel() {
                 locations.value = tescoLocations
             }
         } catch (e: IOException) {
-            Log.d("tesdsast", e.toString())
         }
 
     }
