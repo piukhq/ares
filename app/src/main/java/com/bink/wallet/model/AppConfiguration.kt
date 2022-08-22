@@ -10,7 +10,7 @@ data class Beta(val features: ArrayList<BetaFeature>, val users: ArrayList<BetaU
 
 data class BetaUser(val uid: String)
 
-data class BetaFeature(val slug: String, val type: String, val title: String, val description: String, val enabled: Boolean)
+data class BetaFeature(val slug: String, val type: String, val title: String, val description: String, val enabled: Boolean, var locallyEnabled: Boolean = false)
 
 fun LocalPointsCollection.currentAgent(membershipPlanId: Int?): LocalPointsAgent? {
     val currentAgent = agents.filter { it.membership_plan_id.getId() == membershipPlanId }

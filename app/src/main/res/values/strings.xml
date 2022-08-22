@@ -305,6 +305,7 @@
     <!-- Settings screen -->
     <string name="settings">Settings</string>
     <string name="settings_menu_account">Account</string>
+    <string name="settings_menu_beta">Beta Features</string>
     <string name="settings_menu_log_out">Log out</string>
     <string name="settings_menu_support_and_feedback">Support and feedback</string>
     <string name="settings_menu_faqs">FAQs</string>
@@ -653,6 +654,7 @@
     <string name="location_permission_settings_message">The Bink app needs your location for this functionality, this will take you to your settings</string>
     <string name="map_location_directions_text">Press for directions</string>
     <string name="map_error">Cannot show directions for this location, try again later</string>
+    <string name="beta_feature_title">Beta Features</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

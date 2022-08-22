@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "settings_item")
 enum class SettingsItemType : Parcelable {
     HEADER,
+    BETA,
     LOGOUT,
     PREFERENCES,
     FAQS,

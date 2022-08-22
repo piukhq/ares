@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -810,7 +811,7 @@ class LoyaltyCardDetailsFragment :
     private fun setLocationModuleClickListener() {
         val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
         val isLocationModuleEnabled = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
-        if (!isLocationModuleEnabled.isNullOrEmpty()) binding.showLocationWrapper.visibility = View.VISIBLE
+        if (!isLocationModuleEnabled.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(isLocationModuleEnabled.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
         with(binding) {
             locationsTitle.text = getString(R.string.show_locations, companyName)
             Glide.with(requireContext()).load(R.drawable.location_gif).into(locationsGif)

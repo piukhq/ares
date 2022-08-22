@@ -33,6 +33,7 @@ object SharedPreferenceManager {
     private const val FIRST_OPEN_DATE = "first_open_date"
     private const val TOTAL_OPEN_COUNT = "total_open_count"
     private const val ADDED_NEW_PLL = "added_new_pll"
+    private const val BETA_FEATURE_ENABLED = "BETA_FEATURE_"
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
@@ -184,6 +185,16 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(ADDED_NEW_PLL, value)
         }
+
+    fun betaFeatureEnabled(slug: String): Boolean {
+        return preferences.getBoolean(BETA_FEATURE_ENABLED.plus(slug), false)
+    }
+
+    fun setBetaFeatureEnabled(slug: String, value: Boolean) {
+        preferences.edit {
+            it.putBoolean(BETA_FEATURE_ENABLED.plus(slug), value)
+        }
+    }
 
     var lastSeenTransactions: String?
         get() = preferences.getString(LAST_SEEN_TRANSACTIONS, null)
