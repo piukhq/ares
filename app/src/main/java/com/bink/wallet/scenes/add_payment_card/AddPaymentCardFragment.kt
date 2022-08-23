@@ -150,7 +150,7 @@ class AddPaymentCardFragment :
                     binding.cardName.text.toString(),
                     PaymentAccountUtil.cardValidation(cardNo).type,
                     PaymentAccountUtil.cardValidation(cardNo).type,
-                    PaymentAccountUtil.randomString(BankCard.TOKEN_LENGTH),
+                    PaymentAccountUtil.generateToken(BankCard.TOKEN_LENGTH),
                     PaymentAccountUtil.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                 )
 
