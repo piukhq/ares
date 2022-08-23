@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
+        android:background="?attr/background"
         android:layout_height="match_parent">
 
         <Toolbar
@@ -39,7 +40,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/continue_with_email"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/size_headline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
