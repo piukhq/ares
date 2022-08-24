@@ -104,7 +104,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getLocations(requireActivity())
+        viewModel.getLocations()
 
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(requireContext())
         checkLocationPermission()

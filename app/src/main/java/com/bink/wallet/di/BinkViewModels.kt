@@ -47,6 +47,7 @@ import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -158,7 +159,7 @@ val viewModelModules = module {
 
     viewModel { CheckInboxViewModel(get()) }
 
-    viewModel { LoyaltyCardLocationsViewModel() }
+    viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
 }
 
 fun provideLoginRepository(
