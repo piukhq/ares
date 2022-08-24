@@ -48,12 +48,6 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
                     preferences,
                     onClickListener = { preference: Preference, isChecked: Boolean, _ ->
                         promptPreferenceClear(preference.slug!!, isChecked)
-                        if (preference.slug == ALWAYS_SHOW_BARCODE_KEY) {
-                            setMixpanelProperty(
-                                MixpanelEvents.FORCE_BARCODE,
-                                isChecked.toString()
-                            )
-                        }
                         val state = if (isChecked) 1 else 0
                         viewModel.savePreference(
                             requestBody = JSONObject().put(

@@ -32,5 +32,4 @@ object MixpanelEvents {
     const val CARD_DELETED = "Card Deleted"
     const val BARCODE_ISSUE = "Barcode screen issue reported"
     const val WALLET_SORT = "Wallet Sort Setting"
-    const val FORCE_BARCODE = "Show barcode always"
 }
