@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_details
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -33,6 +34,11 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -814,7 +820,17 @@ class LoyaltyCardDetailsFragment :
         if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
         with(binding) {
             locationsTitle.text = getString(R.string.show_locations, companyName)
-            Glide.with(requireContext()).load(R.drawable.location_gif).into(locationsGif)
+            Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    return false
+                }
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    if (resource is GifDrawable) {
+                        resource.setLoopCount(1)
+                    }
+                    return false
+                }
+            }).into(locationsGif)
             binding.showLocationWrapper.setOnClickListener {
                 findNavController().navigateIfAdded(
                     this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(), currentDestination
