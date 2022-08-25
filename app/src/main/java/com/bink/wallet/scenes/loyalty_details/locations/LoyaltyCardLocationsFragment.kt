@@ -295,7 +295,6 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         if (hasLocationPermission()) {
             mapProperties.value = MapProperties(isMyLocationEnabled = true)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = true)
-            getLocation()
         } else {
             mapProperties.value = MapProperties(isMyLocationEnabled = false)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = false)
