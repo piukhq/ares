@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DarkTheme" parent="Theme.MaterialComponents">
+    <style name="Theme.Reply.DayNight" parent="Theme.Bink.Dark"/>
+
+    <style name="Theme.Bink.Dark" parent="Theme.Bink">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="background">@color/dark_theme_background</item>
         <item name="colorSurface">@color/dark_theme_colour_surface</item>
