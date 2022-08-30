@@ -232,7 +232,9 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         val client = LocationServices.getSettingsClient(requireContext())
         val task = client.checkLocationSettings(builder.build())
 
-        task.addOnSuccessListener {}
+        task.addOnSuccessListener {
+            getLocation()
+        }
 
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
@@ -276,7 +278,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                     LatLng(
                         location.latitude,
                         location.longitude
-                    ), 10f
+                    ), 15f
                 )
             )
         }
@@ -295,6 +297,9 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         if (hasLocationPermission()) {
             mapProperties.value = MapProperties(isMyLocationEnabled = true)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = true)
+            if (isLocationTurnedOn()) {
+                getLocation()
+            }
         } else {
             mapProperties.value = MapProperties(isMyLocationEnabled = false)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = false)
