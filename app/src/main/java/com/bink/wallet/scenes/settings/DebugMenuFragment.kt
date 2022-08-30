@@ -1,6 +1,8 @@
 package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -86,7 +88,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     private fun onDebugItemClick(item: DebugItem) {
         when (item.type) {
             DebugItemType.EMAIL,
-            DebugItemType.CURRENT_VERSION -> {
+            DebugItemType.CURRENT_VERSION,
+            -> {
                 // these don't do nothing at the mom
             }
             DebugItemType.ENVIRONMENT -> {
@@ -106,6 +109,13 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
             DebugItemType.RESET_CACHE -> {
                 clearCache()
+            }
+            DebugItemType.CURRENT_TOKEN -> {
+                //Copy to clip board and pop toast
+                val clipboard = requireContext().getSystemService(ClipboardManager::class.java)
+                val clip = ClipData.newPlainText(getString(R.string.current_token_title), LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN))
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(requireContext(), getString(R.string.current_token_copied), Toast.LENGTH_LONG).show()
             }
         }
     }
