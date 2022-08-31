@@ -38,6 +38,7 @@
     <style name="DefaultTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textStyle">normal</item>
         <item name="fontFamily">@font/nunitosans</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="DialogBackground" parent="Theme.AppCompat.Light.Dialog.Alert">

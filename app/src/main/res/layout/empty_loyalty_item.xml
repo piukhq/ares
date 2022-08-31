@@ -73,7 +73,7 @@
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             android:layout_marginBottom="@dimen/margin_padding_size_medium"
                             android:text="@string/join_card_description"
-                            android:textColor="@color/black"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="@dimen/size_body_large"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
