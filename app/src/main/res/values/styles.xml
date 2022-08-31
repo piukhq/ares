@@ -17,7 +17,7 @@
     </style>
 
     <style name="CustomTextView" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/size_sub_headline</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
