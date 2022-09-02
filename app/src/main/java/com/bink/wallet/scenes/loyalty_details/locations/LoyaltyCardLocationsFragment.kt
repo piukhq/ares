@@ -43,9 +43,9 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -249,8 +249,6 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         val client = LocationServices.getSettingsClient(requireContext())
         val task = client.checkLocationSettings(builder.build())
 
-        task.addOnSuccessListener {}
-
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 try {
@@ -288,14 +286,18 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
             PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
         )?.addOnSuccessListener { location ->
-            cameraPositionState.value = CameraPositionState(
-                position = CameraPosition.fromLatLngZoom(
-                    LatLng(
-                        location.latitude,
-                        location.longitude
-                    ), 10f
+            try {
+                cameraPositionState.value = CameraPositionState(
+                    position = CameraPosition.fromLatLngZoom(
+                        LatLng(
+                            location.latitude,
+                            location.longitude
+                        ), 15f
+                    )
                 )
-            )
+            } catch (e: NullPointerException) {
+
+            }
         }
     }
 
@@ -312,6 +314,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         if (hasLocationPermission()) {
             mapProperties.value = MapProperties(isMyLocationEnabled = true)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = true)
+            getLocation()
         } else {
             mapProperties.value = MapProperties(isMyLocationEnabled = false)
             uiSettings.value = MapUiSettings(myLocationButtonEnabled = false)
