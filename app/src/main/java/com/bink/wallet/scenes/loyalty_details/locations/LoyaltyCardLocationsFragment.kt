@@ -224,6 +224,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                         Text(text = locationOpenTitle,
                             color = colorResource(id = locationOpenTitleColour),
                             fontFamily = nunitoSans,
+                            fontWeight = FontWeight.Bold,
                             fontSize = 14.sp)
 
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
