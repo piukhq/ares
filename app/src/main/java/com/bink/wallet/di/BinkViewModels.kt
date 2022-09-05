@@ -74,7 +74,7 @@ val viewModelModules = module {
 
     viewModel { BrowseBrandsViewModel() }
 
-    viewModel { BarcodeViewModel() }
+    viewModel { BarcodeViewModel(get()) }
 
     viewModel { AddViewModel(get(), get()) }
 
