@@ -6,6 +6,8 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
+import com.bink.wallet.model.NetworkActivity
+import com.bink.wallet.model.store
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
@@ -67,6 +69,26 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
 
         val response = chain.proceed(newRequest.build())
+
+        val sentAt = response.sentRequestAtMillis
+        val receivedAt = response.receivedResponseAtMillis
+        var responseBody = ""
+//        try {
+//            responseBody = response.body?.string()?.replace("\\\\", "") ?: ""
+//        } catch (e: IllegalStateException) {
+//
+//        }
+
+        val networkActivity = NetworkActivity(
+            baseUrl = SharedPreferenceManager.storedApiUrl.toString(),
+            httpStatusCode = response.code.toString(),
+            responseBody = responseBody,
+            endpoint = chain.request().url.toString(),
+            responseTime = "${(receivedAt - sentAt)}ms"
+        )
+
+        networkActivity.store()
+
         response.networkResponse?.request?.url?.let {
             if (it.toString() == ADD_PAYMENT_CARD_URL) {
                 if (response.code == 200 || response.code == 201) {

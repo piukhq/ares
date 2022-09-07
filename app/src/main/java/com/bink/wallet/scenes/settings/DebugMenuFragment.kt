@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -110,6 +112,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.RESET_CACHE -> {
                 clearCache()
             }
+            DebugItemType.EXPORT_NETWORK -> {
+                exportNetworkRequests(SharedPreferenceManager.networkExports)
+            }
             DebugItemType.CURRENT_TOKEN -> {
                 //Copy to clip board and pop toast
                 val clipboard = requireContext().getSystemService(ClipboardManager::class.java)
@@ -215,6 +220,19 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     private fun clearCache() {
         Glide.get(requireContext()).clearMemory()
         Toast.makeText(requireContext(), "Glide cache cleared", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun exportNetworkRequests(content: String?) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "message/rfc822"
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.export_network))
+        intent.putExtra(Intent.EXTRA_TEXT, content)
+        startActivity(
+            Intent.createChooser(
+                intent,
+                getString(R.string.export_network)
+            )
+        )
     }
 
     private fun applyChanges() {

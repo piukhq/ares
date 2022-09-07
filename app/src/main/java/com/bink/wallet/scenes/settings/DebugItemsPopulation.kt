@@ -74,6 +74,14 @@ object DebugItemsPopulation {
 
         itemsList.add(
             DebugItem(
+                res.getString(R.string.export_network),
+                "",
+                DebugItemType.EXPORT_NETWORK
+            )
+        )
+
+        itemsList.add(
+            DebugItem(
                 res.getString(R.string.current_token_title),
                 LocalStoreUtils.getAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN

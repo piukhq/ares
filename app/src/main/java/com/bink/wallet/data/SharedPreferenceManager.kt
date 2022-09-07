@@ -37,6 +37,7 @@ object SharedPreferenceManager {
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
+    private const val NETWORK_EXPORTS = "network_exports"
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
@@ -225,6 +226,13 @@ object SharedPreferenceManager {
         get() = preferences.getInt(SKIPPED_APP_VERSION, 0)
         set(value) = preferences.edit {
             it.putInt(SKIPPED_APP_VERSION, value)
+        }
+
+
+    var networkExports: String?
+        get() = preferences.getString(NETWORK_EXPORTS, null)
+        set(value) = preferences.edit {
+            it.putString(NETWORK_EXPORTS, value)
         }
 
     var loyaltyWalletPosition: Parcelable? = null
