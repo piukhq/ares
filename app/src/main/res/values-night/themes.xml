@@ -7,6 +7,8 @@
         <item name="background">@color/dark_theme_background</item>
         <item name="colorSurface">@color/dark_theme_colour_surface</item>
         <item name="colorOnSurface">@color/white</item>
+        <item name="android:statusBarColor" >@color/dark_theme_background</item>
+
 
     </style>
 

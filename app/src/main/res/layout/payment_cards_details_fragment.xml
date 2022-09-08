@@ -30,6 +30,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/background"
         tools:context="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsFragment">
 
         <Toolbar
@@ -71,7 +72,6 @@
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/payment_header"

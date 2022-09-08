@@ -8,6 +8,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/background"
         tools:context=".scenes.add.AddFragment">
 
         <ScrollView
@@ -245,9 +246,9 @@
                                 android:layout_marginTop="@dimen/margin_padding_size_small"
                                 android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                                 android:text="@string/add_payment_card"
+                                android:textColor="?attr/colorOnSurface"
                                 android:textSize="@dimen/size_headline"
                                 android:textStyle="bold"
-                                android:textColor="?attr/colorOnSurface"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/payment_card_image" />
