@@ -43,6 +43,10 @@
     <dimen name="voucher_card_margin_bottom">24dp</dimen>
     <dimen name="voucher_code_margin_top">12dp</dimen>
     <dimen name="company_name_margin">30dp</dimen>
+    <dimen name="rewards_history_image_size">100dp</dimen>
+    <dimen name="voucher_item_size">24dp</dimen>
+    <dimen name="voucher_circle_size">18dp</dimen>
+    <dimen name="voucher_circle_start_padding">4dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -227,5 +231,10 @@
     <dimen name="checkbox_margin_top">13dp</dimen>
     <dimen name="settings_box_height">48dp</dimen>
     <dimen name="delete_account_button_height">80dp</dimen>
+    <dimen name="sort_button_text_size">10sp</dimen>
+    <dimen name="sort_button_size">25dp</dimen>
+    <dimen name="settings_button_size">30dp</dimen>
+    <dimen name="force_barcode_rounding">25dp</dimen>
+    <dimen name="barcode_icon_size">25dp</dimen>
 
 </resources>

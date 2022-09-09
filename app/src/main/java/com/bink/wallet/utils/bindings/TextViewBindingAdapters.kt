@@ -13,6 +13,16 @@ import java.util.*
 const val ACCUMULATOR = "accumulator"
 const val STAMP = "stamps"
 
+@BindingAdapter("voucherEarn")
+fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
+    text = context.getString(
+        R.string.voucher_stamp_collected,
+        voucherEarn.value?.toInt(),
+        voucherEarn.target_value?.toInt(),
+        voucherEarn.suffix
+    )
+}
+
 @BindingAdapter("voucherEarnSubtitle", requireAll = true)
 fun TextView.setVoucherSubText(voucherEarn: Earn) {
     text = context.getString(
@@ -34,16 +44,6 @@ fun TextView.setVoucherTitle(voucherBurn: Burn?) {
     )
 }
 
-@BindingAdapter("voucherEarn")
-fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
-    text = context.getString(
-        R.string.voucher_stamp_collected,
-        voucherEarn.value?.toInt(),
-        voucherEarn.target_value?.toInt(),
-        voucherEarn.suffix
-    )
-}
-
 @BindingAdapter("voucherHeadline")
 fun TextView.setVoucherHeadline(voucher: Voucher) {
     voucher.state?.let { state ->
@@ -62,8 +62,6 @@ fun TextView.setVoucherHeadline(voucher: Voucher) {
                     R.string.voucher_accumulator_in_progress_headline,
                     ValueDisplayUtils.displayFormattedHeadline(voucher.earn)
                 )
-
-
         }
     }
 

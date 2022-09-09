@@ -11,5 +11,6 @@ enum class DebugItemType : Parcelable {
     BACKEND_VERSION,
     COLOR_SWATCHES,
     FORCE_CRASH,
-    CARD_ON_BOARDING
+    CARD_ON_BOARDING,
+    RESET_CACHE
 }

@@ -43,9 +43,9 @@
                     android:fontFamily="@font/nunito_sans_bold"
                     android:textColor="@color/blue_accent"
                     android:textSize="@dimen/text_size_description_big"
+                    app:voucherBurn="@{voucher.burn}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:voucherBurn="@{voucher.burn}"
                     tools:text="£5 voucer" />
 
                 <TextView
@@ -58,8 +58,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_description_smaller"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title"
                     app:voucherEarnSubtitle="@{voucher.earn}"
+                    app:layout_constraintTop_toBottomOf="@id/title"
                     tools:text="for collecting 5" />
 
                 <TextView
@@ -67,10 +67,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    app:voucherHeadline="@{voucher}"
                     android:layout_marginTop="@dimen/voucher_subtitle_bottom"
                     android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                     android:fontFamily="@font/nunito_sans_extrabold"
-                    app:voucherHeadline="@{voucher}"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_title_big"
                     app:layout_constraintStart_toStartOf="parent"

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -53,6 +54,29 @@ class PaymentCardWalletFragment :
     override val viewModel: PaymentCardWalletViewModel by viewModel()
 
     private var isRefreshing = false
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+                requestPermissionsResult(
+                    null,
+                    { navigateToPaymentAddPaymentCard() },
+                    null,
+                    isGranted
+                )
+
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+            }
+        }
 
     override fun onResume() {
         super.onResume()
@@ -144,7 +168,8 @@ class PaymentCardWalletFragment :
                     }
 
                     dX < 0 -> {
-                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility = View.GONE
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility =
+                            View.GONE
                         viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                         getDefaultUIUtil().onDraw(
                             c,
@@ -353,7 +378,12 @@ class PaymentCardWalletFragment :
                 )
             }
             else -> {
-                requestCameraPermissionAndNavigate(false, null)
+                requestCameraPermissionAndNavigate(
+                    requestPermissionLauncher,
+                    false,
+                    null,
+                    { navigateToPaymentAddPaymentCard() }, null
+                )
             }
         }
     }
@@ -366,22 +396,6 @@ class PaymentCardWalletFragment :
             data,
             { navigateToPaymentAddPaymentCard(it) },
             { logPaymentCardSuccess(it) })
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            null,
-            { navigateToPaymentAddPaymentCard() },
-            null
-        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun navigateToPaymentAddPaymentCard(cardNumber: String = "") {
