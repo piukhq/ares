@@ -15,6 +15,7 @@ import com.bink.wallet.utils.enums.BackendVersion
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -75,14 +76,15 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         var responseBody = ""
         try {
-            responseBody = response.body?.string()?.replace("\\\\", "") ?: ""
+            val copiedBody = response.peekBody(Long.MAX_VALUE)
+            responseBody = copiedBody.string()
         } catch (e: IllegalStateException) {
-
         }
 
         val networkActivity = NetworkActivity(
             baseUrl = SharedPreferenceManager.storedApiUrl.toString(),
             httpStatusCode = response.code.toString(),
+            requestBody = chain.request().body.bodyToString(),
             responseBody = responseBody,
             endpoint = chain.request().url.toString(),
             responseTime = "${(receivedAt - sentAt)}ms"
@@ -141,6 +143,13 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
+}
+
+private fun RequestBody?.bodyToString(): String {
+    if (this == null) return ""
+    val buffer = okio.Buffer()
+    writeTo(buffer)
+    return buffer.readUtf8()
 }
 
 fun provideSpreedlyOkHttpClient(): OkHttpClient {
