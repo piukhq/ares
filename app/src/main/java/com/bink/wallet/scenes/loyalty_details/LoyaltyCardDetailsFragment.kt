@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_details
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -31,6 +33,12 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -99,6 +107,7 @@ class LoyaltyCardDetailsFragment :
         handleBrandHeader()
         setPointsModuleClickListener()
         setLinkModuleClickListener()
+        setLocationModuleClickListener()
         handleFootersListeners()
 
         val colorDrawable =
@@ -805,6 +814,32 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
+    private fun setLocationModuleClickListener() {
+        val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
+        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
+        if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
+        with(binding) {
+            locationsTitle.text = getString(R.string.show_locations, companyName)
+            Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    return false
+                }
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    if (resource is GifDrawable) {
+                        resource.setLoopCount(1)
+                    }
+                    return false
+                }
+            }).into(locationsGif)
+            binding.showLocationWrapper.setOnClickListener {
+                findNavController().navigateIfAdded(
+                    this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(), currentDestination
+                )
+
+            }
+        }
+    }
+
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
             if (!membershipCard.card?.barcode.isNullOrEmpty() ||
@@ -853,7 +888,8 @@ class LoyaltyCardDetailsFragment :
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE,
-                LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE -> {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE,
+                -> {
 
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         val hasCorrectCardType = membershipPlan.feature_set?.card_type == 2
@@ -908,7 +944,8 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_CARD_ALREADY_EXISTS,
-                LoginStatus.STATUS_LOGIN_FAILED -> {
+                LoginStatus.STATUS_LOGIN_FAILED,
+                -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =

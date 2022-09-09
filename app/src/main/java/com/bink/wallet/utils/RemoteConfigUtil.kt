@@ -23,4 +23,6 @@ class RemoteConfigUtil {
     val appConfig = getAppConfig()?.app_config
 
     val localPointsCollection = getAppConfig()?.local_points_collection
+
+    val beta = getAppConfig()?.beta
 }

@@ -33,4 +33,6 @@ object MixpanelEvents {
     const val BARCODE_ISSUE = "Barcode screen issue reported"
     const val WALLET_SORT = "Wallet Sort Setting"
     const val FORCE_BARCODE = "Show barcode always"
+    const val SHOW_LOCATIONS = "Tapped Show Locations"
+    const val SHOW_DIRECTIONS = "Launch Google Maps for Directions"
 }

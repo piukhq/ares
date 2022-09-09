@@ -26,6 +26,7 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
+import com.bink.wallet.scenes.loyalty_details.locations.LoyaltyCardLocationsViewModel
 import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyViewModel
@@ -46,6 +47,7 @@ import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -156,11 +158,13 @@ val viewModelModules = module {
     viewModel { MagicLinkResultViewModel(get(), get(), get(), get()) }
 
     viewModel { CheckInboxViewModel(get()) }
+
+    viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
 }
 
 fun provideLoginRepository(
     restApiService: ApiService,
-    binkDatabase: BinkDatabase
+    binkDatabase: BinkDatabase,
 ): LoginRepository =
     LoginRepository(restApiService, binkDatabase)
 
@@ -169,7 +173,7 @@ fun provideLoyaltyCardRepository(
     membershipPlanDao: MembershipPlanDao,
     membershipCardDao: MembershipCardDao,
     bannersDisplayDao: BannersDisplayDao,
-    paymentCardDao: PaymentCardDao
+    paymentCardDao: PaymentCardDao,
 ): LoyaltyWalletRepository =
     LoyaltyWalletRepository(
         restApiService,
@@ -182,19 +186,19 @@ fun provideLoyaltyCardRepository(
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao,
-    paymentCardDao: PaymentCardDao
+    paymentCardDao: PaymentCardDao,
 ): LoyaltyCardDetailsRepository =
     LoyaltyCardDetailsRepository(restApiService, membershipCardDao, paymentCardDao)
 
 fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
-    membershipCardDao: MembershipCardDao
+    membershipCardDao: MembershipCardDao,
 ): PaymentWalletRepository =
     PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
 
 fun provideUserRepository(
-    restApiService: ApiService
+    restApiService: ApiService,
 ): UserRepository = UserRepository(restApiService)
 
 fun provideAddPaymentCardRepository(
@@ -202,7 +206,7 @@ fun provideAddPaymentCardRepository(
     spreedlyApiService: ApiSpreedly,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao,
-    membershipPlanDao: MembershipPlanDao
+    membershipPlanDao: MembershipPlanDao,
 ): AddPaymentCardRepository =
     AddPaymentCardRepository(
         restApiService,
