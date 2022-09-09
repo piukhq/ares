@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.core.content.ContextCompat
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardLocationFragmentBinding
+import com.bink.wallet.model.getCurrentOpeningTimes
 import com.bink.wallet.model.tescolocations.Properties
 import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.noRippleClickable
@@ -168,6 +170,14 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     private fun LocationCard(modifier: Modifier) {
         AnimatedVisibility(visible = viewModel.selectedLocationProperties.value != null, modifier = modifier) {
             viewModel.selectedLocationProperties.value?.let { properties ->
+
+                val locationOpenTitle = requireContext().getCurrentOpeningTimes(viewModel.getLocationOpeningHours(properties))
+                val locationOpenTitleColour = when {
+                    locationOpenTitle.contains(getString(R.string.location_open_title)) -> R.color.green_ok
+                    locationOpenTitle.contains(getString(R.string.location_closed_title)) -> R.color.red_attention
+                    else -> R.color.orange
+                }
+
                 Row(modifier = modifier
                     .background(Color.White)
                     .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
@@ -210,6 +220,14 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp
                         )
+
+                        Text(text = locationOpenTitle,
+                            color = colorResource(id = locationOpenTitleColour),
+                            fontFamily = nunitoSans,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp)
+
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
 
                         Text(
                             text = getString(R.string.map_location_directions_text),
