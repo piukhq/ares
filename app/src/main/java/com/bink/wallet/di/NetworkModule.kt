@@ -44,7 +44,7 @@ val networkModule = module {
 
 fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
-    interceptor.level = HttpLoggingInterceptor.Level.HEADERS
+    interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
@@ -125,7 +125,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
     val logging = HttpLoggingInterceptor()
     // sets desired log level
-    logging.level = HttpLoggingInterceptor.Level.HEADERS
+    logging.level = HttpLoggingInterceptor.Level.BODY
 
     val builder = CertificatePinner.Builder()
     for (host in CertificatePins.values()) {
