@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:includeFontPadding="false"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
