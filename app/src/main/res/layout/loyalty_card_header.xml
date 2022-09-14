@@ -255,7 +255,7 @@
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:text="@string/tap_card"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
