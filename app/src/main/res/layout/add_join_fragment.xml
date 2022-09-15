@@ -14,6 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="?attr/background"
         android:layout_height="match_parent">
 
         <Toolbar
@@ -27,6 +28,7 @@
         <ImageButton
             android:id="@+id/close_button"
             style="?actionButtonStyle"
+            app:tint="?attr/colorOnSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -96,7 +98,6 @@
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
                             android:text="@string/add_join_store_title"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_headline"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +110,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             android:text="@string/add_join_store_description"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_sub_headline"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/add_join_store_title"
@@ -144,7 +144,6 @@
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
                             android:text="@string/add_join_view_title"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_headline"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -157,7 +156,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             android:text="@string/add_join__inactive_view_description"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_sub_headline"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/add_join_view_title"
@@ -193,7 +191,6 @@
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
                             android:text="@string/add_join_link_title"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_headline"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -206,7 +203,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             android:text="@string/add_join_active_link_description"
-                            android:textColor="@android:color/black"
                             android:textSize="@dimen/size_sub_headline"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/add_join_link_title"
