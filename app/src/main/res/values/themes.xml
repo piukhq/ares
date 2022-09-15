@@ -4,7 +4,7 @@
     <style name="Theme.Bink.DayNight" parent="Theme.Bink"/>
 
     <!-- Base application theme. -->
-    <style name="Theme.Bink" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Bink" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
