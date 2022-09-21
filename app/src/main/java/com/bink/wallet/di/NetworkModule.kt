@@ -76,7 +76,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         var responseBody = ""
         try {
-            val copiedBody = response.peekBody(Long.MAX_VALUE)
+            val copiedBody = response.peekBody(1000000L)
             responseBody = copiedBody.string()
         } catch (e: IllegalStateException) {
         }
