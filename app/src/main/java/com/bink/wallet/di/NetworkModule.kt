@@ -71,26 +71,28 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         val response = chain.proceed(newRequest.build())
 
-        val sentAt = response.sentRequestAtMillis
-        val receivedAt = response.receivedResponseAtMillis
+        if (BuildConfig.BUILD_TYPE != RELEASE_BUILD_TYPE) {
+            val sentAt = response.sentRequestAtMillis
+            val receivedAt = response.receivedResponseAtMillis
 
-        var responseBody = ""
-        try {
-            val copiedBody = response.peekBody(1000000L)
-            responseBody = copiedBody.string()
-        } catch (e: IllegalStateException) {
+            var responseBody = ""
+            try {
+                val copiedBody = response.peekBody(1000000L)
+                responseBody = copiedBody.string()
+            } catch (e: IllegalStateException) {
+            }
+
+            val networkActivity = NetworkActivity(
+                baseUrl = SharedPreferenceManager.storedApiUrl.toString(),
+                httpStatusCode = response.code.toString(),
+                requestBody = chain.request().body.bodyToString(),
+                responseBody = responseBody,
+                endpoint = chain.request().url.toString(),
+                responseTime = "${(receivedAt - sentAt)}ms"
+            )
+
+            networkActivity.store()
         }
-
-        val networkActivity = NetworkActivity(
-            baseUrl = SharedPreferenceManager.storedApiUrl.toString(),
-            httpStatusCode = response.code.toString(),
-            requestBody = chain.request().body.bodyToString(),
-            responseBody = responseBody,
-            endpoint = chain.request().url.toString(),
-            responseTime = "${(receivedAt - sentAt)}ms"
-        )
-
-        networkActivity.store()
 
         response.networkResponse?.request?.url?.let {
             if (it.toString() == ADD_PAYMENT_CARD_URL) {
