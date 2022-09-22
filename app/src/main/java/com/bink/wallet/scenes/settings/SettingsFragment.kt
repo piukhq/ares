@@ -37,6 +37,7 @@ import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -72,9 +73,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         super.onActivityCreated(savedInstanceState)
 
         binding.composeView.setContent {
-            Surface(color = MaterialTheme.colors.background) {
-                SettingsScreen()
+            AppTheme(darkTheme = true) {
+                Surface(color = MaterialTheme.colors.background) {
+                    SettingsScreen()
+                }
             }
+
         }
 
         binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
