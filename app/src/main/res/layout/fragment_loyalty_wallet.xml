@@ -6,7 +6,6 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:background="?attr/background"
         android:layout_height="match_parent"
         >
 

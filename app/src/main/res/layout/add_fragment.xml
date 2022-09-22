@@ -8,7 +8,6 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/background"
         tools:context=".scenes.add.AddFragment">
 
         <ScrollView
