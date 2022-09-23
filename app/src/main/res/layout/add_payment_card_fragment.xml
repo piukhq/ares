@@ -101,7 +101,6 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/add_payment_card"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_headline"
                     android:textStyle="bold" />
 
@@ -111,7 +110,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans_light"
                     android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline" />
 
                 <TextView
@@ -121,7 +119,6 @@
                     android:layout_marginTop="@dimen/payment_card_spacing_margin"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/card_number"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
@@ -148,7 +145,6 @@
                     android:layout_marginTop="@dimen/payment_card_spacing_margin"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/expiry"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
@@ -174,7 +170,6 @@
                     android:layout_marginTop="@dimen/payment_card_spacing_margin"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/name_on_card"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
