@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans"
                     android:text="@{debugItem.title}"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline" />
 
             <TextView
@@ -42,7 +41,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans_light"
                     android:text="@{debugItem.content}"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_body_large" />
         </LinearLayout>
 
