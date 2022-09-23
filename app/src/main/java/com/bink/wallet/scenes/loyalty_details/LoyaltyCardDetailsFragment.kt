@@ -39,10 +39,13 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 
@@ -816,26 +819,33 @@ class LoyaltyCardDetailsFragment :
 
     private fun setLocationModuleClickListener() {
         val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
-        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
-        if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
-        with(binding) {
-            locationsTitle.text = getString(R.string.show_locations, companyName)
-            Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    if (resource is GifDrawable) {
-                        resource.setLoopCount(1)
-                    }
-                    return false
-                }
-            }).into(locationsGif)
-            binding.showLocationWrapper.setOnClickListener {
-                findNavController().navigateIfAdded(
-                    this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(), currentDestination
-                )
 
+        val storageRef = Firebase.storage.reference.child("locations/${companyName.lowercase()}.geojson")
+        storageRef.getBytes(2048 * 2048).addOnSuccessListener { byteArray -> //4 Mb cap
+            val geoJson = String(byteArray, StandardCharsets.UTF_8)
+
+            val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug == "locations" && it.enabled }
+            if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
+            with(binding) {
+                locationsTitle.text = getString(R.string.show_locations, companyName)
+                Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        if (resource is GifDrawable) {
+                            resource.setLoopCount(1)
+                        }
+                        return false
+                    }
+                }).into(locationsGif)
+                binding.showLocationWrapper.setOnClickListener {
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(geoJson), currentDestination
+                    )
+
+                }
             }
         }
     }

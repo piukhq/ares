@@ -19,15 +19,11 @@ class LoyaltyCardLocationsViewModel(private val application: Application) : Base
     val locations: MutableState<TescoLocation?> = mutableStateOf(null)
     val selectedLocationProperties: MutableState<Properties?> = mutableStateOf(null)
 
-    fun getLocations() {
+    fun getLocations(geoJson: String) {
         try {
             val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
             val adapter = moshi.adapter(TescoLocation::class.java)
-            val jsonString =
-                application.assets.open("tesco_locations.geojson").bufferedReader()
-                    .use { it.readText() }
-
-            adapter.fromJson(jsonString)?.let { tescoLocations ->
+            adapter.fromJson(geoJson)?.let { tescoLocations ->
                 locations.value = tescoLocations
             }
         } catch (e: IOException) {

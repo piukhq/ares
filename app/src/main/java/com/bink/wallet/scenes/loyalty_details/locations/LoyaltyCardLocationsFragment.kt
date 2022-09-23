@@ -35,7 +35,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardLocationFragmentBinding
 import com.bink.wallet.model.getCurrentOpeningTimes
 import com.bink.wallet.model.tescolocations.Feature
-import com.bink.wallet.model.tescolocations.Properties
 import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.noRippleClickable
 import com.bink.wallet.utils.nunitoSans
@@ -49,7 +48,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.compose.*
@@ -104,7 +102,11 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getLocations()
+        arguments?.let {
+            LoyaltyCardLocationsFragmentArgs.fromBundle(it).apply {
+                viewModel.getLocations(geoJson)
+            }
+        }
 
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(requireContext())
         checkLocationPermission()

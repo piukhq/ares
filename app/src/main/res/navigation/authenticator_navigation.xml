@@ -432,6 +432,10 @@
         android:id="@+id/loyalty_card_locations"
         android:name="com.bink.wallet.scenes.loyalty_details.locations.LoyaltyCardLocationsFragment"
         tools:layout="@layout/loyalty_card_location_fragment">
+
+        <argument
+            android:name="geoJson"
+            app:argType="string" />
     </fragment>
 
     <fragment
