@@ -27,6 +27,6 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(colors = if (darkTheme) darkThemeColours else lightThemeColours) {
-        content
+        content()
     }
 }
