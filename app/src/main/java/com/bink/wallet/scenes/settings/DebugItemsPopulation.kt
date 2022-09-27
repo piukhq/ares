@@ -72,6 +72,16 @@ object DebugItemsPopulation {
             )
         )
 
+        itemsList.add(
+            DebugItem(
+                res.getString(R.string.current_token_title),
+                LocalStoreUtils.getAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN
+                ) ?: "",
+                DebugItemType.CURRENT_TOKEN
+            )
+        )
+
         return itemsList
     }
 

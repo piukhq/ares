@@ -305,6 +305,7 @@
     <!-- Settings screen -->
     <string name="settings">Settings</string>
     <string name="settings_menu_account">Account</string>
+    <string name="settings_menu_beta">Beta Features</string>
     <string name="settings_menu_log_out">Log out</string>
     <string name="settings_menu_support_and_feedback">Support and feedback</string>
     <string name="settings_menu_faqs">FAQs</string>
@@ -361,6 +362,9 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
     <string name="clear_image_title">Clear image cache</string>
     <string name="clear_image_body">Resetting glide memory</string>
+    <string name="current_token_title">Current token</string>
+    <string name="current_token_copied">Copied token to clipboard</string>
+
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Sign up not supported</string>
@@ -646,6 +650,18 @@
     <string name="show_barcode_body">For some brands, we do not automatically display a barcode if you add your loyalty card manually (without scanning). This is because we cannot guarantee it will work in store.\n\nPress here to show barcode anyway</string>
     <string name="report_issue">Report Issue</string>
     <string name="click_here">Press here</string>
+    <string name="show_locations">Show %s Locations</string>
+
+
+    <string name="location_permission_title">Location Permission Needed</string>
+    <string name="location_permission_settings_message">The Bink app needs your location for this functionality, this will take you to your settings</string>
+    <string name="map_location_directions_text">Press for directions</string>
+    <string name="map_error">Cannot show directions for this location, try again later</string>
+    <string name="beta_feature_title">Beta Features</string>
+    <string name="location_sub_title">Find your nearest store</string>
+    <string name="location_closed_title">Closed - Opens at&#160;</string>
+    <string name="location_closes_soon_title">Closing Soon - Closes at&#160;</string>
+    <string name="location_open_title">Open - Closes at&#160;</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

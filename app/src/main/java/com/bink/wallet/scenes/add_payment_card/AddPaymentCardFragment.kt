@@ -8,6 +8,7 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bink.android_core.PaymentAccountUtil
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
@@ -58,7 +59,7 @@ class AddPaymentCardFragment :
 
     private fun validateCardNumber() {
         binding.cardNumber.error =
-            if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+            if (PaymentAccountUtil.cardValidation(binding.cardNumber.text.toString()).type == PaymentCardType.NONE.type) {
                 getString(R.string.incorrect_card_error)
             } else {
                 null
@@ -136,7 +137,7 @@ class AddPaymentCardFragment :
 
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                val cardNo = PaymentAccountUtil.numberSanitize(binding.cardNumber.text.toString())
                 val cardExp = binding.cardExpiry.text.toString().split("/")
 
                 val bankCard = BankCard(
@@ -147,10 +148,10 @@ class AddPaymentCardFragment :
                     getString(R.string.country_code_gb),
                     getString(R.string.currency_code_gbp),
                     binding.cardName.text.toString(),
-                    cardNo.cardValidation().type,
-                    cardNo.cardValidation().type,
-                    BankCard.tokenGenerator(),
-                    BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                    PaymentAccountUtil.cardValidation(cardNo).type,
+                    PaymentAccountUtil.cardValidation(cardNo).type,
+                    PaymentAccountUtil.generateToken(BankCard.TOKEN_LENGTH),
+                    PaymentAccountUtil.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                 )
 
                 findNavController().navigate(
@@ -231,7 +232,7 @@ class AddPaymentCardFragment :
                 s: Editable,
                 maxSymbols: Int,
                 batchSize: Int,
-                divider: Char
+                divider: Char,
             ): Boolean {
                 var isCorrect =
                     s.length <= maxSymbols
@@ -248,7 +249,7 @@ class AddPaymentCardFragment :
             private fun buildCorrectString(
                 digits: CharArray,
                 dividerPosition: Int,
-                divider: Char
+                divider: Char,
             ): String {
                 val formatted = StringBuilder()
                 for (i in digits.indices) {
@@ -281,23 +282,25 @@ class AddPaymentCardFragment :
 
     private fun cardExpiryErrorCheck(text: String): String? {
         with(text) {
-            if (!dateValidation()) {
+            if (!PaymentAccountUtil.dateValidation(this)) {
                 return getString(R.string.incorrect_card_expiry)
             }
-            if (!formatDate().contentEquals(text))
-                binding.cardExpiry.setText(formatDate())
+            if (!PaymentAccountUtil.formatDate(this).contentEquals(text))
+                binding.cardExpiry.setText(PaymentAccountUtil.formatDate(this))
         }
         return null
     }
 
     private fun cardSwitcher(card: String) {
-        with(card.presentedCardType()) {
-            binding.topLayout.background = ContextCompat.getDrawable(
-                requireContext(),
-                background
-            )
-            binding.topLayoutBrand.setImageResource(logo)
-            binding.bottomLayoutBrand.setImageResource(subLogo)
+        PaymentAccountUtil.presentedCardType(card).type.convertToPaymentCardType()?.let { paymentCardType ->
+            with(paymentCardType) {
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    background
+                )
+                binding.topLayoutBrand.setImageResource(logo)
+                binding.bottomLayoutBrand.setImageResource(subLogo)
+            }
         }
     }
 
