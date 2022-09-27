@@ -34,7 +34,6 @@
             isVisible="@{viewModel.isKeyboardHidden()}"
             android:layout_width="0dp"
             android:layout_height="@dimen/footer_default_fade_view_height"
-            android:background="@drawable/bg_btn_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
