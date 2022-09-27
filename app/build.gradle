@@ -29,7 +29,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    compileSdkVersion 31
+    compileSdkVersion 32
     signingConfigs {
         binkSigningConfig {
             storeFile file('bink-keystore.jks')
@@ -47,9 +47,9 @@ android {
     defaultConfig {
         applicationId "com.bink.wallet"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode buildNumber
-        versionName "2.3.19"
+        versionName "2.3.20"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }
