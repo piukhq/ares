@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
@@ -57,7 +59,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 viewModel.companyName.value = currentMembershipPlan.account?.company_name
                 binding.title.text = currentMembershipPlan.account?.company_name
                 binding.composeView.setContent {
-                    BarcodeScreen(membershipCard, currentMembershipPlan)
+                    AppTheme(darkTheme = true) {
+                        BarcodeScreen(membershipCard, currentMembershipPlan)
+                    }
                 }
             }
         }
@@ -108,7 +112,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = text,
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
-                fontSize = 21.sp
+                fontSize = 21.sp,
+                color = MaterialTheme.colors.onSurface
             )
         }
     }

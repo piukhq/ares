@@ -73,7 +73,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         super.onActivityCreated(savedInstanceState)
 
         binding.composeView.setContent {
-            AppTheme(darkTheme = true) {
+            AppTheme(darkTheme = false) {
                 Surface(color = MaterialTheme.colors.background) {
                     SettingsScreen()
                 }
