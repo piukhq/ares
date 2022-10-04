@@ -73,7 +73,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         super.onActivityCreated(savedInstanceState)
 
         binding.composeView.setContent {
-            AppTheme(darkTheme = false) {
+            AppTheme(viewModel.theme.value) {
                 Surface(color = MaterialTheme.colors.background) {
                     SettingsScreen()
                 }
@@ -88,6 +88,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
         }
+
+        viewModel.getSelectedTheme()
 
     }
 
@@ -393,6 +395,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 )
             }
             SettingsItemType.FOOTER -> {
+
+            }
+            SettingsItemType.APPEARANCE -> {
 
             }
         }

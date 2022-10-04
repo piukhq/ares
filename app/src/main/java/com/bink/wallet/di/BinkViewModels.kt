@@ -1,5 +1,10 @@
 package com.bink.wallet.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.data.*
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
@@ -53,6 +58,8 @@ val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    single { provideDataStoreSource(get()) }
+    single { provideDataStore(get()) }
 
     viewModel { LoginViewModel(get(), get(), get()) }
 
@@ -120,7 +127,7 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(),get()) }
 
     viewModel { DeleteAccountViewModel(get()) }
 
@@ -211,3 +218,13 @@ fun provideAddPaymentCardRepository(
         membershipCardDao,
         membershipPlanDao
     )
+
+fun provideDataStore(context: Context): DataStore<Preferences> =
+    PreferenceDataStoreFactory.create(
+        produceFile = {
+            context.preferencesDataStoreFile("DS_NAME")
+        }
+    )
+
+fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreSourceImpl =
+    DataStoreSourceImpl(dataStore)

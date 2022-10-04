@@ -36,6 +36,23 @@ object SettingsItemsPopulation {
         )
         itemsList.add(
             SettingsItem(
+                res.getString(R.string.settings_menu_appearance),
+                null,
+                SettingsItemType.HEADER,
+                null
+            )
+        )
+
+        itemsList.add(
+            SettingsItem(
+                res.getString(R.string.settings_menu_appearance_subtitle),
+                res.getString(R.string.settings_menu_appearance_subtitle_detail),
+                SettingsItemType.APPEARANCE,
+                null
+            )
+        )
+        itemsList.add(
+            SettingsItem(
                 res.getString(R.string.settings_menu_support_and_feedback),
                 null,
                 SettingsItemType.HEADER,

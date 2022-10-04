@@ -59,7 +59,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 viewModel.companyName.value = currentMembershipPlan.account?.company_name
                 binding.title.text = currentMembershipPlan.account?.company_name
                 binding.composeView.setContent {
-                    AppTheme(darkTheme = true) {
+                    AppTheme(ThemeHelper.DEFAULT) {
                         BarcodeScreen(membershipCard, currentMembershipPlan)
                     }
                 }

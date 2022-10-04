@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 enum class SettingsItemType : Parcelable {
     HEADER,
     LOGOUT,
+    APPEARANCE,
     PREFERENCES,
     FAQS,
     CONTACT_US,

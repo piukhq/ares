@@ -10,6 +10,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.bink.wallet.data.DataStoreSource
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.isNewVersionAvailable
 import com.bink.wallet.model.skipVersion
@@ -31,6 +32,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import io.sentry.android.core.SentryAndroid
 import io.sentry.android.core.SentryAndroidOptions
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
@@ -56,15 +58,15 @@ class MainActivity : AppCompatActivity() {
 
         mixpanel = MixpanelAPI.getInstance(this, mixpanelKey)
 
-        SentryAndroid.init(
-            this
-        ) { options: SentryAndroidOptions ->
-            options.environment =
-                if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
-            options.setDebug(BuildConfig.DEBUG)
-            options.release =
-                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
-        }
+//        SentryAndroid.init(
+//            this
+//        ) { options: SentryAndroidOptions ->
+//            options.environment =
+//                if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+//            options.setDebug(BuildConfig.DEBUG)
+//            options.release =
+//                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+//        }
 
         if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             if (BuildConfig.SECURE_FLAGS) {
