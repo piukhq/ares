@@ -22,7 +22,7 @@ class DataStoreSourceImpl(private val dataStore:DataStore<Preferences>) : DataSt
 
     override suspend fun getMode(): Flow<String> {
         return dataStore.data.map {
-            it[MODE_STATUS] ?: ThemeHelper.DEFAULT //Default of Android Q , without this code, Android Q can use this also
+            it[MODE_STATUS] ?: ThemeHelper.SYSTEM //Default of Android Q , without this code, Android Q can use this also
         }
     }
 }

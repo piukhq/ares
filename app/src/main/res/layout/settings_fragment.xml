@@ -16,23 +16,23 @@
         android:layout_height="match_parent"
         tools:context=".scenes.settings.SettingsFragment">
 
-        <Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:navigationIcon="@drawable/ic_close">
+<!--        <Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            tools:navigationIcon="@drawable/ic_close">-->
 
-            <TextView
-                android:id="@+id/tv_settings_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/toolbar_title_text_size"
-                android:textStyle="bold" />
-        </Toolbar>
+<!--            <TextView-->
+<!--                android:id="@+id/tv_settings_title"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:textSize="@dimen/toolbar_title_text_size"-->
+<!--                android:textStyle="bold" />-->
+<!--        </Toolbar>-->
 
 
         <androidx.compose.ui.platform.ComposeView

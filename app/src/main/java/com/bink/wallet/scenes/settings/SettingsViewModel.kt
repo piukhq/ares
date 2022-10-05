@@ -42,9 +42,12 @@ class SettingsViewModel constructor(
     val userResponse: LiveData<User>
         get() = _userResponse
 
-    private val _theme = mutableStateOf(ThemeHelper.DEFAULT)
+    private val _theme = mutableStateOf(ThemeHelper.SYSTEM)
     val theme: MutableState<String>
     get() = _theme
+
+     val showThemeDialog = mutableStateOf(false)
+
 
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)

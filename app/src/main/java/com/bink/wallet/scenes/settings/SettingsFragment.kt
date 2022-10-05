@@ -47,7 +47,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(null).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -75,15 +75,15 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
                 Surface(color = MaterialTheme.colors.background) {
-                    SettingsScreen()
+                    AppBar()
                 }
             }
 
 
         }
 
-        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+//        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
+//        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
 
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
@@ -103,6 +103,29 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
 
         DeleteAccountDialog()
+        ThemeDialog()
+
+    }
+
+    @Composable
+    @Preview
+    private fun AppBar() {
+        Scaffold(topBar = {
+            TopAppBar( title = {
+                Text(text = stringResource(id = viewModel.getSettingsTitle()))
+            },
+                navigationIcon = {
+                                 IconButton(onClick = { /*TODO*/ }) {
+                                     Icon(painter = painterResource(id = R.drawable.ic_close), contentDescription = "Close")
+                                 }
+                    //composable function for leading icon
+                },
+                backgroundColor = MaterialTheme.colors.background)//color code,
+
+            }, content = {
+                SettingsScreen()
+        })
+
     }
 
     @Composable
@@ -287,6 +310,43 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
+    @Composable
+    private fun ThemeDialog() {
+        val radioButtons = listOf(ThemeHelper.DARK_MODE, ThemeHelper.LIGHT_MODE, ThemeHelper.SYSTEM)
+        val isSelected = viewModel.theme.value
+
+        if (viewModel.showThemeDialog.value) {
+            Dialog(
+                onDismissRequest = { viewModel.showThemeDialog.value = false }) {
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.surface)
+                        .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
+                        .fillMaxWidth()
+                ) {
+                    radioButtons.forEach {
+                        Row() {
+                            RadioButton(
+                                selected = isSelected == it,
+                                modifier = Modifier.padding(8.dp),
+                                onClick = {
+                                    viewModel.showThemeDialog.value = false
+                                    viewModel.selectedTheme(it)
+                                })
+
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
+                            )
+                        }
+                    }
+                }
+                //Cancel button
+            }
+        }
+
+    }
+
     private fun settingsItemClick(item: SettingsItem) {
         when (item.type) {
             SettingsItemType.HEADER -> {
@@ -398,7 +458,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
             }
             SettingsItemType.APPEARANCE -> {
-
+                viewModel.showThemeDialog.value = true
             }
         }
 
@@ -430,7 +490,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
-    @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
         Surface(color = MaterialTheme.colors.background) {
