@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -10,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -29,10 +32,27 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val marginPercent = 75
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
+    private val galleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        handleGalleryResult(uri) { barcode ->
+            val membershipPlan: MembershipPlan? = viewModel.membershipPlans.value?.let { MembershipPlanUtils.findMembershipPlan(it.toTypedArray(), barcode) }
+
+            membershipPlan?.also {
+
+                val membershipCardId = ""
+                val action = AddFragmentDirections.addToAddCard(
+                    membershipPlan = it,
+                    membershipCardId = membershipCardId,
+                    barcode = barcode.toString()
+                )
+                findNavController().navigateIfAdded(this, action)
+
+            } ?: run {
+                DialogFactory.showTryAgainGenericError(requireActivity())
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 // Permission is granted. Continue the action or workflow in your
                 // app.
@@ -40,7 +60,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                     { navigateToScanLoyaltyCard() },
                     { navigateToAddPaymentCard() },
                     { navigateToBrowseBrands() },
-                    isGranted
+                    isGranted,
+                    galleryResult
                 )
 
             } else {
@@ -84,7 +105,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 true,
                 { navigateToScanLoyaltyCard() },
                 { navigateToAddPaymentCard() },
-                { navigateToBrowseBrands() }
+                { navigateToBrowseBrands() },
+                galleryResult
             )
         }
     }

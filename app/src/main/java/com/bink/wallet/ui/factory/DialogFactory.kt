@@ -5,7 +5,9 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
 import com.bink.wallet.R
+import com.bink.wallet.utils.CameraAccessDialog
 
 class DialogFactory {
 
@@ -32,6 +34,11 @@ class DialogFactory {
             }
 
             builder.create().show()
+        }
+
+        fun showPermissionsSettingsDialog(activity: Activity, activityResult: ActivityResultLauncher<String>?, negativeAction: () -> Unit = {}) {
+            val dialog = CameraAccessDialog(activity, activityResult, negativeAction)
+            dialog.show()
         }
 
         fun showTryAgainGenericError(
