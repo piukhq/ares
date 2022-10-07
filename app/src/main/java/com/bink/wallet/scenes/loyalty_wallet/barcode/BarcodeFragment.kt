@@ -1,10 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet.barcode
 
-import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -45,6 +42,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
 
+    private var screenBrightness = 0f
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
@@ -70,6 +69,21 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val attributes = activity?.window?.attributes
+        screenBrightness = attributes?.screenBrightness ?: 0f
+        attributes?.screenBrightness = 1.0f
+        activity?.window?.attributes = attributes
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val attributes = activity?.window?.attributes
+        attributes?.screenBrightness = screenBrightness
+        activity?.window?.attributes = attributes
     }
 
     @Composable
@@ -388,27 +402,5 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkSystemWritePermission()
-    }
-
-    private fun checkSystemWritePermission(): Boolean {
-       val retVal = Settings.System.canWrite(requireContext())
-        if (retVal) {
-            ///Permission granted by the user
-            Settings.System.putInt(requireContext().contentResolver, Settings.System.SCREEN_BRIGHTNESS, 255);
-
-        } else {
-            //permission not granted navigate to permission screen
-            openAndroidPermissionsMenu()
-        }
-        return retVal
-    }
-
-    private fun openAndroidPermissionsMenu() {
-        val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
-        startActivity(intent)
-    }
 }
 
