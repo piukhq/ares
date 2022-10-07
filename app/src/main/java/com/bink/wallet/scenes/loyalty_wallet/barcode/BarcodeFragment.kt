@@ -42,7 +42,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
 
-    private var screenBrightness = 0f
+    private var screenBrightness = 0.5f
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -74,7 +74,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     override fun onResume() {
         super.onResume()
         val attributes = activity?.window?.attributes
-        screenBrightness = attributes?.screenBrightness ?: 0f
+        screenBrightness = attributes?.screenBrightness ?: 0.5f
         attributes?.screenBrightness = 1.0f
         activity?.window?.attributes = attributes
     }
