@@ -9,8 +9,6 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.DialogCameraAccessBinding
 
 class CameraAccessDialog(private val activity: Activity, private val activityResult: ActivityResultLauncher<String>?, private val negativeAction: () -> Unit = {}) : Dialog(activity) {
@@ -19,6 +17,10 @@ class CameraAccessDialog(private val activity: Activity, private val activityRes
         super.onCreate(savedInstanceState)
         val binding = DialogCameraAccessBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
+
+        if (activityResult == null) {
+            binding.fromPhotoLibrary.visibility = View.GONE
+        }
 
         binding.allowAccess.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -45,6 +47,5 @@ class CameraAccessDialog(private val activity: Activity, private val activityRes
             this.cancel()
         }
 
-        if (SharedPreferenceManager.didAttemptToAddPaymentCard) binding.fromPhotoLibrary.visibility = View.GONE else binding.fromPhotoLibrary.visibility = View.VISIBLE
     }
 }

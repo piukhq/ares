@@ -65,7 +65,7 @@ fun Fragment.requestCameraPermissionAndNavigate(
     }
 }
 
-fun Fragment.   fonRequestDenied(
+fun Fragment.onRequestDenied(
     navigateToAddPaymentCard: (() -> Unit)?,
     navigateToBrowseBrands: (() -> Unit)?,
     galleryResult: ActivityResultLauncher<String>? = null,
@@ -100,14 +100,6 @@ fun Fragment.requestPermissionsResult(
             )
 
         if (!shouldShowPermissionExplanation) {
-//            DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
-//                if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
-//                    navigateToAddPaymentCard?.invoke()
-//                } else {
-//                    navigateToBrowseBrands?.invoke()
-//                }
-//            }
-
             DialogFactory.showPermissionsSettingsDialog(requireActivity(), galleryResult) {
                 if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                     navigateToAddPaymentCard?.invoke()
@@ -119,14 +111,14 @@ fun Fragment.requestPermissionsResult(
     }
 }
 
-fun Fragment.handleGalleryResult(uri: Uri?, callback: (String?) -> Unit){
-    if (uri != null){
+fun Fragment.handleGalleryResult(uri: Uri?, callback: (String?) -> Unit) {
+    if (uri != null) {
         val inputImage = InputImage.fromFilePath(requireContext(), uri)
         val scanner = BarcodeScanning.getClient()
 
         scanner.process(inputImage)
             .addOnSuccessListener {
-                if(it.isNullOrEmpty()) {
+                if (it.isNullOrEmpty()) {
                     callback(null)
                 } else {
                     callback(it[0].displayValue)
@@ -145,7 +137,7 @@ fun Fragment.scanResult(
     resultCode: Int,
     data: Intent?,
     navigateToAddPaymentCard: (String) -> Unit,
-    logPaymentCardSuccess: (Boolean) -> Unit
+    logPaymentCardSuccess: (Boolean) -> Unit,
 ) {
     if (CardScanActivity.isScanResult(requestCode)) {
         val cardActivityResultHandler = object : CardScanActivityResultHandler {
