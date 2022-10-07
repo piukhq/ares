@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.loyalty_wallet.barcode
 
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -38,6 +41,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
 
@@ -384,5 +388,27 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkSystemWritePermission()
+    }
+
+    private fun checkSystemWritePermission(): Boolean {
+       val retVal = Settings.System.canWrite(requireContext())
+        if (retVal) {
+            ///Permission granted by the user
+            Settings.System.putInt(requireContext().contentResolver, Settings.System.SCREEN_BRIGHTNESS, 255);
+
+        } else {
+            //permission not granted navigate to permission screen
+            openAndroidPermissionsMenu()
+        }
+        return retVal
+    }
+
+    private fun openAndroidPermissionsMenu() {
+        val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+        startActivity(intent)
+    }
 }
 
