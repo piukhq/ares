@@ -49,7 +49,6 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:letterSpacing="0"
-                android:textColor="@android:color/black"
                 android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
