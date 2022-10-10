@@ -3,9 +3,11 @@ package com.bink.wallet.scenes.add_loyalty_card
 import android.app.Activity
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
+import android.net.Uri
 import android.os.*
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,12 +16,9 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.ADD_AUTH_BARCODE
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.SignUpFieldTypes
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -37,6 +36,12 @@ class AddLoyaltyCardFragment :
     var cancelHaptic = false
     private var isFromAddAuth = false
     private var account: Account? = null
+
+    private val galleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        handleGalleryResult(uri) {
+            handleResultText(it)
+        }
+    }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -82,6 +87,49 @@ class AddLoyaltyCardFragment :
     private fun stopScanning() {
         binding.scannerView.stopCameraPreview()
     }
+
+    private fun handleResultText(text: String?) {
+        cancelHaptic = true
+        val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
+        savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
+
+        if (text == null) {
+            showUnsupportedBarcodePopup(account?.company_name)
+            return
+        }
+
+        if (isFromAddAuth && account != null) {
+            if (isValidRegex(text)) {
+                savedInstanceState?.set(ADD_AUTH_BARCODE, text)
+                if (text != null) {
+                    findNavController().popBackStack()
+
+                }
+            } else {
+                showUnsupportedBarcodePopup(account?.company_name)
+            }
+
+        } else {
+            if (brands != null) {
+                val membershipPlan: MembershipPlan? = MembershipPlanUtils.findMembershipPlan(brands!!, text)
+
+                membershipPlan?.also {
+
+                    val membershipCardId = ""
+                    val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
+                        membershipPlan = it,
+                        membershipCardId = membershipCardId,
+                        barcode = text
+                    )
+                    findNavController().navigateIfAdded(this, action)
+
+                } ?: run {
+                    showUnsupportedBarcodePopup(null)
+                }
+            }
+        }
+    }
+
 
     private fun getValidators() {
         args.membershipPlans?.let {
@@ -163,6 +211,10 @@ class AddLoyaltyCardFragment :
 
             }
         }
+
+        binding.pickFromGallery.setOnClickListener {
+            galleryResult.launch("image/*")
+        }
     }
 
     private fun findMembershipPlan(rawResult: Result?): MembershipPlan? {
@@ -195,12 +247,22 @@ class AddLoyaltyCardFragment :
         }
     }
 
-    private fun showUnsupportedBarcodePopup(companyName: String = "") {
+    private fun showUnsupportedBarcodePopup(companyName: String? = "") {
         if (isFromAddAuth) {
-            showTryAgainGenericError(
-                requireActivity(), getString(R.string.scan_failure_body, companyName)
-            )
+            if (companyName != null) {
+                showTryAgainGenericError(
+                    requireActivity(), getString(R.string.scan_failure_body, companyName)
+                )
+            } else {
+                showTryAgainGenericError(
+                    requireActivity(), getString(R.string.scan_non_supported_body)
+                )
+            }
+
+
         }
+
+
         performHaptic(
             getString(R.string.unrecognized_barcode_title),
             getString(R.string.unrecognized_barcode_body)
@@ -210,7 +272,7 @@ class AddLoyaltyCardFragment :
 
     private fun performHaptic(
         title: String = getString(R.string.enter_manually),
-        text: String = getString(R.string.enter_manually_cant_scan)
+        text: String = getString(R.string.enter_manually_cant_scan),
     ) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = requireActivity().getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -301,9 +363,9 @@ class AddLoyaltyCardFragment :
 
     private fun showTryAgainGenericError(
         activity: Activity,
-        message: String
+        message: String,
 
-    ) {
+        ) {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(activity.getString(R.string.payment_card_scanning_scan_failed_title))
         builder.setMessage(message)
