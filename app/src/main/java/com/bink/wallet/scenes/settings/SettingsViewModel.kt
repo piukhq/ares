@@ -22,7 +22,7 @@ class SettingsViewModel constructor(
     var loyaltyWalletRepository: LoyaltyWalletRepository,
     var paymentWalletRepository: PaymentWalletRepository,
     var userRepository: UserRepository,
-    val dataStoreSource: DataStoreSourceImpl
+    private val dataStoreSource: DataStoreSourceImpl
 ) :
     BaseViewModel() {
 

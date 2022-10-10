@@ -55,11 +55,12 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
+            viewModel.getSelectedTheme()
             BarcodeFragmentArgs.fromBundle(it).apply {
                 viewModel.companyName.value = currentMembershipPlan.account?.company_name
                 binding.title.text = currentMembershipPlan.account?.company_name
                 binding.composeView.setContent {
-                    AppTheme(ThemeHelper.SYSTEM) {
+                    AppTheme(viewModel.theme.value) {
                         BarcodeScreen(membershipCard, currentMembershipPlan)
                     }
                 }
@@ -128,7 +129,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.membership_number_title, title),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
-                fontSize = 21.sp
+                fontSize = 21.sp,
+                color = MaterialTheme.colors.onSurface
             )
 
             NumberRow(text = text)
