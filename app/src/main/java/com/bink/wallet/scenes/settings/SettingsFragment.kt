@@ -115,7 +115,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     private fun AppBar() {
         Scaffold(topBar = {
             TopAppBar( title = {
-                Text(text = stringResource(id = viewModel.getSettingsTitle()))
+                Text(text = stringResource(id = viewModel.getSettingsTitle()), textAlign = TextAlign.Center , modifier = Modifier.padding(start = 30.dp))
             },
                 navigationIcon = {
                                  IconButton(onClick = { findNavController().popBackStack()}) {
