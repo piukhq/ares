@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.bink.wallet.utils.ThemeHelper
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -29,7 +30,6 @@ fun AppTheme(
     theme: String,
     content: @Composable () -> Unit
 ) {
-    val systemUiController = rememberSystemUiController()
 
     val color = when (theme) {
         ThemeHelper.DARK_MODE -> true
@@ -42,7 +42,8 @@ fun AppTheme(
         content = content
     )
 
-        systemUiController.setStatusBarColor(MaterialTheme.colors.background)
-
+    val systemUiController = rememberSystemUiController()
+    val ctu = if (color) darkThemeColours.background else Color.Transparent
+    systemUiController.setStatusBarColor(ctu)
 
 }

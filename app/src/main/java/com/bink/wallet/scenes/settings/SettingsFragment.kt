@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,6 +42,7 @@ import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding>() {
@@ -74,6 +76,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
+//                SetStatusBarColour()
                 Surface(color = MaterialTheme.colors.background) {
                     AppBar()
                 }
@@ -115,7 +118,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 Text(text = stringResource(id = viewModel.getSettingsTitle()))
             },
                 navigationIcon = {
-                                 IconButton(onClick = { /*TODO*/ }) {
+                                 IconButton(onClick = { findNavController().popBackStack()}) {
                                      Icon(painter = painterResource(id = R.drawable.ic_close), contentDescription = "Close")
                                  }
                     //composable function for leading icon
@@ -490,6 +493,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
+    @Composable
+    private fun SetStatusBarColour(){
+        val systemUiController = rememberSystemUiController()
+        systemUiController.setStatusBarColor(Color.Transparent)
+
+    }
     @Composable
     fun DefaultPreview() {
         Surface(color = MaterialTheme.colors.background) {
