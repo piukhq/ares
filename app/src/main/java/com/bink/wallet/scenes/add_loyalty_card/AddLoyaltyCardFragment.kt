@@ -36,6 +36,7 @@ class AddLoyaltyCardFragment :
     var cancelHaptic = false
     private var isFromAddAuth = false
     private var account: Account? = null
+    private var handler = Handler(Looper.getMainLooper())
 
     private val galleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         handleGalleryResult(uri) {
@@ -59,6 +60,8 @@ class AddLoyaltyCardFragment :
         cancelHaptic = false
         getValidators()
         setBottomLayout()
+        binding.progressSpinner.visibility = View.GONE
+
         context?.resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
@@ -110,26 +113,32 @@ class AddLoyaltyCardFragment :
             }
 
         } else {
-            if (brands != null) {
-                val membershipPlan: MembershipPlan? = MembershipPlanUtils.findMembershipPlan(brands!!, text)
+            val membershipPlan: MembershipPlan? = MembershipPlanUtils.findMembershipPlan(brands!!, text)
 
-                membershipPlan?.also {
+            membershipPlan?.also {
 
-                    val membershipCardId = ""
-                    val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
-                        membershipPlan = it,
-                        membershipCardId = membershipCardId,
-                        barcode = text
-                    )
+                val membershipCardId = ""
+                val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
+                    membershipPlan = it,
+                    membershipCardId = membershipCardId,
+                    barcode = text
+                )
+                binding.progressSpinner.visibility = View.VISIBLE
+                handler.postDelayed({
                     findNavController().navigateIfAdded(this, action)
+                }, 1000)
 
-                } ?: run {
-                    showUnsupportedBarcodePopup(null)
-                }
+
+            } ?: run {
+                showUnsupportedBarcodePopup(null)
             }
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
+    }
 
     private fun getValidators() {
         args.membershipPlans?.let {
