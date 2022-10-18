@@ -39,7 +39,10 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
+
+    private var screenBrightness = 0.5f
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -66,6 +69,21 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val attributes = activity?.window?.attributes
+        screenBrightness = attributes?.screenBrightness ?: 0.5f
+        attributes?.screenBrightness = 1.0f
+        activity?.window?.attributes = attributes
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val attributes = activity?.window?.attributes
+        attributes?.screenBrightness = screenBrightness
+        activity?.window?.attributes = attributes
     }
 
     @Composable
