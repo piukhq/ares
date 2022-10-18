@@ -5,7 +5,11 @@
         android:id="@+id/newest_item"
         android:title="@string/menu_newest" />
     <item
+        android:id="@+id/recent_item"
+        android:title="@string/menu_recent" />
+    <item
         android:id="@+id/custom_item"
         android:title="@string/menu_custom" />
+
 
 </menu>

@@ -37,6 +37,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.SortState
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
@@ -449,7 +450,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.custom_item -> {
-                            setSortButtonState(true)
+                            setSortButtonState(SortState.CUSTOM)
+                        }
+                        R.id.recent_item -> {
+                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
+                                requireContext().showDialog(
+                                    title = getString(R.string.newest_sort_title),
+                                    message = getString(R.string.newest_sort_warning),
+                                    positiveBtn = getString(R.string.ok),
+                                    negativeBtn = getString(R.string.cancel_text),
+                                    positiveCallback = { sortByRecent(unsortedCards) },
+                                    negativeCallback = { })
+                            } else {
+                                sortByRecent(unsortedCards)
+                            }
                         }
                         R.id.newest_item -> {
                             val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
@@ -485,6 +500,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
         }
         setSortButtonState()
+    }
+
+    private fun sortByRecent(unsortedCards: List<MembershipCard>){
+        setSortButtonState(SortState.RECENT)
     }
 
     override fun onPause() {
@@ -885,9 +904,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return totalDupes
     }
 
-    private fun setSortButtonState(forceToCustom: Boolean = false) {
-        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forceToCustom) {
+    private fun setSortButtonState(forcedType: SortState = SortState.NEWEST) {
+        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forcedType == SortState.CUSTOM) {
             getString(R.string.menu_custom)
+        } else if(forcedType == SortState.RECENT) {
+            getString(R.string.menu_recent)
         } else {
             getString(R.string.menu_newest)
         }
