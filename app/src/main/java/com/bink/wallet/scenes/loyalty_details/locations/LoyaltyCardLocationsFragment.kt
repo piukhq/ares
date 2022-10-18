@@ -17,13 +17,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -34,6 +34,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardLocationFragmentBinding
 import com.bink.wallet.model.getCurrentOpeningTimes
+import com.bink.wallet.model.tescolocations.Feature
 import com.bink.wallet.model.tescolocations.Properties
 import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.noRippleClickable
@@ -50,6 +51,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.compose.*
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -68,14 +70,10 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     private val uiSettings = mutableStateOf(MapUiSettings(myLocationButtonEnabled = false))
 
     //Defaulted to London
-    private val cameraPositionState = mutableStateOf(
-        CameraPositionState(
-            position = CameraPosition.fromLatLngZoom(
-                LatLng(
-                    51.54,
-                    -0.14
-                ), 10f
-            )
+    private val cameraPos = mutableStateOf(
+        LatLng(
+            51.54,
+            -0.14
         )
     )
 
@@ -114,8 +112,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         binding.compose.setContent {
             Column(modifier = Modifier.fillMaxSize()) {
                 BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                    MapView(modifier = Modifier
-                        .fillMaxSize())
+                    GoogleMapClustering(items = viewModel.locations.value?.features ?: arrayListOf(), modifier = Modifier.fillMaxSize())
                     LocationCard(modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))
@@ -134,35 +131,40 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         )
     }
 
+    @OptIn(MapsComposeExperimentalApi::class)
     @Composable
-    private fun MapView(modifier: Modifier) {
-        val markerClick: (Marker) -> Boolean = {
-            val properties = it.tag as Properties
-            viewModel.selectedLocationProperties.value = properties
-            true
+    fun GoogleMapClustering(items: List<Feature>, modifier: Modifier) {
+        val cameraPosState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(
+                cameraPos.value, 10f
+            )
         }
 
         GoogleMap(
             modifier = modifier,
-            cameraPositionState = cameraPositionState.value,
+            cameraPositionState = cameraPosState,
             uiSettings = uiSettings.value,
             properties = mapProperties.value,
             onMapClick = {
                 viewModel.selectedLocationProperties.value = null
             })
         {
+            val context = LocalContext.current
+            var clusterManager by remember { mutableStateOf<ClusterManager<Feature>?>(null) }
 
-            viewModel.locations.value?.features?.forEach {
-                if (it.geometry?.coordinates != null) {
-                    val locationLatLng = LatLng(it.geometry.coordinates[1], it.geometry.coordinates[0])
-                    Marker(
-                        state = MarkerState(position = locationLatLng),
-                        tag = it.properties,
-                        onClick = markerClick
-                    )
+            clusterManager?.setOnClusterItemClickListener {
+                viewModel.selectedLocationProperties.value = it.properties
+                true
+            }
+            MapEffect(items) { map ->
+                clusterManager = ClusterManager<Feature>(context, map)
+                clusterManager?.addItems(items)
+            }
+            LaunchedEffect(key1 = cameraPosState.isMoving) {
+                if (!cameraPosState.isMoving) {
+                    clusterManager?.onCameraIdle()
                 }
             }
-
         }
     }
 
@@ -288,13 +290,9 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
             CancellationTokenSource().token
         )?.addOnSuccessListener { location ->
             try {
-                cameraPositionState.value = CameraPositionState(
-                    position = CameraPosition.fromLatLngZoom(
-                        LatLng(
-                            location.latitude,
-                            location.longitude
-                        ), 15f
-                    )
+                cameraPos.value = LatLng(
+                    location.latitude,
+                    location.longitude
                 )
             } catch (e: NullPointerException) {
 
