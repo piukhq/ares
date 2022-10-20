@@ -168,7 +168,39 @@ object WalletOrderingUtil {
         SharedPreferenceManager.loyaltyWalletOrder = gson.toJson(allSavedWalletOrders)
     }
 
+    fun getRecentLoyaltyCardList(unsortedCards: List<MembershipCard>): List<MembershipCard> {
+        val loyaltyWalletRecentOrder = SharedPreferenceManager.loyaltyWalletRecentOrder ?: return unsortedCards
+        val recentOrder: ArrayList<String> = Gson().fromJson(loyaltyWalletRecentOrder, object : TypeToken<ArrayList<String>>() {}.type)
+
+        val cardsAsRecent = arrayListOf<MembershipCard>()
+        val unsortedCardsAsArrayList = ArrayList<MembershipCard>()
+        unsortedCardsAsArrayList.addAll(unsortedCards)
+
+        recentOrder.forEach { id ->
+            unsortedCards.firstOrNull { it.id == id }?.let { card ->
+                cardsAsRecent.add(card)
+                unsortedCardsAsArrayList.remove(card)
+            }
+        }
+
+        cardsAsRecent.addAll(unsortedCardsAsArrayList)
+        return cardsAsRecent
+    }
+
+    fun addRecentCard(loyaltyCard: Any) {
+        val previousCards = arrayListOf<String>()
+        SharedPreferenceManager.loyaltyWalletRecentOrder?.let {
+            previousCards.addAll(Gson().fromJson(it, object : TypeToken<ArrayList<String>>() {}.type))
+        }
+
+        getLoyaltyCardId(loyaltyCard)?.let { loyaltyCardId ->
+            previousCards.add(0, loyaltyCardId.toString())
+        }
+        SharedPreferenceManager.loyaltyWalletRecentOrder = Gson().toJson(previousCards)
+    }
+
     fun hasCustomWalletState(cards: List<MembershipCard>): Boolean {
+        if(SharedPreferenceManager.orderWalletByRecent) return false
         val savedWallet = getSavedLoyaltyWalletOrder()
         val cardAsNewest = cards.sortedByDescending { it.id }
 
