@@ -194,13 +194,14 @@ object WalletOrderingUtil {
         }
 
         getLoyaltyCardId(loyaltyCard)?.let { loyaltyCardId ->
+            previousCards.remove(loyaltyCardId.toString())
             previousCards.add(0, loyaltyCardId.toString())
         }
         SharedPreferenceManager.loyaltyWalletRecentOrder = Gson().toJson(previousCards)
     }
 
     fun hasCustomWalletState(cards: List<MembershipCard>): Boolean {
-        if(SharedPreferenceManager.orderWalletByRecent) return false
+        if (SharedPreferenceManager.orderWalletByRecent) return false
         val savedWallet = getSavedLoyaltyWalletOrder()
         val cardAsNewest = cards.sortedByDescending { it.id }
 
