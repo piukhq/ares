@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -504,18 +505,23 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setSortButtonState()
     }
 
-    private fun sortByRecent(unsortedCards: List<MembershipCard>) {
-        val cardsAsRecent = WalletOrderingUtil.getRecentLoyaltyCardList(unsortedCards)
+    private fun sortByRecent(unsortedCards: List<MembershipCard>? = null, localResort: Boolean = false) {
+        val cardsAsRecent = unsortedCards?.let { WalletOrderingUtil.getRecentLoyaltyCardList(it) }
 
         val listAsAny = ArrayList<Any>()
-        listAsAny.addAll(cardsAsRecent)
+        cardsAsRecent?.let { listAsAny.addAll(it) }
 
         //Save the new Order
         WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
 
         //Refresh the list
-        viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
-            logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+        if (localResort) {
+            walletAdapter.membershipCards = listAsAny
+            walletAdapter.notifyDataSetChanged()
+        } else {
+            viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+            }
         }
 
         setSortButtonState(SortState.RECENT)
@@ -654,6 +660,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         mainViewModel.stopLoading()
     }
 
+
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
@@ -663,6 +670,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
                             WalletOrderingUtil.addRecentCard(item)
+
+                            if (SharedPreferenceManager.orderWalletByRecent) {
+                                val userDataResult = viewModel.cardsDataMerger.value
+                                if (userDataResult is UserDataResult.UserDataSuccess) {
+                                    val cardsAsMembershipCard = arrayListOf<MembershipCard>()
+                                    userDataResult.result.third.forEach {
+                                        if (it is MembershipCard) {
+                                            cardsAsMembershipCard.add(it)
+                                        }
+                                    }
+                                    sortByRecent(cardsAsMembershipCard, true)
+                                }
+                            }
+
                             val directions =
                                 LoyaltyWalletFragmentDirections.loyaltyToDetail(
                                     membershipPlan,
