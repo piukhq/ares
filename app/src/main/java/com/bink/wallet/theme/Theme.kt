@@ -44,9 +44,9 @@ fun AppTheme(
         content = content
     )
 
-    val systemUiController = rememberSystemUiController()
-        if (color) {
-            systemUiController.setStatusBarColor(darkThemeColours.background)
-        }
+//    val systemUiController = rememberSystemUiController()
+//        if (color) {
+//            systemUiController.setStatusBarColor(darkThemeColours.background)
+//        }
 
 }

@@ -74,7 +74,7 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(
                 this,
-                LoyaltyCardDetailsFragmentDirections.detailToHome(),
+                LoyaltyCardDetailsFragmentDirections.detailToHome(false),
                 currentDestination
             )
 

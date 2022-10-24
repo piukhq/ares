@@ -119,7 +119,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
         binding.buttonCancel.setOnClickListener {
             handleToolbarAction()
-            findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
+            findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome(false))
         }
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {

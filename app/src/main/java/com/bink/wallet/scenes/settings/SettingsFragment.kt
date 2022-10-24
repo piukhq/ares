@@ -125,8 +125,11 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 },
                 backgroundColor = MaterialTheme.colors.background)//color code,
 
-            }, content = {
-                SettingsScreen()
+            }, content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)){SettingsScreen()}
+
         })
 
     }
@@ -496,7 +499,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     @Composable
     private fun SetStatusBarColour(){
         val systemUiController = rememberSystemUiController()
-        systemUiController.setStatusBarColor(Color.Transparent)
+        systemUiController.setStatusBarColor(Color.Transparent, isSystemInDarkTheme())
+
 
     }
     @Composable

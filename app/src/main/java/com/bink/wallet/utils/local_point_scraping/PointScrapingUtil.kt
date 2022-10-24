@@ -148,7 +148,7 @@ object PointScrapingUtil {
             settings.apply {
                 javaScriptEnabled = true
                 cacheMode = WebSettings.LOAD_NO_CACHE
-                setAppCacheEnabled(false)
+//                setAppCacheEnabled(false)
             }
             clearCache(true)
             clearFormData()

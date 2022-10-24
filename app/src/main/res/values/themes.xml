@@ -23,6 +23,8 @@
         <item name="colorControlHighlight">@color/grey_10</item>
         <item name="android:fontFamily">@font/nunitosans</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -44,4 +46,13 @@
     <style name="DialogBackground" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@color/global_background </item>
     </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorSurface">@color/white</item>
+    </style>
+
 </resources>
