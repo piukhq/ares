@@ -36,7 +36,6 @@ class AddLoyaltyCardFragment :
     var cancelHaptic = false
     private var isFromAddAuth = false
     private var account: Account? = null
-    private var handler = Handler(Looper.getMainLooper())
 
     private val galleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         handleGalleryResult(uri) {
@@ -124,20 +123,13 @@ class AddLoyaltyCardFragment :
                     barcode = text
                 )
                 binding.progressSpinner.visibility = View.VISIBLE
-                handler.postDelayed({
                     findNavController().navigateIfAdded(this, action)
-                }, 1000)
 
 
             } ?: run {
                 showUnsupportedBarcodePopup(null)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        handler.removeCallbacksAndMessages(null)
     }
 
     private fun getValidators() {
@@ -200,16 +192,11 @@ class AddLoyaltyCardFragment :
     }
 
     private fun setBottomLayout() {
-        binding.scannerView.setViewFinderMeasureCallback {
-            val topPadding = binding.scannerView.totalPreviewHeight
-            binding.bottomView.root.post {
-                binding.bottomView.root.setPadding(0, topPadding, 0, 0)
+                binding.bottomView.root.setPadding(0, 800, 0, 0)
                 binding.bottomView.root.alpha = 0f
                 binding.bottomView.root.setVisible(true)
                 binding.bottomView.root.animate().alpha(1f)
 
-            }
-        }
         binding.bottomView.enterManuallyContainer.setOnClickListener()
         {
             cancelHaptic = true
