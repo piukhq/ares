@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -7,7 +8,6 @@ import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -42,7 +44,6 @@ import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding>() {
@@ -76,7 +77,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
-//                SetStatusBarColour()
+                SetStatusBarColour()
                 Surface(color = MaterialTheme.colors.background) {
                     AppBar()
                 }
@@ -114,21 +115,31 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     @Preview
     private fun AppBar() {
         Scaffold(topBar = {
-            TopAppBar( title = {
-                Text(text = stringResource(id = viewModel.getSettingsTitle()), textAlign = TextAlign.Center , modifier = Modifier.padding(start = 30.dp))
-            },
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = viewModel.getSettingsTitle()),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 30.dp)
+                    )
+                },
                 navigationIcon = {
-                                 IconButton(onClick = { findNavController().popBackStack()}) {
-                                     Icon(painter = painterResource(id = R.drawable.ic_close), contentDescription = "Close")
-                                 }
+                    IconButton(onClick = { findNavController().popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close),
+                            contentDescription = "Close"
+                        )
+                    }
                     //composable function for leading icon
                 },
-                backgroundColor = MaterialTheme.colors.background)//color code,
+                backgroundColor = MaterialTheme.colors.background
+            )//color code,
 
-            }, content = { padding ->
+        }, content = { padding ->
             Column(
                 modifier = Modifier
-                    .padding(padding)){SettingsScreen()}
+                    .padding(padding)
+            ) { SettingsScreen() }
 
         })
 
@@ -497,17 +508,11 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     }
 
     @Composable
-    private fun SetStatusBarColour(){
-        val systemUiController = rememberSystemUiController()
-        systemUiController.setStatusBarColor(Color.Transparent, isSystemInDarkTheme())
+    private fun SetStatusBarColour() {
+        val activity = LocalView.current.context as Activity
+        val backgroundArgb = MaterialTheme.colors.background.toArgb()
+        activity.window.statusBarColor = backgroundArgb
 
-
-    }
-    @Composable
-    fun DefaultPreview() {
-        Surface(color = MaterialTheme.colors.background) {
-            SettingsScreen()
-        }
     }
 
 }
