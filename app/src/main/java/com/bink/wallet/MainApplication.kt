@@ -49,7 +49,7 @@ class MainApplication : Application() {
 
         mainScope.launch {
 
-            val appTheme = dataStoreSource.getMode()
+            val appTheme = dataStoreSource.getCurrentlySelectedTheme()
             appTheme.collect {
                 ThemeHelper.applyTheme(it)
             }

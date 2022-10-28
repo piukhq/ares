@@ -97,13 +97,13 @@ class SettingsViewModel constructor(
 
     fun selectedTheme(theme:String){
         viewModelScope.launch {
-            dataStoreSource.storeMode(theme)
+            dataStoreSource.saveSelectedTheme(theme)
         }
     }
 
     fun getSelectedTheme(){
         viewModelScope.launch {
-            dataStoreSource.getMode().collect{
+            dataStoreSource.getCurrentlySelectedTheme().collect{
                 _theme.value = it
             }
         }

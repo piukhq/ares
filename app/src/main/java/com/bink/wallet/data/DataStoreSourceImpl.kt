@@ -14,13 +14,13 @@ class DataStoreSourceImpl(private val dataStore:DataStore<Preferences>) : DataSt
         val MODE_STATUS = stringPreferencesKey("MODE_STATUS")
     }
 
-    override suspend fun storeMode(mode: String) {
+    override suspend fun saveSelectedTheme(theme: String) {
         dataStore.edit {
-            it[MODE_STATUS] = mode
+            it[MODE_STATUS] = theme
         }
     }
 
-    override suspend fun getMode(): Flow<String> {
+    override suspend fun getCurrentlySelectedTheme(): Flow<String> {
         return dataStore.data.map {
             it[MODE_STATUS] ?: ThemeHelper.SYSTEM //Default of Android Q , without this code, Android Q can use this also
         }

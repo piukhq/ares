@@ -18,7 +18,7 @@ class BarcodeViewModel(private val dataStoreSource: DataStoreSourceImpl) : BaseV
 
     fun getSelectedTheme(){
         viewModelScope.launch {
-            dataStoreSource.getMode().collect{
+            dataStoreSource.getCurrentlySelectedTheme().collect{
                 _theme.value = it
             }
         }
