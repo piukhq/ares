@@ -47,12 +47,13 @@
         <item name="android:windowBackground">@color/global_background </item>
     </style>
 
-    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
     </style>
 
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
-        <item name="colorSurface">@color/white</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
     </style>
 
 </resources>
