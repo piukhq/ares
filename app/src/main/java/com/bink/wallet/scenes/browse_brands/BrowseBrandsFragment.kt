@@ -24,6 +24,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
     private val filtersAdapter = BrandsFiltersAdapter()
     override val layoutRes = R.layout.browse_brands_fragment
     override val viewModel: BrowseBrandsViewModel by viewModel()
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()

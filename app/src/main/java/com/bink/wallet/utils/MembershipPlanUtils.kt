@@ -5,10 +5,7 @@ import android.graphics.Bitmap
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.enums.CardCodes
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.enums.MembershipCardStatus.*
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -170,6 +167,47 @@ object MembershipPlanUtils {
             paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
         return originalSize == filteredCards.size
+    }
+
+    fun findMembershipPlan(brands: Array<MembershipPlan>, text: String?): MembershipPlan? {
+        var foundPlan: MembershipPlan? = null
+        val validators = getValidators(brands)
+
+        for ((planId, validation) in validators) {
+            if (!validation.isNullOrEmpty() && UtilFunctions.isValidField(
+                    validation,
+                    text
+                )
+            ) {
+                foundPlan = brands.find { plan -> plan.id == (planId) }
+                break
+            }
+        }
+        return foundPlan
+    }
+
+    private fun getValidators(brands: Array<MembershipPlan>): HashMap<String, String?> {
+        val validators = HashMap<String, String?>()
+
+        for (plan in brands) {
+            var foundInAddFields = false
+            plan.account?.add_fields?.map { field ->
+                if (field.common_name == SignUpFieldTypes.BARCODE.common_name && !field.validation.isNullOrEmpty()) {
+                    validators[plan.id] = field.validation
+                    foundInAddFields = true
+                }
+            }
+            if (!foundInAddFields) {
+                plan.account?.authorise_fields?.map { field ->
+                    if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
+                        validators[plan.id] = field.validation
+                        foundInAddFields = true
+                    }
+                }
+            }
+        }
+
+        return validators
     }
 
     fun loadBarcode(context: Context, membershipCard: BarcodeWrapper?): Bitmap? {
