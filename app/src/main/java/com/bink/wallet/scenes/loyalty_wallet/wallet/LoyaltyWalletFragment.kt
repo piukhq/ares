@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -37,6 +38,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.SortState
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
@@ -86,7 +88,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                target: RecyclerView.ViewHolder,
             ): Boolean {
                 val currentPosition = viewHolder.adapterPosition
                 var card: MembershipCard? = null
@@ -102,6 +104,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 card?.let {
                     val moveItem = walletAdapter.onItemMove(currentPosition, target.adapterPosition)
                     if (moveItem) {
+                        SharedPreferenceManager.orderWalletByRecent = false
                         setSortButtonState()
                     }
                     return moveItem
@@ -176,7 +179,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 dX: Float,
                 dY: Float,
                 actionState: Int,
-                isCurrentlyActive: Boolean
+                isCurrentlyActive: Boolean,
             ) {
 
                 val foregroundView = when (viewHolder) {
@@ -247,7 +250,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             override fun clearView(
                 recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                viewHolder: RecyclerView.ViewHolder,
             ) {
                 val foregroundView = when (viewHolder) {
                     is LoyaltyWalletViewHolder ->
@@ -277,7 +280,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             override fun getMovementFlags(
                 recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                viewHolder: RecyclerView.ViewHolder,
             ): Int {
                 val hasMultipleCards =
                     walletAdapter.membershipCards.filterIsInstance<MembershipCard>().size > 1
@@ -449,7 +452,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.custom_item -> {
-                            setSortButtonState(true)
+                            setSortButtonState(SortState.CUSTOM)
+                        }
+                        R.id.recent_item -> {
+                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
+                                requireContext().showDialog(
+                                    title = getString(R.string.newest_sort_title),
+                                    message = getString(R.string.newest_sort_warning),
+                                    positiveBtn = getString(R.string.ok),
+                                    negativeBtn = getString(R.string.cancel_text),
+                                    positiveCallback = { sortByRecent(unsortedCards) },
+                                    negativeCallback = { })
+                            } else {
+                                sortByRecent(unsortedCards)
+                            }
                         }
                         R.id.newest_item -> {
                             val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
@@ -484,7 +501,30 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
             logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
         }
+        SharedPreferenceManager.orderWalletByRecent = false
         setSortButtonState()
+    }
+
+    private fun sortByRecent(unsortedCards: List<MembershipCard>? = null, localResort: Boolean = false) {
+        val cardsAsRecent = unsortedCards?.let { WalletOrderingUtil.getRecentLoyaltyCardList(it) }
+
+        val listAsAny = ArrayList<Any>()
+        cardsAsRecent?.let { listAsAny.addAll(it) }
+
+        //Save the new Order
+        WalletOrderingUtil.setSavedLoyaltyCardWallet(listAsAny)
+
+        //Refresh the list
+        if (localResort) {
+            walletAdapter.membershipCards = listAsAny
+            walletAdapter.notifyDataSetChanged()
+        } else {
+            viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
+            }
+        }
+
+        setSortButtonState(SortState.RECENT)
     }
 
     override fun onPause() {
@@ -513,7 +553,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun createDynamicAction(
         dynamicActionLocation: DynamicActionLocation,
-        dynamicAction: DynamicAction
+        dynamicAction: DynamicAction,
     ) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
@@ -620,6 +660,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         mainViewModel.stopLoading()
     }
 
+
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
@@ -628,6 +669,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 list?.let {
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
+                            WalletOrderingUtil.addRecentCard(item)
+
+                            if (SharedPreferenceManager.orderWalletByRecent) {
+                                val userDataResult = viewModel.cardsDataMerger.value
+                                if (userDataResult is UserDataResult.UserDataSuccess) {
+                                    val cardsAsMembershipCard = arrayListOf<MembershipCard>()
+                                    userDataResult.result.third.forEach {
+                                        if (it is MembershipCard) {
+                                            cardsAsMembershipCard.add(it)
+                                        }
+                                    }
+                                    sortByRecent(cardsAsMembershipCard, true)
+                                }
+                            }
+
                             val directions =
                                 LoyaltyWalletFragmentDirections.loyaltyToDetail(
                                     membershipPlan,
@@ -790,7 +846,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun shouldShowCardLink(
         cards: List<MembershipCard>,
-        plan: List<MembershipPlan>
+        plan: List<MembershipPlan>,
     ): Boolean {
         cards.forEach { membershipCard ->
             plan.forEach { mPlan ->
@@ -808,7 +864,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun shouldShowStoreCards(
         cards: List<MembershipCard>,
-        plan: List<MembershipPlan>
+        plan: List<MembershipPlan>,
     ): Boolean {
         cards.forEach { membershipCard ->
             plan.forEach { mPlan ->
@@ -825,7 +881,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun shouldShowSeeCards(
         cards: List<MembershipCard>,
-        plan: List<MembershipPlan>
+        plan: List<MembershipPlan>,
     ): Boolean {
         cards.forEach { membershipCard ->
             plan.forEach { mPlan ->
@@ -885,10 +941,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return totalDupes
     }
 
-    private fun setSortButtonState(forceToCustom: Boolean = false) {
-        val sortType = if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forceToCustom) {
+    private fun setSortButtonState(forcedType: SortState = SortState.NEWEST) {
+        val sortType = if (forcedType == SortState.RECENT || SharedPreferenceManager.orderWalletByRecent) {
+            SharedPreferenceManager.orderWalletByRecent = true
+            getString(R.string.menu_recent)
+        } else if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forcedType == SortState.CUSTOM) {
+            SharedPreferenceManager.orderWalletByRecent = false
             getString(R.string.menu_custom)
         } else {
+            SharedPreferenceManager.orderWalletByRecent = false
             getString(R.string.menu_newest)
         }
         setMixpanelProperty(
