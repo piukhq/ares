@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -16,69 +17,94 @@ import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
 
 fun Fragment.requestCameraPermissionAndNavigate(
+    requestPermissionLauncher: ActivityResultLauncher<String>?,
     shouldNavigateToScanLoyaltyCard: Boolean,
-    navigateToScanLoyaltyCard: (() -> Unit)?
+    navigateToScanLoyaltyCard: (() -> Unit)?,
+    navigateToAddPaymentCard: (() -> Unit)?,
+    navigateToBrowseBrands: (() -> Unit)?
 ) {
-    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
-    val permission = activity?.let {
-        ContextCompat.checkSelfPermission(
-            it,
-            Manifest.permission.CAMERA
-        )
-    }
 
-    if (permission != PackageManager.PERMISSION_GRANTED) {
-        requestPermissions(
-            arrayOf(Manifest.permission.CAMERA),
-            CAMERA_REQUEST_CODE
-        )
-    } else {
-        if (shouldNavigateToScanLoyaltyCard) {
-            navigateToScanLoyaltyCard?.invoke()
+    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
+
+    when {
+        ContextCompat.checkSelfPermission(
+            this.requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED -> {
+            // You can use the API that requires the permission.
+            if (!shouldNavigateToScanLoyaltyCard) {
+                openScanPaymentCard()
+            } else {
+                navigateToScanLoyaltyCard?.invoke()
+            }
+
+        }
+        ActivityCompat.shouldShowRequestPermissionRationale(
+            this.requireActivity(),
+            Manifest.permission.CAMERA
+        ) -> {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected. In this UI,
+            // include a "cancel" or "no thanks" button that allows the user to
+            // continue using your app without granting the permission.
+            onRequestDenied(navigateToAddPaymentCard, navigateToBrowseBrands)
+
+        }
+        else -> {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+
+            requestPermissionLauncher?.launch(
+                Manifest.permission.CAMERA
+            )
+        }
+    }
+}
+
+fun Fragment.onRequestDenied(
+    navigateToAddPaymentCard: (() -> Unit)?,
+    navigateToBrowseBrands: (() -> Unit)?
+) {
+    DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+        if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
+            navigateToAddPaymentCard?.invoke()
         } else {
-            openScanPaymentCard()
+            navigateToBrowseBrands?.invoke()
         }
     }
 }
 
 fun Fragment.requestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<out String>,
-    grantResults: IntArray,
     navigateToScanLoyaltyCard: (() -> Unit)?,
     navigateToAddPaymentCard: (() -> Unit)?,
-    navigateToBrowseBrands: (() -> Unit)?
+    navigateToBrowseBrands: (() -> Unit)?,
+    isPermissionGranted: Boolean
 ) {
-    if (requestCode == CAMERA_REQUEST_CODE) {
-        if ((permissions[0] == Manifest.permission.CAMERA)
-            && (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        ) {
-            if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
-                openScanPaymentCard()
-            } else {
-                navigateToScanLoyaltyCard?.invoke()
-            }
+    if (isPermissionGranted) {
+        if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
+            openScanPaymentCard()
         } else {
-            val shouldShowPermissionExplanation =
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    requireActivity(),
-                    Manifest.permission.CAMERA
-                )
+            navigateToScanLoyaltyCard?.invoke()
+        }
+    } else {
+        val shouldShowPermissionExplanation =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.CAMERA
+            )
 
-            if (!shouldShowPermissionExplanation) {
-                DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
-                    if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
-                        navigateToAddPaymentCard?.invoke()
-                    } else {
-                        navigateToBrowseBrands?.invoke()
-                    }
+        if (!shouldShowPermissionExplanation) {
+            DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+                if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
+                    navigateToAddPaymentCard?.invoke()
+                } else {
+                    navigateToBrowseBrands?.invoke()
                 }
             }
         }
     }
-
-
 }
+
 
 fun Fragment.scanResult(
     requestCode: Int,

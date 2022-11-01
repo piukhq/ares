@@ -33,10 +33,12 @@ object SharedPreferenceManager {
     private const val FIRST_OPEN_DATE = "first_open_date"
     private const val TOTAL_OPEN_COUNT = "total_open_count"
     private const val ADDED_NEW_PLL = "added_new_pll"
+    private const val BETA_FEATURE_ENABLED = "BETA_FEATURE_"
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
+    private const val NETWORK_EXPORTS = "network_exports"
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
@@ -185,6 +187,16 @@ object SharedPreferenceManager {
             it.putBoolean(ADDED_NEW_PLL, value)
         }
 
+    fun betaFeatureEnabled(slug: String): Boolean {
+        return preferences.getBoolean(BETA_FEATURE_ENABLED.plus(slug), false)
+    }
+
+    fun setBetaFeatureEnabled(slug: String, value: Boolean) {
+        preferences.edit {
+            it.putBoolean(BETA_FEATURE_ENABLED.plus(slug), value)
+        }
+    }
+
     var lastSeenTransactions: String?
         get() = preferences.getString(LAST_SEEN_TRANSACTIONS, null)
         set(value) = preferences.edit {
@@ -225,6 +237,13 @@ object SharedPreferenceManager {
         get() = preferences.getInt(SKIPPED_APP_VERSION, 0)
         set(value) = preferences.edit {
             it.putInt(SKIPPED_APP_VERSION, value)
+        }
+
+
+    var networkExports: String?
+        get() = preferences.getString(NETWORK_EXPORTS, null)
+        set(value) = preferences.edit {
+            it.putString(NETWORK_EXPORTS, value)
         }
 
     var loyaltyWalletPosition: Parcelable? = null

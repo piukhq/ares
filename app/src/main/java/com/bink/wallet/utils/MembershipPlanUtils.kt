@@ -19,7 +19,7 @@ object MembershipPlanUtils {
 
     fun getAccountStatus(
         membershipPlan: MembershipPlan,
-        membershipCard: MembershipCard
+        membershipCard: MembershipCard,
     ): LoginStatus {
         if (membershipPlan.feature_set?.has_points == true ||
             membershipPlan.feature_set?.transactions_available == true
@@ -44,7 +44,8 @@ object MembershipPlanUtils {
                 }
 
                 FAILED.status,
-                UNAUTHORISED.status -> {
+                UNAUTHORISED.status,
+                -> {
                     membershipCard.status?.reason_codes?.let { reasonCodes ->
                         if (reasonCodes.intersect(listOf(CardCodes.X201.code).toSet()).isNotEmpty()) {
                             return LoginStatus.STATUS_SIGN_UP_FAILED
@@ -85,7 +86,7 @@ object MembershipPlanUtils {
     fun getLinkStatus(
         membershipPlan: MembershipPlan,
         membershipCard: MembershipCard,
-        paymentCards: MutableList<PaymentCard>
+        paymentCards: MutableList<PaymentCard>,
     ): LinkStatus {
         when (membershipPlan.feature_set?.card_type) {
             CardType.PLL.type -> {
@@ -132,7 +133,8 @@ object MembershipPlanUtils {
                 }
             }
             CardType.VIEW.type,
-            CardType.STORE.type -> {
+            CardType.STORE.type,
+            -> {
                 return LinkStatus.STATUS_UNLINKABLE
             }
         }
@@ -141,7 +143,7 @@ object MembershipPlanUtils {
 
     fun existLinkedPaymentCards(
         membershipCard: MembershipCard,
-        paymentCards: MutableList<PaymentCard>
+        paymentCards: MutableList<PaymentCard>,
     ): Boolean {
         countLinkedPaymentCards(membershipCard, paymentCards)?.let {
             return it > 0
@@ -151,7 +153,7 @@ object MembershipPlanUtils {
 
     fun countLinkedPaymentCards(
         membershipCard: MembershipCard,
-        paymentCards: MutableList<PaymentCard>
+        paymentCards: MutableList<PaymentCard>,
     ): Int? {
         val paymentCardIds = mutableListOf<String>()
         paymentCards.forEach { paymentCard ->
@@ -175,7 +177,8 @@ object MembershipPlanUtils {
             val multiFormatWriter = MultiFormatWriter()
             val isSquare = when (membershipCard?.membershipCard?.card?.getBarcodeFormat()) {
                 BarcodeFormat.QR_CODE,
-                BarcodeFormat.AZTEC -> true
+                BarcodeFormat.AZTEC,
+                -> true
                 else -> false
             }
             val heightPx = context.toPixelFromDip(if (isSquare) 250f else 80f)
@@ -226,5 +229,30 @@ object MembershipPlanUtils {
         } else {
             return null
         }
+    }
+
+    fun createBarcode(context: Context, card: MembershipCard): Bitmap? {
+        card.card?.membership_id?.let {
+            val multiFormatWriter = MultiFormatWriter()
+            val heightPx = context.toPixelFromDip(80f)
+            val widthPx = context.toPixelFromDip(320f)
+            val format = card.card?.getBarcodeFormat() ?: BarcodeFormat.CODE_39
+
+            return try {
+                val bitMatrix: BitMatrix =
+                    multiFormatWriter.encode(
+                        it,
+                        format,
+                        widthPx.toInt(),
+                        heightPx.toInt()
+                    )
+                val barcodeEncoder = BarcodeEncoder()
+                barcodeEncoder.createBitmap(bitMatrix)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        return null
     }
 }

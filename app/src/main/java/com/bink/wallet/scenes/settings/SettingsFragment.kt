@@ -96,9 +96,22 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     @Composable
     fun SettingsScreen() {
+        val settingsList = SettingsItemsPopulation.populateItems(LocalContext.current.resources)
+        val uid = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)
+        RemoteConfigUtil().beta?.users?.firstOrNull { it.uid == uid }?.let {
+            settingsList.add(3,
+                SettingsItem(
+                    getString(R.string.settings_menu_beta),
+                    null,
+                    SettingsItemType.BETA,
+                    null
+                )
+            )
+        }
+
         Column(modifier = Modifier.fillMaxHeight()) {
             SettingsList(
-                settings = SettingsItemsPopulation.populateItems(LocalContext.current.resources),
+                settings = settingsList,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -383,6 +396,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 }
             }
 
+            SettingsItemType.BETA -> {
+                findNavController().navigateIfAdded(
+                    this,
+                    SettingsFragmentDirections.settingsToBeta()
+                )
+            }
+
             SettingsItemType.DEBUG_MENU -> {
                 findNavController().navigateIfAdded(
                     this,
@@ -430,7 +450,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 )
             }
             SettingsItemType.TERMS_AND_CONDITIONS,
-            SettingsItemType.PRIVACY_POLICY -> {
+            SettingsItemType.PRIVACY_POLICY,
+            -> {
                 item.url?.let { url ->
                     findNavController().navigate(
                         SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(url)

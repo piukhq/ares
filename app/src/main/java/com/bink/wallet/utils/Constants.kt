@@ -51,7 +51,7 @@ const val DATE_FORMAT = "dd/MM/yyyy"
 
 const val TERMS_AND_CONDITIONS_URL = "https://bink.com/terms-and-conditions/#privacy-policy"
 const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
-const val MAGIC_LINK_URL = "https://help.bink.com/hc/en-gb/articles/4404303824786"
+const val MAGIC_LINK_URL = "https://help.gb.bink.com/docs/managing-your-account.html"
 
 const val BARCODE = "barcode"
 const val CARD_NUMBER = "card_number"
@@ -74,6 +74,7 @@ const val MAGIC_LINK_SLUG = "matalan-reward-card"
 
 val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
 const val REMEMBER_DETAILS_KEY = "remember-my-details"
+const val ALWAYS_SHOW_BARCODE_KEY = "show-barcode-always"
 const val CLEAR_PREF_KEY = "clear_preferences"
 const val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
 const val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"

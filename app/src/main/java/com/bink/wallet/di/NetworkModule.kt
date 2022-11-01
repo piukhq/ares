@@ -6,6 +6,8 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
+import com.bink.wallet.model.NetworkActivity
+import com.bink.wallet.model.store
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
@@ -13,6 +15,7 @@ import com.bink.wallet.utils.enums.BackendVersion
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -67,6 +70,30 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
 
         val response = chain.proceed(newRequest.build())
+
+        if (BuildConfig.BUILD_TYPE != RELEASE_BUILD_TYPE) {
+            val sentAt = response.sentRequestAtMillis
+            val receivedAt = response.receivedResponseAtMillis
+
+            var responseBody = ""
+            try {
+                val copiedBody = response.peekBody(1000000L)
+                responseBody = copiedBody.string()
+            } catch (e: IllegalStateException) {
+            }
+
+            val networkActivity = NetworkActivity(
+                baseUrl = SharedPreferenceManager.storedApiUrl.toString(),
+                httpStatusCode = response.code.toString(),
+                requestBody = chain.request().body.bodyToString(),
+                responseBody = responseBody,
+                endpoint = chain.request().url.toString(),
+                responseTime = "${(receivedAt - sentAt)}ms"
+            )
+
+            networkActivity.store()
+        }
+
         response.networkResponse?.request?.url?.let {
             if (it.toString() == ADD_PAYMENT_CARD_URL) {
                 if (response.code == 200 || response.code == 201) {
@@ -118,6 +145,13 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
+}
+
+private fun RequestBody?.bodyToString(): String {
+    if (this == null) return ""
+    val buffer = okio.Buffer()
+    writeTo(buffer)
+    return buffer.readUtf8()
 }
 
 fun provideSpreedlyOkHttpClient(): OkHttpClient {

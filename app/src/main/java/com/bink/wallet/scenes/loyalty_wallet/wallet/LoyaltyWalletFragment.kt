@@ -505,22 +505,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             { logPaymentCardSuccess(it) })
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        requestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            null,
-            { navigateToAddPaymentCard() },
-            null
-        )
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -666,9 +650,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     )
                 )
             }
-            else ->
-                requestCameraPermissionAndNavigate(false, null)
-
         }
     }
 

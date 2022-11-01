@@ -24,16 +24,7 @@ data class BankCard(
 ) : Parcelable {
 
     companion object {
-        private const val TOKEN_LENGTH = 100
-
-        fun tokenGenerator(): String {
-            return StringUtils.randomString(TOKEN_LENGTH)
-        }
-
-        fun fingerprintGenerator(pan: String, expiryYear: String, expiryMonth: String): String {
-            // Based a hash of the pan, it's the key identifier of the card
-            return "$pan|$expiryMonth|$expiryYear".md5()
-        }
+        const val TOKEN_LENGTH = 100
     }
 
     fun isExpired(): Boolean {
