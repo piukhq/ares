@@ -86,9 +86,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
         }
 
-//        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
-//        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
-
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
         }
@@ -130,11 +127,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                             contentDescription = "Close"
                         )
                     }
-                    //composable function for leading icon
                 },
                 backgroundColor = MaterialTheme.colors.background
-            )//color code,
-
+            )
         }, content = { padding ->
             Column(
                 modifier = Modifier
@@ -358,7 +353,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         }
                     }
                 }
-                //Cancel button
             }
         }
 

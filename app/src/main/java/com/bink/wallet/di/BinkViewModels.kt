@@ -222,7 +222,7 @@ fun provideAddPaymentCardRepository(
 fun provideDataStore(context: Context): DataStore<Preferences> =
     PreferenceDataStoreFactory.create(
         produceFile = {
-            context.preferencesDataStoreFile("DS_NAME")
+            context.preferencesDataStoreFile("BINK_DATASTORE")
         }
     )
 

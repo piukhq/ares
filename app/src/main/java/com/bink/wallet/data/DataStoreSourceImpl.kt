@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 class DataStoreSourceImpl(private val dataStore:DataStore<Preferences>) : DataStoreSource {
 
     companion object{
-        val MODE_STATUS = stringPreferencesKey("MODE_STATUS")
+        val MODE_STATUS = stringPreferencesKey("THEME")
     }
 
     override suspend fun saveSelectedTheme(theme: String) {
@@ -22,7 +22,7 @@ class DataStoreSourceImpl(private val dataStore:DataStore<Preferences>) : DataSt
 
     override suspend fun getCurrentlySelectedTheme(): Flow<String> {
         return dataStore.data.map {
-            it[MODE_STATUS] ?: ThemeHelper.SYSTEM //Default of Android Q , without this code, Android Q can use this also
+            it[MODE_STATUS] ?: ThemeHelper.SYSTEM
         }
     }
 }
