@@ -259,7 +259,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             Dialog(onDismissRequest = { showDialog.value = false }) {
                 Column(
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(MaterialTheme.colors.surface)
                         .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
                 ) {
                     Text(
