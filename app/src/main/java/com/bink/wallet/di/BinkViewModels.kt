@@ -83,7 +83,7 @@ val viewModelModules = module {
 
     viewModel { BrowseBrandsViewModel() }
 
-    viewModel { BarcodeViewModel(get(),get()) }
+    viewModel { BarcodeViewModel(get(), get()) }
 
     viewModel { AddViewModel(get(), get()) }
 
@@ -129,7 +129,7 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get(), get(),get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
 
     viewModel { DeleteAccountViewModel(get()) }
 
@@ -167,6 +167,8 @@ val viewModelModules = module {
     viewModel { CheckInboxViewModel(get()) }
 
     viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
+
+    viewModel { BetaFeatureViewModel(get()) }
 }
 
 fun provideLoginRepository(
