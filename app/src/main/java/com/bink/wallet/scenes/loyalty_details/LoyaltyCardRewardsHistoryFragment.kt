@@ -3,12 +3,14 @@ package com.bink.wallet.scenes.loyalty_details
 import android.os.Bundle
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +30,7 @@ import com.bink.wallet.databinding.LoyaltyCardRewardsHistoryBinding
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.bindings.STAMP
 import com.bink.wallet.utils.dateFormatTransactionTime
@@ -54,14 +57,19 @@ class LoyaltyCardRewardsHistoryFragment :
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            viewModel.membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            viewModel.membershipPlan.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipCard.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
         binding.title.text = viewModel.membershipPlan.value?.account?.company_name
+        viewModel.getSelectedTheme()
 
         binding.composeView.setContent {
-            LoyaltyCardRewardsHistory(vouchers = viewModel.getFilteredVouchers())
+            AppTheme(viewModel.theme.value) {
+                LoyaltyCardRewardsHistory(vouchers = viewModel.getFilteredVouchers())
+            }
         }
     }
 
@@ -72,12 +80,14 @@ class LoyaltyCardRewardsHistoryFragment :
                 text = getString(R.string.rewards_history),
                 fontSize = 25.sp,
                 fontFamily = nunitoSans,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 text = getString(R.string.your_past_rewards),
                 fontSize = 18.sp,
                 fontFamily = nunitoSans,
+                color = MaterialTheme.colors.onSurface
             )
 
             if (vouchers.isNullOrEmpty()) {
@@ -96,14 +106,22 @@ class LoyaltyCardRewardsHistoryFragment :
 
     @Composable
     private fun EmptyState() {
-        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium)), horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painterResource(R.drawable.ic_empty_wallet), contentDescription = "Empty Wallet", modifier = Modifier.size(dimensionResource(id = R.dimen.rewards_history_image_size)))
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painterResource(R.drawable.ic_empty_wallet),
+                contentDescription = "Empty Wallet",
+                modifier = Modifier.size(dimensionResource(id = R.dimen.rewards_history_image_size))
+            )
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
             Text(
                 text = getString(R.string.no_rewards),
                 fontSize = 18.sp,
                 fontFamily = nunitoSans,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSurface
             )
 
         }
@@ -160,7 +178,13 @@ class LoyaltyCardRewardsHistoryFragment :
             colorResource(id = R.color.blue_inactive)
         }
 
-        LazyRow(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))) {
+        LazyRow(
+            modifier = Modifier
+                .padding(
+                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)
+                )
+        ) {
             voucher.earn?.target_value?.toInt()?.let {
                 items(it) {
                     Row(
@@ -242,7 +266,11 @@ class LoyaltyCardRewardsHistoryFragment :
         }
     }
 
-    private fun setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false): String {
+    private fun setTimestamp(
+        timeStamp: Long,
+        format: String = "%s",
+        shortMonth: Boolean = false
+    ): String {
         return String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
     }
 }

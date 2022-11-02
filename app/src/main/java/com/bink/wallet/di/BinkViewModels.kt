@@ -102,7 +102,7 @@ val viewModelModules = module {
 
     viewModel { VoucherDetailsViewModel() }
 
-    viewModel { LoyaltyCardRewardsHistoryViewModel() }
+    viewModel { LoyaltyCardRewardsHistoryViewModel(get()) }
 
     viewModel { PllEmptyViewModel(get()) }
 
