@@ -296,7 +296,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             text = stringResource(R.string.report_issue),
             fontFamily = nunitoSans,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = MaterialTheme.colors.onSurface,
             fontSize = 18.sp,
             textAlign = TextAlign.Center
         )

@@ -74,6 +74,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel.getSelectedTheme()
 
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
@@ -89,35 +90,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
         }
-
-        viewModel.getSelectedTheme()
-
-    }
-
-    @Composable
-    fun SettingsScreen() {
-        val settingsList = SettingsItemsPopulation.populateItems(LocalContext.current.resources)
-        val uid = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)
-        RemoteConfigUtil().beta?.users?.firstOrNull { it.uid == uid }?.let {
-            settingsList.add(3,
-                SettingsItem(
-                    getString(R.string.settings_menu_beta),
-                    null,
-                    SettingsItemType.BETA,
-                    null
-                )
-            )
-        }
-
-        Column(modifier = Modifier.fillMaxHeight()) {
-            SettingsList(
-                settings = settingsList,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        DeleteAccountDialog()
-        ThemeDialog()
 
     }
 
@@ -150,6 +122,34 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             ) { SettingsScreen() }
 
         })
+
+    }
+
+    @Composable
+    fun SettingsScreen() {
+        val settingsList = SettingsItemsPopulation.populateItems(LocalContext.current.resources)
+        val uid = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)
+        RemoteConfigUtil().beta?.users?.firstOrNull { it.uid == uid }?.let {
+            settingsList.add(
+                3,
+                SettingsItem(
+                    getString(R.string.settings_menu_beta),
+                    null,
+                    SettingsItemType.BETA,
+                    null
+                )
+            )
+        }
+
+        Column(modifier = Modifier.fillMaxHeight()) {
+            SettingsList(
+                settings = settingsList,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        DeleteAccountDialog()
+        ThemeDialog()
 
     }
 
