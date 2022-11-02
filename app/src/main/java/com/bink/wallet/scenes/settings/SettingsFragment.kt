@@ -102,7 +102,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     Text(
                         text = stringResource(id = viewModel.getSettingsTitle()),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(start = 30.dp)
+                        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_extra_large))
                     )
                 },
                 navigationIcon = {
