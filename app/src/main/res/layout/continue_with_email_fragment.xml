@@ -120,7 +120,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:buttonTint="@color/black"
                     android:fontFamily="@font/nunito_sans_light"
                     android:gravity="top"
                     android:textColor="@color/black"
