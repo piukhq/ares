@@ -350,10 +350,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         .fillMaxWidth()
                 ) {
                     radioButtons.forEach {
-                        Row() {
+                        Row {
                             RadioButton(
                                 selected = isSelected == it,
-                                modifier = Modifier.padding(8.dp),
+                                modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_small)),
                                 onClick = {
                                     viewModel.showThemeDialog.value = false
                                     viewModel.selectedTheme(it)
