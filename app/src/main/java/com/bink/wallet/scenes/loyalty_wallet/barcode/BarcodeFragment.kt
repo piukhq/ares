@@ -315,7 +315,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         Dialog(onDismissRequest = { showDialog.value = false }) {
             Column(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.background)
                     .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
             ) {
                 Text(
@@ -324,6 +324,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                         .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_small)),
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onSurface,
                     fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
