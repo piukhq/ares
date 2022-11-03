@@ -126,7 +126,7 @@
                     android:layout_marginStart="@dimen/loyalty_voucher_margin"
                     android:layout_marginTop="@dimen/date_margin_top"
                     android:fontFamily="@font/nunito_sans_light"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/text_size_description_smaller"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
