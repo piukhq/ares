@@ -83,7 +83,7 @@ fun GradientButton(
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(12.dp)
             )
         }
     }
