@@ -65,7 +65,6 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@string/enter_manually"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
                     app:layout_constraintStart_toEndOf="@+id/icon"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +77,6 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_light"
                     android:text="@string/enter_manually_subtitle"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_body"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

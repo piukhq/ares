@@ -18,7 +18,6 @@
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

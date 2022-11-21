@@ -21,6 +21,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentBetaFeatureBinding
 import com.bink.wallet.model.BetaFeature
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.RemoteConfigUtil
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -56,14 +57,17 @@ class BetaFeatureFragment : BaseFragment<BetaFeatureViewModel, FragmentBetaFeatu
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            Surface(color = MaterialTheme.colors.background) {
-                BetaFeatures()
+            AppTheme(viewModel.theme.value) {
+                Surface(color = MaterialTheme.colors.background) {
+                    BetaFeatures()
+                }
             }
         }
         getToggledFeatures(RemoteConfigUtil().beta?.features)?.let {
             betaFeatures.value = it
         }
 
+        viewModel.getSelectedTheme()
         binding.tvBetaFeaturesTitle.text = getString(R.string.beta_feature_title)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
 
@@ -80,10 +84,15 @@ class BetaFeatureFragment : BaseFragment<BetaFeatureViewModel, FragmentBetaFeatu
 
                 val isChecked = remember { mutableStateOf(feature.locallyEnabled) }
 
-                Row(verticalAlignment = Alignment.CenterVertically,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .height(dimensionResource(id = R.dimen.settings_box_height))
-                        .padding(top = dimensionResource(id = R.dimen.margin_padding_size_small_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_small_medium))) {
+                        .padding(
+                            top = dimensionResource(id = R.dimen.margin_padding_size_small_medium),
+                            bottom = dimensionResource(id = R.dimen.margin_padding_size_small_medium)
+                        )
+                ) {
                     Text(
                         modifier = Modifier.weight(1f),
                         text = feature.title,
@@ -116,7 +125,8 @@ class BetaFeatureFragment : BaseFragment<BetaFeatureViewModel, FragmentBetaFeatu
 
     private fun getToggledFeatures(features: ArrayList<BetaFeature>?): ArrayList<BetaFeature>? {
         features?.forEachIndexed { index, feature ->
-            features[index].locallyEnabled = SharedPreferenceManager.betaFeatureEnabled(feature.slug)
+            features[index].locallyEnabled =
+                SharedPreferenceManager.betaFeatureEnabled(feature.slug)
         }
 
         return features

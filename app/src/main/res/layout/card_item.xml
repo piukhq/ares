@@ -15,14 +15,12 @@
         style="@style/ShadowedCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:cardBackgroundColor="@color/white"
+
         app:cardUseCompatPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/card_height"
-            android:background="@android:color/white"
             android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView

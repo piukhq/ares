@@ -29,7 +29,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    compileSdkVersion 32
+    compileSdkVersion 33
     signingConfigs {
         binkSigningConfig {
             storeFile file('bink-keystore.jks')
@@ -47,7 +47,7 @@ android {
     defaultConfig {
         applicationId "com.bink.wallet"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode buildNumber
         versionName "2.3.22"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -157,7 +157,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.10'
     }
     android.ndkVersion '21.3.6528147'
 
@@ -201,9 +200,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
 
     // navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.3.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
 
     // retrofi & moshi
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -289,8 +288,8 @@ dependencies {
 
     /**Compose**/
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation "androidx.compose.ui:ui:1.1.1"
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
@@ -304,6 +303,8 @@ dependencies {
     
     //Coil
     implementation("io.coil-kt:coil-compose:2.1.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //Maps
     implementation 'com.google.maps.android:maps-compose:2.3.0'
