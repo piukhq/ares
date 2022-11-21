@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -63,6 +64,7 @@ fun <T> GridItems(
 fun GradientButton(
     text: String,
     modifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier,
     onClick: () -> Unit = { },
 ) {
     Spacer(modifier = Modifier.height(16.dp))
@@ -79,11 +81,12 @@ fun GradientButton(
         ) {
             Text(
                 text = text,
+                textAlign = TextAlign.Center,
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 fontSize = 18.sp,
-                modifier = Modifier.padding(12.dp)
+                modifier = textModifier
             )
         }
     }

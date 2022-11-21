@@ -19,17 +19,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.model.OnboardingItem
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.GradientButton
-import com.bink.wallet.utils.ONBOARDING_SCROLL_DURATION_SECONDS
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.nunitoSans
+import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -38,6 +37,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
 
@@ -45,6 +45,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         get() = R.layout.onboarding_fragment
 
     override val viewModel: OnboardingViewModel by viewModel()
+
+    private var debugClickCounter = 0
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -105,6 +107,13 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             Spacer(Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_large)))
 
             HorizontalPager(
+                modifier = Modifier.noRippleClickable {
+                    debugClickCounter++
+                    if (debugClickCounter == 3) {
+                        debugClickCounter = 0
+                        openSettingsPage()
+                    }
+                },
                 count = onboardingSteps.size,
                 state = pagerState
             ) { index ->
@@ -128,9 +137,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
             GradientButton(text = getString(R.string.continue_with_email), modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = dimensionResource(id = R.dimen.margin_padding_size_large), end = dimensionResource(id = R.dimen.margin_padding_size_large)), onClick = {
-                navigateToNextScreen()
-            })
+                .padding(start = dimensionResource(id = R.dimen.continue_button_padding), end = dimensionResource(id = R.dimen.continue_button_padding)),
+                textModifier = Modifier.padding(dimensionResource(id = R.dimen.continue_button_text_padding)),
+                onClick = {
+                    navigateToNextScreen()
+                })
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_large)))
 
@@ -184,6 +195,17 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         )
         //ONBOARDING START FOR REGISTER
         logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_REGISTER))
+    }
+
+    private fun openSettingsPage() {
+        if (BuildConfig.BUILD_TYPE.lowercase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+            parentFragment?.let {
+                findNavController().navigateIfAdded(
+                    it,
+                    OnboardingFragmentDirections.onboardingToDebug()
+                )
+            }
+        }
     }
 
 
