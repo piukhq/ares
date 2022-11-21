@@ -203,6 +203,10 @@
             android:id="@+id/add_to_add_loyalty"
             app:destination="@id/add_loyalty_card" />
 
+        <action
+            android:id="@+id/add_to_add_card"
+            app:destination="@+id/addCardFragment" />
+
     </fragment>
 
     <fragment

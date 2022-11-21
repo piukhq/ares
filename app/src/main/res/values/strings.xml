@@ -362,6 +362,7 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
     <string name="clear_image_title">Clear image cache</string>
     <string name="clear_image_body">Resetting glide memory</string>
+    <string name="export_network">Export Recent Network Activity</string>
     <string name="current_token_title">Current token</string>
     <string name="current_token_copied">Copied token to clipboard</string>
 
@@ -602,11 +603,13 @@
     <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
     <string name="scan_failure_title">Error</string>
     <string name="scan_failure_body">The card you scanned was not correct, please scan your %1$s card </string>
+    <string name="scan_non_supported_body">The card you scanned was not supported by Bink</string>
     <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
     <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
 
     <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
     <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
+    <string name="add_loyalty_card_permissions_denied_cta_gallery">Add from Photo Library</string>
 
     <!-- WebView -->
     <string name="webview_error_title">Error</string>
@@ -641,6 +644,7 @@
     <string name="account_delete_failed">Account deletion failed, please contact us</string>
     <string name="account_delete_success">Account deletion is successful</string>
     <string name="menu_newest">Newest</string>
+    <string name="menu_recent">Recent</string>
     <string name="menu_custom">Custom</string>
     <string name="newest_sort_title">Changing Sort</string>
 

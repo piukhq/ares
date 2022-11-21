@@ -37,11 +37,14 @@ object SharedPreferenceManager {
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
+    private const val LOYALTY_WALLET_RECENT_ORDER = "loyalty_wallet_recent_order"
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
+    private const val NETWORK_EXPORTS = "network_exports"
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
     private const val ALLOW_BACK_ON_DELETE = "allow_back_on_delete"
+    private const val SORT_WALLET_BY_RECENT = "sort_wallet_by_recent"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -214,6 +217,18 @@ object SharedPreferenceManager {
             it.putString(LOYALTY_WALLET_ORDER, value)
         }
 
+    var loyaltyWalletRecentOrder: String?
+        get() = preferences.getString(LOYALTY_WALLET_RECENT_ORDER, null)
+        set(value) = preferences.edit {
+            it.putString(LOYALTY_WALLET_RECENT_ORDER, value)
+        }
+
+    var orderWalletByRecent: Boolean
+        get() = preferences.getBoolean(SORT_WALLET_BY_RECENT, false)
+        set(value) = preferences.edit {
+            it.putBoolean(SORT_WALLET_BY_RECENT, value)
+        }
+
     var paymentWalletOrder: String?
         get() = preferences.getString(PAYMENT_WALLET_ORDER, null)
         set(value) = preferences.edit {
@@ -236,6 +251,13 @@ object SharedPreferenceManager {
         get() = preferences.getInt(SKIPPED_APP_VERSION, 0)
         set(value) = preferences.edit {
             it.putInt(SKIPPED_APP_VERSION, value)
+        }
+
+
+    var networkExports: String?
+        get() = preferences.getString(NETWORK_EXPORTS, null)
+        set(value) = preferences.edit {
+            it.putString(NETWORK_EXPORTS, value)
         }
 
     var loyaltyWalletPosition: Parcelable? = null

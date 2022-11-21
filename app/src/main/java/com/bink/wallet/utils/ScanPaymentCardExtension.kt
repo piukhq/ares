@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
@@ -15,13 +16,16 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.getbouncer.cardscan.ui.CardScanActivity
 import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 
 fun Fragment.requestCameraPermissionAndNavigate(
     requestPermissionLauncher: ActivityResultLauncher<String>?,
     shouldNavigateToScanLoyaltyCard: Boolean,
     navigateToScanLoyaltyCard: (() -> Unit)?,
     navigateToAddPaymentCard: (() -> Unit)?,
-    navigateToBrowseBrands: (() -> Unit)?
+    navigateToBrowseBrands: (() -> Unit)?,
+    galleryResult: ActivityResultLauncher<String>? = null,
 ) {
 
     SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
@@ -47,7 +51,7 @@ fun Fragment.requestCameraPermissionAndNavigate(
             // permission for a specific feature to behave as expected. In this UI,
             // include a "cancel" or "no thanks" button that allows the user to
             // continue using your app without granting the permission.
-            onRequestDenied(navigateToAddPaymentCard, navigateToBrowseBrands)
+            onRequestDenied(navigateToAddPaymentCard, navigateToBrowseBrands, galleryResult)
 
         }
         else -> {
@@ -63,9 +67,10 @@ fun Fragment.requestCameraPermissionAndNavigate(
 
 fun Fragment.onRequestDenied(
     navigateToAddPaymentCard: (() -> Unit)?,
-    navigateToBrowseBrands: (() -> Unit)?
+    navigateToBrowseBrands: (() -> Unit)?,
+    galleryResult: ActivityResultLauncher<String>? = null,
 ) {
-    DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+    DialogFactory.showPermissionsSettingsDialog(requireActivity(), galleryResult) {
         if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
             navigateToAddPaymentCard?.invoke()
         } else {
@@ -78,7 +83,8 @@ fun Fragment.requestPermissionsResult(
     navigateToScanLoyaltyCard: (() -> Unit)?,
     navigateToAddPaymentCard: (() -> Unit)?,
     navigateToBrowseBrands: (() -> Unit)?,
-    isPermissionGranted: Boolean
+    isPermissionGranted: Boolean,
+    galleryResult: ActivityResultLauncher<String>? = null,
 ) {
     if (isPermissionGranted) {
         if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
@@ -94,7 +100,7 @@ fun Fragment.requestPermissionsResult(
             )
 
         if (!shouldShowPermissionExplanation) {
-            DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+            DialogFactory.showPermissionsSettingsDialog(requireActivity(), galleryResult) {
                 if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                     navigateToAddPaymentCard?.invoke()
                 } else {
@@ -105,13 +111,33 @@ fun Fragment.requestPermissionsResult(
     }
 }
 
+fun Fragment.handleGalleryResult(uri: Uri?, callback: (String?) -> Unit) {
+    if (uri != null) {
+        val inputImage = InputImage.fromFilePath(requireContext(), uri)
+        val scanner = BarcodeScanning.getClient()
+
+        scanner.process(inputImage)
+            .addOnSuccessListener {
+                if (it.isNullOrEmpty()) {
+                    callback(null)
+                } else {
+                    callback(it[0].displayValue)
+                }
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
+    }
+
+}
+
 
 fun Fragment.scanResult(
     requestCode: Int,
     resultCode: Int,
     data: Intent?,
     navigateToAddPaymentCard: (String) -> Unit,
-    logPaymentCardSuccess: (Boolean) -> Unit
+    logPaymentCardSuccess: (Boolean) -> Unit,
 ) {
     if (CardScanActivity.isScanResult(requestCode)) {
         val cardActivityResultHandler = object : CardScanActivityResultHandler {

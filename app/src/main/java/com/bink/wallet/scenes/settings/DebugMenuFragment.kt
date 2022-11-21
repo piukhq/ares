@@ -3,12 +3,16 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.DebugMenuEditTextBinding
@@ -22,6 +26,7 @@ import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
@@ -109,6 +114,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
             DebugItemType.RESET_CACHE -> {
                 clearCache()
+            }
+            DebugItemType.EXPORT_NETWORK -> {
+                exportNetworkRequests(SharedPreferenceManager.networkExports)
             }
             DebugItemType.CURRENT_TOKEN -> {
                 //Copy to clip board and pop toast
@@ -215,6 +223,30 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     private fun clearCache() {
         Glide.get(requireContext()).clearMemory()
         Toast.makeText(requireContext(), "Glide cache cleared", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun exportNetworkRequests(content: String?) {
+        requireContext().openFileOutput("networkRequests.txt", Context.MODE_PRIVATE).use {
+            it.write(content?.toByteArray())
+        }
+
+        val file = File(requireContext().filesDir, "networkRequests.txt")
+
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            BuildConfig.APPLICATION_ID + ".provider",
+            file
+        )
+
+        val intent = Intent(Intent.ACTION_SEND)
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+
+        intent.type = "*/*"
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+        startActivity(intent)
     }
 
     private fun applyChanges() {

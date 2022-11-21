@@ -13,5 +13,6 @@ enum class DebugItemType : Parcelable {
     FORCE_CRASH,
     CARD_ON_BOARDING,
     RESET_CACHE,
+    EXPORT_NETWORK,
     CURRENT_TOKEN
 }
