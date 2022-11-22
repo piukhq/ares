@@ -188,7 +188,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation"androidx.fragment:fragment-ktx:$fragment_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     implementation "androidx.security:security-crypto:1.1.0-alpha01"
 
@@ -231,7 +231,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation 'com.scottyab:rootbeer-lib:0.1.0'
-    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
     api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
