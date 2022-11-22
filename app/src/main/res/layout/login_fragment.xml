@@ -14,7 +14,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <android.widget.Toolbar
             android:id="@+id/toolbar"
@@ -33,7 +34,6 @@
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/log_in_email_text"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,6 @@
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_light"
             android:text="@string/log_in_screen_description"
-            android:textColor="@color/black"
             android:textSize="@dimen/text_size_description_big"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +62,6 @@
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/email_text"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_body_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +77,6 @@
             android:hint="@string/enter_email_text"
             android:inputType="textEmailAddress"
             android:text="@={viewModel.email}"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +92,6 @@
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/password_text"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_body_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +107,6 @@
             android:hint="@string/enter_password"
             android:inputType="textPassword"
             android:text="@={viewModel.password}"
-            android:textColor="@color/black"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,7 +145,6 @@
             android:focusable="true"
             android:fontFamily="@font/nunito_sans_bold"
             android:text="@string/use_magic_link"
-            android:textColor="@color/black"
             android:textColorLink="@color/blue_accent"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"

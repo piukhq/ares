@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -81,7 +82,7 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(
                 this,
-                LoyaltyCardDetailsFragmentDirections.detailToHome(),
+                LoyaltyCardDetailsFragmentDirections.detailToHome(false),
                 currentDestination
             )
 
@@ -110,8 +111,21 @@ class LoyaltyCardDetailsFragment :
         setLocationModuleClickListener()
         handleFootersListeners()
 
-        val colorDrawable =
-            ColorDrawable(ContextCompat.getColor(requireContext(), android.R.color.white))
+        val nightModeFlags =
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        val colorDrawable = if (nightModeFlags != Configuration.UI_MODE_NIGHT_YES) ColorDrawable(
+            ContextCompat.getColor(
+                requireContext(),
+                android.R.color.white
+            )
+        ) else ColorDrawable(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.dark_theme_background
+            )
+        )
+
         colorDrawable.alpha = MIN_ALPHA.toInt()
         binding.toolbar.background = colorDrawable
 

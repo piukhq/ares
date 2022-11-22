@@ -183,12 +183,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             } else {
                 currentMembershipPlan?.let {
                     findNavController().navigate(
-                        AddJoinFragmentDirections.addJoinToAddCardFragment(
-                            it,
-                            isRetryJourney,
-                            isFromNoReasonCodes,
-                            membershipCardId.toString()
-                        )
+                        AddJoinFragmentDirections.addJoinToAddCardFragment(it,membershipCardId.toString(),isRetryJourney,isFromNoReasonCodes)
                     )
 
                 }

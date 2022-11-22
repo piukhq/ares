@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/forms_checkbox_margin"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
-            android:buttonTint="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

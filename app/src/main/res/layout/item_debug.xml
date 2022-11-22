@@ -28,23 +28,20 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_sans"
-                android:text="@{debugItem.title}"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline" />
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans"
+                    android:text="@{debugItem.title}"
+                    android:textSize="@dimen/size_sub_headline" />
 
             <TextView
-                android:id="@+id/value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/custom_margin_add_fragment"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@{debugItem.content}"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_body_large" />
+                    android:id="@+id/value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:text="@{debugItem.content}"
+                    android:textSize="@dimen/size_body_large" />
         </LinearLayout>
 
         <ImageView

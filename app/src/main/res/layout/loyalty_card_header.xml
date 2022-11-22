@@ -66,19 +66,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/nunito_sans"
-                                android:textColor="@color/black"
                                 android:textSize="@dimen/size_body"
-                                tools:text="@string/bonus_card_number"
-                                tools:textColor="@color/black" />
+                                tools:text="@string/bonus_card_number" />
 
                             <TextView
                                 android:id="@+id/sb_barcode_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/nunito_sans_extrabold"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/size_body"
-                                tools:textColor="@color/black" />
+                                android:textSize="@dimen/size_body" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -230,10 +226,8 @@
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
-                    tools:text="@string/barcode_card_number"
-                    tools:textColor="@color/black" />
+                    tools:text="@string/barcode_card_number" />
 
                 <TextView
                     android:id="@+id/no_barcode_card_number"
@@ -241,9 +235,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_extrabold"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/size_sub_headline"
-                    tools:textColor="@color/black" />
+                    android:textSize="@dimen/size_sub_headline" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -255,7 +247,7 @@
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:text="@string/tap_card"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
