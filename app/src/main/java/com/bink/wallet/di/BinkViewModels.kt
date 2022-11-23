@@ -154,7 +154,7 @@ val viewModelModules = module {
 
     viewModel { PreferencesViewModel(get()) }
 
-    viewModel { OnboardingViewModel(get(), get()) }
+    viewModel { OnboardingViewModel(get(), get(), get()) }
 
     viewModel { MainViewModel(get()) }
 

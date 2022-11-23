@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toolbar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -23,6 +24,7 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.model.OnboardingItem
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
@@ -59,30 +61,35 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         logScreenView(ONBOARDING_VIEW)
 
         viewModel.clearWallets()
+        viewModel.getSelectedTheme()
 
         val onboardingSteps = arrayListOf(
-            OnboardingItem(R.drawable.ic_onboarding_page1,
+            OnboardingItem(
+                R.drawable.ic_onboarding_page1,
                 getString(R.string.page_1_title),
                 getString(R.string.page_1_description)
             ),
 
-            OnboardingItem(R.drawable.ic_onboarding_page2,
+            OnboardingItem(
+                R.drawable.ic_onboarding_page2,
                 getString(R.string.page_2_title),
                 getString(R.string.page_2_description)
             ),
 
-            OnboardingItem(R.drawable.ic_onboarding_page3,
+            OnboardingItem(
+                R.drawable.ic_onboarding_page3,
                 getString(R.string.page_3_title),
                 getString(R.string.page_3_description)
             )
         )
 
         binding.composeView.setContent {
-            Surface(color = Color.White) {
-                OnboardingScreen(onboardingSteps = onboardingSteps)
+            AppTheme(theme = viewModel.theme.value) {
+                Surface {
+                    OnboardingScreen(onboardingSteps = onboardingSteps)
+                }
             }
         }
-
     }
 
     @OptIn(ExperimentalPagerApi::class)
@@ -127,7 +134,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
             HorizontalPagerIndicator(
                 pagerState = pagerState,
-                activeColor = Color.Black,
+                activeColor = MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
@@ -137,7 +144,10 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
             GradientButton(text = getString(R.string.continue_with_email), modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = dimensionResource(id = R.dimen.continue_button_padding), end = dimensionResource(id = R.dimen.continue_button_padding)),
+                .padding(
+                    start = dimensionResource(id = R.dimen.continue_button_padding),
+                    end = dimensionResource(id = R.dimen.continue_button_padding)
+                ),
                 textModifier = Modifier.padding(dimensionResource(id = R.dimen.continue_button_text_padding)),
                 onClick = {
                     navigateToNextScreen()
@@ -150,7 +160,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     @Composable
     private fun OnboardingPage(onboardingItem: OnboardingItem, modifier: Modifier) {
-        Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Image(
                 painter = painterResource(onboardingItem.image),
                 contentDescription = "Onboarding",
