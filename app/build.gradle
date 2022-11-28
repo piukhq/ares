@@ -177,6 +177,7 @@ dependencies {
     def fragment_version = "1.5.0"
 
     implementation files('../libs/androidcoredebug.aar')
+    implementation files('../libs/paymentsdk.aar')
 
     kapt("androidx.lifecycle:lifecycle-compiler:2.3.1")
     kapt("com.github.bumptech.glide:compiler:4.9.0")
