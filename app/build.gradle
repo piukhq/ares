@@ -187,7 +187,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation"androidx.fragment:fragment-ktx:$fragment_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     implementation "androidx.security:security-crypto:1.1.0-alpha01"
 
@@ -230,7 +230,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation 'com.scottyab:rootbeer-lib:0.1.0'
-    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
     api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
@@ -294,6 +293,10 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.5.0-alpha03'
+
+    //Pager
+    implementation "com.google.accompanist:accompanist-pager:0.26.0-alpha"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.26.0-alpha"
 
     /** Lottie **/
     implementation 'com.airbnb.android:lottie:4.0.0'

@@ -241,5 +241,7 @@
     <dimen name="barcode_icon_size">25dp</dimen>
     <dimen name="map_location_card_icon_size">30dp</dimen>
     <dimen name="location_gif_size">50dp</dimen>
+    <dimen name="continue_button_padding">48dp</dimen>
+    <dimen name="continue_button_text_padding">12dp</dimen>
 
 </resources>
