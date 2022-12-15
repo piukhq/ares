@@ -51,3 +51,7 @@
 
 # Having minify enabled seems to remove some methods from crypto lib causing a crash on version 1.1.0-alpha01
 -keep class com.google.crypto.** { *; }
+
+# Retain generic signatures of TypeToken and its subclasses with R8 version 3.0 and higher.
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
