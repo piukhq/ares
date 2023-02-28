@@ -173,7 +173,10 @@ class LoyaltyCardDetailsFragment :
 
             membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
                 binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
+
+                setupGoToSite(Color.parseColor(secondaryCardColour))
             }
+
         }
 
         val titleMessage =
@@ -407,7 +410,6 @@ class LoyaltyCardDetailsFragment :
                     aboutText,
                     summary,
                     description2 = description,
-                    firstButtonText = getString(R.string.go_to_site)
                 ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
             ),
             currentDestination
@@ -484,6 +486,13 @@ class LoyaltyCardDetailsFragment :
                 FirebaseEvents.FIREBASE_REQUEST_REVIEW,
                 getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS)
             )
+        }
+    }
+
+    private fun setupGoToSite(backgroundColor: Int){
+        binding.goToSite.setBackgroundColor(backgroundColor)
+        binding.goToSite.setOnClickListener {
+            findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(viewModel.membershipPlan.value?.account?.plan_url ?: ""))
         }
     }
 
