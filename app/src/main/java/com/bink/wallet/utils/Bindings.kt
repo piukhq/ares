@@ -341,7 +341,7 @@ private fun copyCardNumber(context: Context, cardNumber: String) {
     val clip = ClipData.newPlainText("Card Number", cardNumber)
     clipboard.setPrimaryClip(clip)
     Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_LONG).show()
-    
+
     val mixpanelKey = if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
     val mixpanel = MixpanelAPI.getInstance(context, mixpanelKey)
     mixpanel.track(MixpanelEvents.COPY_CARD)
