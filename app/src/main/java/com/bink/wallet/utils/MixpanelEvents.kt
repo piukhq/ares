@@ -35,4 +35,5 @@ object MixpanelEvents {
     const val FORCE_BARCODE = "Show barcode always"
     const val SHOW_LOCATIONS = "Tapped Show Locations"
     const val SHOW_DIRECTIONS = "Launch Google Maps for Directions"
+    const val COPY_CARD = "Card number copied to pasteboard"
 }

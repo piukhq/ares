@@ -50,6 +50,7 @@
     <dimen name="voucher_item_size">24dp</dimen>
     <dimen name="voucher_circle_size">18dp</dimen>
     <dimen name="voucher_circle_start_padding">4dp</dimen>
+    <dimen name="copy_card_size">28dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
