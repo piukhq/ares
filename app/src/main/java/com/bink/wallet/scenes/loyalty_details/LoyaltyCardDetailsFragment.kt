@@ -492,6 +492,7 @@ class LoyaltyCardDetailsFragment :
     private fun setupGoToSite(backgroundColor: Int){
         binding.goToSite.setBackgroundColor(backgroundColor)
         binding.goToSite.setOnClickListener {
+            logMixpanelEvent(MixpanelEvents.GO_TO_SITE)
             findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(viewModel.membershipPlan.value?.account?.plan_url ?: ""))
         }
     }
