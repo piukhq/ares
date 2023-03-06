@@ -306,6 +306,16 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/voucher_tiles"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linked_wrapper" />
+
                     <Button
                         android:id="@+id/go_to_site"
                         android:layout_width="0dp"
@@ -316,19 +326,9 @@
                         android:text="@string/go_to_site"
                         android:textColor="@color/white"
                         android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintEnd_toEndOf="@+id/linked_wrapper"
-                        app:layout_constraintStart_toStartOf="@+id/points_wrapper"
-                        app:layout_constraintTop_toBottomOf="@+id/points_wrapper" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/voucher_tiles"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:visibility="visible"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/go_to_site" />
+                        app:layout_constraintEnd_toEndOf="@+id/voucher_tiles"
+                        app:layout_constraintStart_toStartOf="@+id/voucher_tiles"
+                        app:layout_constraintTop_toBottomOf="@+id/show_location_wrapper" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/offer_tiles"
@@ -339,7 +339,7 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/show_location_wrapper" />
+                        app:layout_constraintTop_toBottomOf="@+id/go_to_site" />
 
                     <View
                         android:layout_width="match_parent"
