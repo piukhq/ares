@@ -1,9 +1,9 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -89,6 +89,8 @@ class LoyaltyCardRewardsHistoryFragment :
                 fontFamily = nunitoSans,
                 color = MaterialTheme.colors.onSurface
             )
+
+            Log.d("lololololol", vouchers.toString())
 
             if (vouchers.isNullOrEmpty()) {
                 EmptyState()
@@ -225,11 +227,18 @@ class LoyaltyCardRewardsHistoryFragment :
     }
 
     private fun getVoucherSubTitle(voucherEarn: Earn?): String {
-        return getString(
-            R.string.voucher_stamp_subtext,
-            voucherEarn?.target_value?.toInt(),
-            voucherEarn?.suffix
-        )
+        return if (voucherEarn?.type == "accumulator") {
+            getString(
+                R.string.voucher_acc_subtext,
+                "${voucherEarn.prefix ?: ""}${voucherEarn.target_value?.toInt()}"
+            )
+        } else {
+            getString(
+                R.string.voucher_stamp_subtext,
+                voucherEarn?.target_value?.toInt(),
+                voucherEarn?.suffix
+            )
+        }
     }
 
     private fun getVoucherHeadline(voucher: Voucher): String {
@@ -269,7 +278,7 @@ class LoyaltyCardRewardsHistoryFragment :
     private fun setTimestamp(
         timeStamp: Long,
         format: String = "%s",
-        shortMonth: Boolean = false
+        shortMonth: Boolean = false,
     ): String {
         return String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
     }
