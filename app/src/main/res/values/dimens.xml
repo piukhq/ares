@@ -28,6 +28,7 @@
     <dimen name="rounder_corner_edit_text_padding">10dp</dimen>
     <dimen name="rounder_corner_edit_text_width">2dp</dimen>
     <dimen name="rounder_corner_edit_text_corner_radius">20dp</dimen>
+    <dimen name="theme_selector_dialog_padding">20dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
