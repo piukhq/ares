@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
@@ -32,6 +31,7 @@ import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.bindings.ACCUMULATOR
 import com.bink.wallet.utils.bindings.STAMP
 import com.bink.wallet.utils.dateFormatTransactionTime
 import com.bink.wallet.utils.enums.VoucherStates
@@ -156,7 +156,15 @@ class LoyaltyCardRewardsHistoryFragment :
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.ExtraBold
                 )
-                DisplayVoucherCount(voucher = voucher)
+                if (voucher.earn?.type == ACCUMULATOR) {
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                    PercentageProgressBar(voucher = voucher)
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+
+                } else {
+                    DisplayVoucherCount(voucher = voucher)
+                }
+
                 val dateToDisplay =
                     if (voucher.state == VoucherStates.REDEEMED.state) voucher.date_redeemed else voucher.expiry_date
                 dateToDisplay?.let {
@@ -211,7 +219,24 @@ class LoyaltyCardRewardsHistoryFragment :
                 }
             }
         }
+    }
 
+    @Composable
+    fun PercentageProgressBar(voucher: Voucher) {
+        val colour = if (voucher.state == VoucherStates.REDEEMED.state) {
+            colorResource(id = R.color.voucher_redeemed_background)
+        } else {
+            colorResource(id = R.color.blue_inactive)
+        }
+
+        LinearProgressIndicator(
+            progress = (voucher.earn?.value ?: 0f) / (voucher.earn?.target_value ?: 1f),
+            color = colour,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.voucher_progress_bar_size))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.voucher_progress_bar_size)))
+        )
     }
 
     private fun getVoucherTitle(voucherBurn: Burn?): String {
@@ -227,7 +252,7 @@ class LoyaltyCardRewardsHistoryFragment :
     }
 
     private fun getVoucherSubTitle(voucherEarn: Earn?): String {
-        return if (voucherEarn?.type == "accumulator") {
+        return if (voucherEarn?.type == ACCUMULATOR) {
             getString(
                 R.string.voucher_acc_subtext,
                 "${voucherEarn.prefix ?: ""}${voucherEarn.target_value?.toInt()}"

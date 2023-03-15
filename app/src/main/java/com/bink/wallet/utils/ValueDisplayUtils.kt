@@ -32,6 +32,7 @@ object ValueDisplayUtils {
                 append(SPACE)
             }
             if (!suffix.isNullOrEmpty()) {
+                append(SPACE)
                 append(suffix)
                 append(SPACE)
             }
