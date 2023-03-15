@@ -90,8 +90,6 @@ class LoyaltyCardRewardsHistoryFragment :
                 color = MaterialTheme.colors.onSurface
             )
 
-            Log.d("lololololol", vouchers.toString())
-
             if (vouchers.isNullOrEmpty()) {
                 EmptyState()
             } else {
