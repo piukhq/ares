@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.compose.ui.graphics.Color.Companion.Black
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
