@@ -1,5 +1,8 @@
 package com.bink.wallet.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -35,6 +38,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*
@@ -112,7 +116,8 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
         val multiFormatWriter = MultiFormatWriter()
         val isSquare = when (membershipCard?.membershipCard?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
-            BarcodeFormat.AZTEC -> true
+            BarcodeFormat.AZTEC,
+            -> true
             else -> false
         }
         val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
@@ -228,7 +233,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
         when (val barcodeFormat = card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
-            BarcodeFormat.AZTEC -> {
+            BarcodeFormat.AZTEC,
+            -> {
                 binding.tapCard.text =
                     if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(
                         R.string.tap_to_enlarge_aztec
@@ -238,6 +244,9 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
                 binding.sbBarcodeText.text = cardNumber
+                binding.sbCopyNumber.setOnClickListener {
+                    copyCardNumber(context, cardNumber)
+                }
             }
             BarcodeFormat.ITF, BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(
                     barcodeFormat,
@@ -272,7 +281,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                     e: GlideException?,
                     model: Any?,
                     target: Target<Drawable>?,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean = false
 
                 override fun onResourceReady(
@@ -280,7 +289,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                     model: Any?,
                     target: Target<Drawable>?,
                     dataSource: DataSource?,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean {
                     binding.container.layoutParams = FrameLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -312,7 +321,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 private fun LoyaltyCardHeader.loadRectangularBarcode(
     plan: MembershipPlan?,
     card: MembershipCard?,
-    cardNumber: String
+    cardNumber: String,
 ) {
     binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
     binding.rbTitle.text = context.getString(R.string.barcode_card_number)
@@ -320,11 +329,27 @@ private fun LoyaltyCardHeader.loadRectangularBarcode(
     binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
     binding.rectangleBarcodeContainer.visibility = View.VISIBLE
     binding.rbBarcodeText.text = cardNumber
+    binding.rbCopyNumber.setOnClickListener {
+        copyCardNumber(context, cardNumber)
+    }
+
+}
+
+private fun copyCardNumber(context: Context, cardNumber: String) {
+    //Copy to clip board and pop toast
+    val clipboard = context.getSystemService(ClipboardManager::class.java)
+    val clip = ClipData.newPlainText("Card Number", cardNumber)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_LONG).show()
+
+    val mixpanelKey = if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
+    val mixpanel = MixpanelAPI.getInstance(context, mixpanelKey)
+    mixpanel.track(MixpanelEvents.COPY_CARD)
 }
 
 private fun LoyaltyCardHeader.loadNoBarcodeState(
     plan: MembershipPlan?,
-    card: MembershipCard?
+    card: MembershipCard?,
 ) {
     binding.container.visibility = View.GONE
     binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
@@ -366,7 +391,7 @@ fun TextView.textBalance(card: MembershipCard?) {
 
 @BindingAdapter("planField")
 fun TextView.title(
-    planField: PlanField?
+    planField: PlanField?,
 ) {
     if (!planField?.column.isNullOrEmpty()) {
         this.text = planField?.column
@@ -375,7 +400,7 @@ fun TextView.title(
 
 @BindingAdapter("planField")
 fun Spinner.setValues(
-    planField: PlanField?
+    planField: PlanField?,
 ) {
     if (planField != null && !planField.choice.isNullOrEmpty())
         adapter = ArrayAdapter(
@@ -503,7 +528,7 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
 @BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
 fun ImageView.setLinkedStatus(
     paymentCard: PaymentCard,
-    membershipCards: MembershipCardListWrapper
+    membershipCards: MembershipCardListWrapper,
 ) {
     if (paymentCard.isCardActive()) {
         SharedPreferenceManager.hasNoActivePaymentCards = false
@@ -593,7 +618,7 @@ fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 fun TextView.setPcdSubtitle(
     hasAddedPlls: Boolean,
     paymentCard: PaymentCard,
-    hyperlinkClick: (() -> Unit)?
+    hyperlinkClick: (() -> Unit)?,
 ) {
     text = if (paymentCard.card?.isExpired() == true) {
         UtilFunctions.buildHyperlinkSpanStringWithoutUrl(

@@ -1,6 +1,8 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -848,6 +851,7 @@ class LoyaltyCardDetailsFragment :
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     return false
                 }
+
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     if (resource is GifDrawable) {
                         resource.setLoopCount(1)
