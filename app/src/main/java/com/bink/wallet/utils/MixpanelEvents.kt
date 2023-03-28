@@ -36,4 +36,4 @@ object MixpanelEvents {
     const val SHOW_LOCATIONS = "Tapped Show Locations"
     const val SHOW_DIRECTIONS = "Launch Google Maps for Directions"
     const val COPY_CARD = "Card number copied to pasteboard"
-}
+    const val GO_TO_SITE = "Go To Site Pressed"
