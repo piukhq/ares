@@ -52,6 +52,7 @@ import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import com.bink.wallet.utils.firebase.FirebaseRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -60,6 +61,7 @@ val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    single { provideFirebaseRepository() }
     single { provideDataStoreSource(get()) }
     single { provideDataStore(get()) }
 
@@ -74,7 +76,7 @@ val viewModelModules = module {
             get()
         )
     }
-    viewModel { LoyaltyViewModel(get(), get()) }
+    viewModel { LoyaltyViewModel(get(), get(), get()) }
 
     viewModel { AddAuthViewModel(get(), get()) }
     viewModel { AddCardViewModel(get(), get()) }
@@ -234,3 +236,5 @@ fun provideDataStore(context: Context): DataStore<Preferences> =
 
 fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreSourceImpl =
     DataStoreSourceImpl(dataStore)
+
+fun provideFirebaseRepository(): FirebaseRepository = FirebaseRepository()

@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -406,6 +405,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 viewModel.membershipPlanData.value = it
             }
         }
+
+        viewModel.checkWhatsNew()
 
         WebScrapableManager.updatedCards.observeNonNull(this) {
             viewModel.membershipCardData.value = it
