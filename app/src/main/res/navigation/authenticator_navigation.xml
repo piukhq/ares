@@ -94,6 +94,10 @@
         android:label="@string/root">
 
         <action
+            android:id="@+id/loyalty_to_whats_new"
+            app:destination="@id/whats_new_fragment" />
+
+        <action
             android:id="@+id/loyalty_to_add"
             app:destination="@id/add_fragment" />
 
@@ -435,8 +439,7 @@
     <fragment
         android:id="@+id/loyalty_card_locations"
         android:name="com.bink.wallet.scenes.loyalty_details.locations.LoyaltyCardLocationsFragment"
-        tools:layout="@layout/loyalty_card_location_fragment">
-    </fragment>
+        tools:layout="@layout/loyalty_card_location_fragment"></fragment>
 
     <fragment
         android:id="@+id/voucher_details_fragment"
@@ -466,6 +469,16 @@
         <action
             android:id="@+id/history_to_voucher"
             app:destination="@+id/voucher_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/whats_new_fragment"
+        android:name="com.bink.wallet.scenes.whats_new.WhatsNewFragment">
+
+        <argument
+            android:name="whatsNew"
+            app:argType="com.bink.wallet.model.WhatsNew" />
+
     </fragment>
 
     <fragment
@@ -678,12 +691,12 @@
 
     <fragment
         android:id="@+id/beta_features_fragment"
-        android:name="com.bink.wallet.scenes.settings.BetaFeatureFragment"/>
+        android:name="com.bink.wallet.scenes.settings.BetaFeatureFragment" />
 
 
     <fragment
         android:id="@+id/delete_account_screen"
-        android:name="com.bink.wallet.scenes.settings.DeleteAccountFragment"/>
+        android:name="com.bink.wallet.scenes.settings.DeleteAccountFragment" />
 
     <fragment
         android:id="@+id/who_are_we_fragment"

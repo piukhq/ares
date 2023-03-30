@@ -1,14 +1,20 @@
 package com.bink.wallet.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class WhatsNew(
     val id: String? = null,
     val published: Boolean? = null,
     val showFrom: Int? = null,
-    val adhocMessages: ArrayList<NewFeature>? = null,
-    val features: ArrayList<NewFeature>? = null,
-    val merchants: ArrayList<NewMerchant>? = null,
-)
+    val adhocMessages: List<NewFeature>? = null,
+    val features: List<NewFeature>? = null,
+    val merchants: List<NewMerchant>? = null,
+) : Parcelable
 
-data class NewFeature(val description: String? = null, val imageUrl: String? = null)
+@Parcelize
+data class NewFeature(val description: String? = null, val imageUrl: String? = null) : Parcelable
 
-data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null)
+@Parcelize
+data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null) : Parcelable

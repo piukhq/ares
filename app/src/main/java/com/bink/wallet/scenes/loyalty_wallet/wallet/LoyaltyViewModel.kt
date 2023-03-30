@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet.wallet
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -235,9 +234,9 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun checkWhatsNew() {
-        firebaseRepository.getCollection<WhatsNew>(Firebase.whatsNew().whereEqualTo("published", true).whereLessThan("showFrom", getTime())) { whatsNew ->
-            Log.d("WhatsNew", whatsNew.toString())
+    fun checkWhatsNew(callback: (WhatsNew) -> Unit) {
+        firebaseRepository.getCollection(Firebase.whatsNew().whereEqualTo("published", true).whereLessThan("showFrom", getTime())) { whatsNew ->
+            whatsNew?.let { callback(it.first()) }
         }
     }
 
