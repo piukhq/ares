@@ -19,7 +19,6 @@
             android:gravity="center"
             android:text="@string/camera_preview_subtitle"
             android:textAppearance="@style/CustomTextView"
-            android:textColor="@android:color/black"
             android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

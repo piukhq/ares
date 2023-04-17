@@ -361,7 +361,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
                             Text(
                                 text = it,
-                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
+                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.theme_selector_dialog_padding))
                             )
                         }
                     }
