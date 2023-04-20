@@ -32,10 +32,7 @@ android {
     compileSdkVersion 33
     signingConfigs {
         binkSigningConfig {
-            storeFile file('/Users/enochhankombo/BINK/ares/app/bink-keystore.jks')
-            storePassword '-j2VdA=9.ckusV_\\'
-            keyAlias 'bink'
-            keyPassword '-j2VdA=9.ckusV_\\'
+            storeFile file('bink-keystore.jks')
             if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
                 keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
                 keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
@@ -67,8 +64,6 @@ android {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
                 }
             }
-            signingConfig signingConfigs.binkSigningConfig
-
         }
         debug {
 //            signingConfig signingConfigs.binkSigningConfig
