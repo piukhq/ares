@@ -51,3 +51,7 @@
 
 # Having minify enabled seems to remove some methods from crypto lib causing a crash on version 1.1.0-alpha01
 -keep class com.google.crypto.** { *; }
+
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep public class * implements java.lang.reflect.Type
