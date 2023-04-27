@@ -28,4 +28,4 @@ data class NewFeature(val description: String? = null, val imageUrl: String? = n
 data class AdHocMessage(val description: String? = null, val imageUrl: String? = null, val title: String? = null) : Parcelable
 
 @Parcelize
-data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null) : Parcelable
+data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null, var iconUrl: String? = null, var merchantName: String? = null, var primaryColour: String? = null, var secondaryColour: String? = null) : Parcelable

@@ -333,11 +333,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
-        viewModel.checkWhatsNew {
-            val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(it)
-            findNavController().navigateIfAdded(this@LoyaltyWalletFragment, directions, currentDestination)
-        }
-
         WebScrapableManager.updatedCards.observeNonNull(this) {
             viewModel.membershipCardData.value = it
         }
@@ -488,8 +483,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(sortPlans(ArrayList(userDataResult.result.third)))
 
-                setSortButtonState()
+                viewModel.checkWhatsNew { whatsNew ->
+                    val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(whatsNew, plans.toTypedArray())
+                    findNavController().navigateIfAdded(this@LoyaltyWalletFragment, directions, currentDestination)
+                }
 
+                setSortButtonState()
                 disableIndicators()
             }
 

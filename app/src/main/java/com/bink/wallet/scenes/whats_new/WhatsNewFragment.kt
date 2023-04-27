@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.WhatsNewFragmentBinding
@@ -36,6 +37,7 @@ import com.bink.wallet.model.asAnyList
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.theme.White
 import com.bink.wallet.utils.ImageViaUrl
+import com.bink.wallet.utils.asJetpackColour
 import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,6 +51,7 @@ class WhatsNewFragment :
             .build()
     }
 
+    private val args by navArgs<WhatsNewFragmentArgs>()
     override val viewModel: WhatsNewViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.whats_new_fragment
@@ -57,7 +60,8 @@ class WhatsNewFragment :
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            viewModel.whatsNew.value = WhatsNewFragmentArgs.fromBundle(it).whatsNew
+            viewModel.whatsNew.value = args.whatsNew
+            viewModel.getFeaturedCards(args.membershipPlans)
         }
 
         binding.composeView.setContent {
@@ -142,7 +146,7 @@ class WhatsNewFragment :
                     )
                     .rotate(-46f)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Color.Red)
+                    .background(newMerchant.secondaryColour?.asJetpackColour() ?: Color.Transparent)
             )
 
             Box(
@@ -154,14 +158,17 @@ class WhatsNewFragment :
                     )
                     .rotate(-23f)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Color.Blue)
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(newMerchant.primaryColour?.asJetpackColour() ?: Color.Transparent)
             )
 
             Column(modifier = Modifier
-                .align(Alignment.Center)
-                .padding(start = 64.dp)) {
+                .offset(
+                    y = 40.dp,
+                    x = 160.dp,
+                )) {
                 Text(
-                    text = "Merchant",
+                    text = newMerchant.merchantName ?: "",
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -180,6 +187,17 @@ class WhatsNewFragment :
                 .matchParentSize()
                 .fillMaxHeight()) {
                 FeatureTitle(title = "New Merchant")
+            }
+
+            Row(modifier = Modifier
+                .align(Alignment.CenterStart)) {
+                Spacer(modifier = Modifier.width(16.dp))
+                ImageViaUrl(
+                    url = newMerchant.iconUrl ?: "",
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .size(80.dp)
+                )
             }
 
             Image(
@@ -263,6 +281,30 @@ class WhatsNewFragment :
                     .size(25.dp)
                     .align(Alignment.CenterEnd)
             )
+
+            Column(modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 16.dp)) {
+
+                ImageViaUrl(
+                    url = adHocMessage.imageUrl ?: "", modifier = Modifier
+                        .size(30.dp)
+                )
+
+                Text(
+                    text = adHocMessage.title ?: "",
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = adHocMessage.description ?: "",
+                    fontFamily = nunitoSans,
+                    fontSize = 14.sp,
+                    color = Color.Black
+                )
+            }
         }
     }
 

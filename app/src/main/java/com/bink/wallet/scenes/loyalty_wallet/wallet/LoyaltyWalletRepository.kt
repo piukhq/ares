@@ -22,14 +22,14 @@ class LoyaltyWalletRepository(
     private val membershipCardDao: MembershipCardDao,
     private val membershipPlanDao: MembershipPlanDao,
     private val bannersDisplayDao: BannersDisplayDao,
-    private val paymentCardDao: PaymentCardDao
+    private val paymentCardDao: PaymentCardDao,
 ) {
 
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
         loadCardsError: MutableLiveData<Exception>,
-        callback: ((List<MembershipCard>) -> Unit?)? = null
+        callback: ((List<MembershipCard>) -> Unit?)? = null,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -65,7 +65,7 @@ class LoyaltyWalletRepository(
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         loadPlansError: MutableLiveData<Exception>,
-        fromPersistence: Boolean = false
+        fromPersistence: Boolean = false,
     ) {
         retrieveMembershipPlans(mutableMembershipPlans, loadPlansError, null, fromPersistence)
     }
@@ -74,7 +74,7 @@ class LoyaltyWalletRepository(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         loadPlansError: MutableLiveData<Exception>,
         databaseUpdated: MutableLiveData<Boolean>?,
-        fromPersistence: Boolean = false
+        fromPersistence: Boolean = false,
     ) {
         if (!fromPersistence) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -142,7 +142,7 @@ class LoyaltyWalletRepository(
     fun deleteMembershipCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<String>,
-        deleteCardError: MutableLiveData<Exception>
+        deleteCardError: MutableLiveData<Exception>,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
 
@@ -164,7 +164,7 @@ class LoyaltyWalletRepository(
     private fun storeMembershipPlans(
         plans: List<MembershipPlan>,
         loadPlansError: MutableLiveData<Exception> = MutableLiveData(),
-        databaseUpdated: MutableLiveData<Boolean>? = MutableLiveData()
+        databaseUpdated: MutableLiveData<Boolean>? = MutableLiveData(),
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -202,7 +202,7 @@ class LoyaltyWalletRepository(
         mutableMembershipCard: MutableLiveData<MembershipCard>,
         createError: MutableLiveData<Exception>,
         addLoyaltyCardRequestMade: MutableLiveData<Boolean>,
-        loading: MutableLiveData<Boolean>
+        loading: MutableLiveData<Boolean>,
     ) {
 
         membershipCardRequest.account?.let { safeAccount ->
@@ -235,7 +235,7 @@ class LoyaltyWalletRepository(
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
         createCardError: MutableLiveData<Exception>,
-        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>,
     ) {
         membershipCardRequest.account?.let { safeAccount ->
             encryptMembershipCardFields(safeAccount)
@@ -260,7 +260,7 @@ class LoyaltyWalletRepository(
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
         createCardError: MutableLiveData<Exception>,
-        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
@@ -278,7 +278,7 @@ class LoyaltyWalletRepository(
 
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        fetchError: MutableLiveData<Exception>
+        fetchError: MutableLiveData<Exception>,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
@@ -294,7 +294,7 @@ class LoyaltyWalletRepository(
 
     fun retrieveDismissedCards(
         localMembershipCards: MutableLiveData<List<BannerDisplay>>,
-        fetchError: MutableLiveData<Exception>
+        fetchError: MutableLiveData<Exception>,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -311,7 +311,7 @@ class LoyaltyWalletRepository(
         localMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         localMembershipCards: MutableLiveData<List<MembershipCard>>,
         fetchError: MutableLiveData<Exception>,
-        updateDone: MutableLiveData<Boolean>
+        updateDone: MutableLiveData<Boolean>,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -415,5 +415,4 @@ class LoyaltyWalletRepository(
         SharedPreferenceManager.membershipPlansLastRequestTime =
             System.currentTimeMillis()
     }
-
 }

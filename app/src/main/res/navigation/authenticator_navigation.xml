@@ -479,6 +479,11 @@
             android:name="whatsNew"
             app:argType="com.bink.wallet.model.WhatsNew" />
 
+        <argument
+            android:name="membershipPlans"
+            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+
+
     </fragment>
 
     <fragment
