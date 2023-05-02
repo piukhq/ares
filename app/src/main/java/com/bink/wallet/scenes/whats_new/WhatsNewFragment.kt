@@ -215,7 +215,7 @@ class WhatsNewFragment :
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .background(Color.White)
+            .background("#33aeb9".asJetpackColour())
         ) {
 
             Column(modifier = Modifier
@@ -247,13 +247,13 @@ class WhatsNewFragment :
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
                 Text(
                     text = newFeature.description ?: "",
                     fontFamily = nunitoSans,
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
             }
         }
@@ -264,7 +264,7 @@ class WhatsNewFragment :
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .background(Color.White)
+            .background("#33aeb9".asJetpackColour())
         ) {
 
             Column(modifier = Modifier
@@ -273,14 +273,6 @@ class WhatsNewFragment :
                 .fillMaxHeight()) {
                 FeatureTitle(title = "Ad Hoc Message")
             }
-
-            Image(
-                imageVector = Icons.Filled.ArrowForwardIos,
-                contentDescription = "Next", colorFilter = ColorFilter.tint(White),
-                modifier = Modifier
-                    .size(25.dp)
-                    .align(Alignment.CenterEnd)
-            )
 
             Column(modifier = Modifier
                 .align(Alignment.CenterStart)
@@ -296,13 +288,13 @@ class WhatsNewFragment :
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
                 Text(
                     text = adHocMessage.description ?: "",
                     fontFamily = nunitoSans,
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
             }
         }
@@ -322,7 +314,7 @@ class WhatsNewFragment :
                 Text(text = title,
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp))
             }
         }
 
