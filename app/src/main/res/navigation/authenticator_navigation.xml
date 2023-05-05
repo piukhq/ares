@@ -133,6 +133,38 @@
             android:id="@+id/loyalty_to_browse_brands"
             app:destination="@+id/browse_brands" />
 
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/whats_new_fragment"
+        android:name="com.bink.wallet.scenes.whats_new.WhatsNewFragment">
+
+        <argument
+            android:name="whatsNew"
+            app:argType="com.bink.wallet.model.WhatsNew" />
+
+        <argument
+            android:name="membershipPlans"
+            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+
+        <argument
+            android:name="membershipCards"
+            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
+
+        <action
+            android:id="@+id/whats_new_to_browse_brands"
+            app:destination="@+id/browse_brands" />
+
+        <action
+            android:id="@+id/whats_new_to_settings_screen"
+            app:destination="@+id/settings_screen" />
+
+        <action
+            android:id="@+id/whats_new_to_payment_wallet"
+            app:destination="@+id/payment_card_wallet" />
+
+
     </fragment>
 
     <fragment
@@ -469,21 +501,6 @@
         <action
             android:id="@+id/history_to_voucher"
             app:destination="@+id/voucher_details_fragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/whats_new_fragment"
-        android:name="com.bink.wallet.scenes.whats_new.WhatsNewFragment">
-
-        <argument
-            android:name="whatsNew"
-            app:argType="com.bink.wallet.model.WhatsNew" />
-
-        <argument
-            android:name="membershipPlans"
-            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
-
-
     </fragment>
 
     <fragment

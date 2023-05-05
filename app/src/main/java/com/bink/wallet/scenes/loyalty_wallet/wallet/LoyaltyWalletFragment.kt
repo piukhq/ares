@@ -484,7 +484,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(sortPlans(ArrayList(userDataResult.result.third)))
 
                 viewModel.checkWhatsNew { whatsNew ->
-                    val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(whatsNew, plans.toTypedArray())
+                    val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(whatsNew, plans.toTypedArray(), cards.toTypedArray())
                     findNavController().navigateIfAdded(this@LoyaltyWalletFragment, directions, currentDestination)
                 }
 

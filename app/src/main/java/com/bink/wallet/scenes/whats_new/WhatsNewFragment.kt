@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,9 +24,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -61,7 +62,7 @@ class WhatsNewFragment :
 
         arguments?.let {
             viewModel.whatsNew.value = args.whatsNew
-            viewModel.getFeaturedCards(args.membershipPlans)
+            viewModel.getFeaturedCards(args.membershipPlans, args.membershipCards)
         }
 
         binding.composeView.setContent {
@@ -69,18 +70,6 @@ class WhatsNewFragment :
                 WhatsNew(viewModel.whatsNew.value?.asAnyList())
             }
         }
-    }
-
-
-    @Preview
-    @Composable
-    private fun Preview() {
-        val whatsNew = arrayListOf<Any>(
-            NewMerchant("Hello", "0"),
-            NewFeature("You can now add a new profile picture!", "https://firebasestorage.googleapis.com/v0/b/bink-ac226.appspot.com/o/new-features%2F0.jpeg?alt=media&token=0e425696-53ab-44a7-b172-3011d7d33094", "New pic!!!"),
-            AdHocMessage("Hello", "", "Title"),
-        )
-        WhatsNew(whatsNew)
     }
 
     @Composable
@@ -115,13 +104,19 @@ class WhatsNewFragment :
                     shape = RoundedCornerShape(12.dp)) {
                     when (newItem) {
                         is NewMerchant -> {
-                            NewMerchant(newMerchant = newItem)
+                            NewMerchant(newMerchant = newItem) {
+
+                            }
                         }
                         is NewFeature -> {
-                            NewFeature(newFeature = newItem)
+                            NewFeature(newFeature = newItem) {
+                                newItem.screen?.let { navigate(it) }
+                            }
                         }
                         is AdHocMessage -> {
-                            AdHocMessage(adHocMessage = newItem)
+                            AdHocMessage(adHocMessage = newItem) {
+                                newItem.screen?.let { navigate(it) }
+                            }
                         }
                     }
                 }
@@ -130,11 +125,14 @@ class WhatsNewFragment :
     }
 
     @Composable
-    private fun NewMerchant(newMerchant: NewMerchant) {
+    private fun NewMerchant(newMerchant: NewMerchant, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
             .background(Color.White)
+            .clickable {
+                onClick()
+            }
         ) {
 
             Box(
@@ -211,11 +209,14 @@ class WhatsNewFragment :
     }
 
     @Composable
-    private fun NewFeature(newFeature: NewFeature) {
+    private fun NewFeature(newFeature: NewFeature, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
             .background("#33aeb9".asJetpackColour())
+            .clickable {
+                onClick()
+            }
         ) {
 
             Column(modifier = Modifier
@@ -260,7 +261,7 @@ class WhatsNewFragment :
     }
 
     @Composable
-    private fun AdHocMessage(adHocMessage: AdHocMessage) {
+    private fun AdHocMessage(adHocMessage: AdHocMessage, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
@@ -318,6 +319,28 @@ class WhatsNewFragment :
             }
         }
 
+    }
+
+    private fun navigate(screen: Int) {
+        when (screen) {
+            1 -> {
+                //Loyalty Wallet
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+            2 -> {
+                //Payment Wallet
+                findNavController().navigate(WhatsNewFragmentDirections.whatsNewToPaymentWallet())
+            }
+            3 -> {
+                //Browse Brands
+                val plansAndCards = viewModel.getPlansAndCards()
+                findNavController().navigate(WhatsNewFragmentDirections.whatsNewToBrowseBrands(plansAndCards.first, plansAndCards.second))
+            }
+            4 -> {
+                //Settings
+                findNavController().navigate(WhatsNewFragmentDirections.whatsNewToSettingsScreen())
+            }
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.DataStoreSourceImpl
 import com.bink.wallet.model.WhatsNew
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.ThemeHelper
 import com.bink.wallet.utils.getIconTypeFromPlan
@@ -16,6 +17,9 @@ class WhatsNewViewModel(private val dataStoreSource: DataStoreSourceImpl) : Base
 
     var whatsNew = MutableLiveData<WhatsNew>()
 
+    private lateinit var membershipPlans: Array<MembershipPlan>
+    private lateinit var membershipCards: Array<MembershipCard>
+
     private val _theme = mutableStateOf(ThemeHelper.SYSTEM)
     val theme: MutableState<String>
         get() = _theme
@@ -24,7 +28,10 @@ class WhatsNewViewModel(private val dataStoreSource: DataStoreSourceImpl) : Base
         getSelectedTheme()
     }
 
-    fun getFeaturedCards(plans: Array<MembershipPlan>) {
+    fun getFeaturedCards(plans: Array<MembershipPlan>, cards: Array<MembershipCard>) {
+        membershipPlans = plans
+        membershipCards = cards
+
         whatsNew.value?.merchants?.forEachIndexed { index, newMerchant ->
             val membershipPlan = plans.firstOrNull { it.id == newMerchant.membershipPlanId }
             whatsNew.value?.merchants!![index].iconUrl = getIconTypeFromPlan(membershipPlan)
@@ -32,6 +39,10 @@ class WhatsNewViewModel(private val dataStoreSource: DataStoreSourceImpl) : Base
             whatsNew.value?.merchants!![index].primaryColour = membershipPlan?.card?.colour
             whatsNew.value?.merchants!![index].secondaryColour = membershipPlan?.card?.getSecondaryColor()
         }
+    }
+
+    fun getPlansAndCards(): Pair<Array<MembershipPlan>, Array<MembershipCard>> {
+        return Pair(membershipPlans, membershipCards)
     }
 
     private fun getSelectedTheme() {
