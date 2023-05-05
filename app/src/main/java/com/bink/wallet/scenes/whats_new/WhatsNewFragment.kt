@@ -101,7 +101,7 @@ class WhatsNewFragment :
                 Card(modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                    shape = RoundedCornerShape(12.dp)) {
+                    shape = RoundedCornerShape(dimensionResource(id = R.dimen.whats_new_item_corner))) {
                     when (newItem) {
                         is NewMerchant -> {
                             NewMerchant(newMerchant = newItem) {
@@ -128,7 +128,7 @@ class WhatsNewFragment :
     private fun NewMerchant(newMerchant: NewMerchant, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
+            .height(dimensionResource(id = R.dimen.whats_new_item_height))
             .background(Color.White)
             .clickable {
                 onClick()
@@ -189,12 +189,12 @@ class WhatsNewFragment :
 
             Row(modifier = Modifier
                 .align(Alignment.CenterStart)) {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_medium)))
                 ImageViaUrl(
                     url = newMerchant.iconUrl ?: "",
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .size(80.dp)
+                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                        .size(dimensionResource(id = R.dimen.merchant_icon_size))
                 )
             }
 
@@ -202,7 +202,7 @@ class WhatsNewFragment :
                 imageVector = Icons.Filled.ArrowForwardIos,
                 contentDescription = "Next", colorFilter = ColorFilter.tint(White),
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(dimensionResource(id = R.dimen.navigate_icon_size))
                     .align(Alignment.CenterEnd)
             )
         }
@@ -212,7 +212,7 @@ class WhatsNewFragment :
     private fun NewFeature(newFeature: NewFeature, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
+            .height(dimensionResource(id = R.dimen.whats_new_item_height))
             .background("#33aeb9".asJetpackColour())
             .clickable {
                 onClick()
@@ -230,17 +230,17 @@ class WhatsNewFragment :
                 imageVector = Icons.Filled.ArrowForwardIos,
                 contentDescription = "Next", colorFilter = ColorFilter.tint(White),
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(dimensionResource(id = R.dimen.navigate_icon_size))
                     .align(Alignment.CenterEnd)
             )
 
             Column(modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 16.dp)) {
+                .padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium))) {
 
                 ImageViaUrl(
                     url = newFeature.imageUrl ?: "", modifier = Modifier
-                        .size(30.dp)
+                        .size(dimensionResource(id = R.dimen.new_feature_icon_size))
                 )
 
                 Text(
@@ -264,7 +264,7 @@ class WhatsNewFragment :
     private fun AdHocMessage(adHocMessage: AdHocMessage, onClick: () -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
+            .height(dimensionResource(id = R.dimen.whats_new_item_height))
             .background("#33aeb9".asJetpackColour())
         ) {
 
@@ -277,11 +277,11 @@ class WhatsNewFragment :
 
             Column(modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 16.dp)) {
+                .padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium))) {
 
                 ImageViaUrl(
                     url = adHocMessage.imageUrl ?: "", modifier = Modifier
-                        .size(30.dp)
+                        .size(dimensionResource(id = R.dimen.new_feature_icon_size))
                 )
 
                 Text(
@@ -309,13 +309,13 @@ class WhatsNewFragment :
 
             Spacer(modifier = Modifier.weight(1f))
             Box(modifier = Modifier
-                .padding(12.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .padding(dimensionResource(id = R.dimen.whats_new_item_corner))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                 .background(if (title != "") Color.Gray.copy(alpha = 0.5f) else Color.Transparent)) {
                 Text(text = title,
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp))
+                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.whats_new_item_corner), vertical = dimensionResource(id = R.dimen.margin_padding_size_really_small)))
             }
         }
 
