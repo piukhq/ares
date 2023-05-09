@@ -7,16 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.CardOnboardingItemBinding
 import com.bink.wallet.databinding.CardOnboardingSeeStoreBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.databinding.TakePollViewBinding
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingLinkViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingSeeViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingStoreViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.*
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import java.util.*
@@ -36,6 +35,8 @@ class LoyaltyWalletAdapter(
         private const val CARD_ON_BOARDING_SEE = 2
 
         private const val CARD_ON_BOARDING_STORE = 3
+
+        private const val TAKE_POLL = 4
     }
 
     var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
@@ -73,6 +74,11 @@ class LoyaltyWalletAdapter(
                 membershipPlans
             )
 
+            TAKE_POLL -> TakePollViewHolder(
+                TakePollViewBinding.inflate(inflater, parent, false),
+                onClickListener
+            )
+
             else -> CardOnBoardingLinkViewHolder(
                 CardOnboardingItemBinding.inflate(inflater, parent, false),
                 onClickListener,
@@ -90,12 +96,14 @@ class LoyaltyWalletAdapter(
                 is CardOnBoardingLinkViewHolder -> holder.bind(it as MembershipPlan)
                 is CardOnBoardingSeeViewHolder -> holder.bind(it as MembershipPlan)
                 is CardOnBoardingStoreViewHolder -> holder.bind(it as MembershipPlan)
+                is TakePollViewHolder -> holder.bind(it as PollItem)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when {
+            membershipCards[position] is PollItem -> TAKE_POLL
             membershipCards[position] is MembershipCard -> MEMBERSHIP_CARD
             (membershipCards[position] as MembershipPlan).isStoreCard() -> CARD_ON_BOARDING_STORE
             WebScrapableManager.isCardScrapable(
