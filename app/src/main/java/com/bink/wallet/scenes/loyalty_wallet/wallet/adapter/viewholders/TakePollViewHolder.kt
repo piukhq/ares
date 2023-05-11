@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bink.wallet.R
 import com.bink.wallet.databinding.TakePollViewBinding
 import com.bink.wallet.model.PollItem
 import com.bink.wallet.scenes.BaseViewHolder
@@ -23,15 +25,18 @@ import com.bink.wallet.utils.nunitoSans
 class TakePollViewHolder(
     val binding: TakePollViewBinding,
     val onClickListener: (Any) -> Unit = {},
+    val closeClicked: (String) -> Unit,
 ) :
     BaseViewHolder<PollItem>(binding) {
 
     override fun bind(pollItem: PollItem) {
         with(binding) {
             composeView.setContent {
-                TakePollCTA(pollItem) {
+                TakePollCTA(pollItem, onClick = {
                     onClickListener(pollItem)
-                }
+                }, closeClicked = {
+                    closeClicked(it)
+                })
             }
         }
 
@@ -42,7 +47,7 @@ class TakePollViewHolder(
 }
 
 @Composable
-private fun TakePollCTA(pollItem: PollItem, onClick: () -> Unit) {
+private fun TakePollCTA(pollItem: PollItem, onClick: () -> Unit = {}, closeClicked: (String) -> Unit = {}) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick() }) {
@@ -52,14 +57,17 @@ private fun TakePollCTA(pollItem: PollItem, onClick: () -> Unit) {
                 imageVector = Icons.Filled.Leaderboard,
                 contentDescription = "Poll", colorFilter = ColorFilter.tint(Color.White),
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(dimensionResource(id = R.dimen.poll_cta_image_size))
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 imageVector = Icons.Filled.Close,
                 contentDescription = "Close", colorFilter = ColorFilter.tint(Color.White),
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(dimensionResource(id = R.dimen.poll_cta_image_size))
+                    .clickable {
+                        closeClicked(pollItem.id ?: "")
+                    }
             )
         }
 
@@ -71,7 +79,7 @@ private fun TakePollCTA(pollItem: PollItem, onClick: () -> Unit) {
         )
         Row {
             Text(
-                text = "Take Poll",
+                text = stringResource(id = R.string.take_poll),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
@@ -81,7 +89,7 @@ private fun TakePollCTA(pollItem: PollItem, onClick: () -> Unit) {
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Take Poll", colorFilter = ColorFilter.tint(Color.White),
                 modifier = Modifier
-                    .size(25.dp)
+                    .size(dimensionResource(id = R.dimen.poll_cta_image_size))
             )
         }
     }

@@ -23,8 +23,9 @@ import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
+    val onClosePollClickListener: (String) -> Unit = {},
     val onCardLinkClickListener: (MembershipPlan) -> Unit = {},
-    var onPlaceholderClickListener: (Any) -> Unit = {}
+    var onPlaceholderClickListener: (Any) -> Unit = {},
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
@@ -76,7 +77,8 @@ class LoyaltyWalletAdapter(
 
             TAKE_POLL -> TakePollViewHolder(
                 TakePollViewBinding.inflate(inflater, parent, false),
-                onClickListener
+                onClickListener,
+                onClosePollClickListener
             )
 
             else -> CardOnBoardingLinkViewHolder(

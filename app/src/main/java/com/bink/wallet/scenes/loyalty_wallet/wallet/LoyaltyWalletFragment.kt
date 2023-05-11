@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -23,6 +22,7 @@ import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionArea
 import com.bink.wallet.model.DynamicActionLocation
+import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -62,6 +62,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private val walletAdapter = LoyaltyWalletAdapter(
         onClickListener = {
             onCardClicked(it)
+        },
+        onClosePollClickListener = {
+            dismissPollDialog(it)
         },
         onCardLinkClickListener = {
             onCardLinkClicked(it)
@@ -581,10 +584,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 cards = userDataResult.result.first
                 plans = userDataResult.result.second
 
-                walletAdapter.membershipCards =
-                    WalletOrderingUtil.getSavedLoyaltyCardWallet(
-                        sortPlans(ArrayList(userDataResult.result.third))
-                    )
+                val displayedCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                    sortPlans(ArrayList(userDataResult.result.third))
+                )
+
+                if (PollUtil.canViewPoll("123321")) {
+                    displayedCards.add(0, PollItem("123321", "Which retailer would you like to see next in your bink app?"))
+                }
+
+                walletAdapter.membershipCards = displayedCards
 
                 setSortButtonState()
 
@@ -787,6 +795,35 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
     }
+
+    private fun dismissPollDialog(pollId: String) {
+        lateinit var dialog: AlertDialog
+        val builder = context?.let { AlertDialog.Builder(it) }
+        if (builder != null) {
+            builder.setTitle("Help us manage your poll notifications better:")
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        PollUtil.dismissPollFor24h(pollId)
+                        fetchData()
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        PollUtil.dismissPollPermanently(pollId)
+                        fetchData()
+                    }
+                }
+            }
+            builder.setPositiveButton("Remind me tomorrow", dialogClickListener)
+            builder.setNeutralButton("Don't show me this poll again", dialogClickListener)
+            dialog = builder.create()
+            dialog.show()
+
+            dialog.setOnCancelListener {
+                dialog.cancel()
+            }
+        }
+    }
+
 
     fun pendingCardDeleteDialog(position: Int) {
         lateinit var dialog: AlertDialog

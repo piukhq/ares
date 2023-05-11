@@ -2,7 +2,6 @@ package com.bink.wallet.utils
 
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.JoinCardItem
-import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.WalletOrder
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -112,7 +111,6 @@ object WalletOrderingUtil {
         //Unsure why the below doesnt work. Without converting it to an Arraylist it will work. We ofc can't use a List for this.
         //val sortedCards = (unassignedCards.sortedByDescending { it is MembershipCard }) as ArrayList<Any>
 
-        sortedMembershipCards.add(0, PollItem("", "Which retailer would you like to see next in your bink app?"))
         return sortedMembershipCards
     }
 

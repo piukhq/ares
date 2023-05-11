@@ -37,4 +37,9 @@ object MixpanelEvents {
     const val SHOW_DIRECTIONS = "Launch Google Maps for Directions"
     const val COPY_CARD = "Card number copied to pasteboard"
     const val GO_TO_SITE = "Go To Site Pressed"
+    const val POLL_DISMISS_24H = "Poll Dismissed Temporarily"
+    const val POLL_DISMISS = "Poll Dismissed Permanently"
+    const val POLL_CLICKED = "Poll Clicked"
+    const val POLL_ID = "Poll ID"
+
 }
