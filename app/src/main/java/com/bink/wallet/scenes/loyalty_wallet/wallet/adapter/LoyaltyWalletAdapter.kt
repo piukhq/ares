@@ -23,6 +23,7 @@ import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
+    val onOpenPollClickListener: (PollItem) -> Unit = {},
     val onClosePollClickListener: (String) -> Unit = {},
     val onCardLinkClickListener: (MembershipPlan) -> Unit = {},
     var onPlaceholderClickListener: (Any) -> Unit = {},
@@ -77,7 +78,7 @@ class LoyaltyWalletAdapter(
 
             TAKE_POLL -> TakePollViewHolder(
                 TakePollViewBinding.inflate(inflater, parent, false),
-                onClickListener,
+                onOpenPollClickListener,
                 onClosePollClickListener
             )
 

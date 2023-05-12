@@ -22,7 +22,6 @@ import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionArea
 import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -62,6 +61,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private val walletAdapter = LoyaltyWalletAdapter(
         onClickListener = {
             onCardClicked(it)
+        },
+        onOpenPollClickListener = {
+            logMixpanelEvent(
+                MixpanelEvents.POLL_CLICKED,
+                JSONObject().put(MixpanelEvents.POLL_ID, it.id)
+            )
         },
         onClosePollClickListener = {
             dismissPollDialog(it)
@@ -319,6 +324,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
+
         }
         mainViewModel.isLoading.value?.let {
             if (it) {
@@ -588,11 +594,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     sortPlans(ArrayList(userDataResult.result.third))
                 )
 
-                if (PollUtil.canViewPoll("123321")) {
-                    displayedCards.add(0, PollItem("123321", "Which retailer would you like to see next in your bink app?"))
-                }
+                viewModel.getPolls { pollItem ->
+                    pollItem?.let {
+                        displayedCards.add(0, it)
+                    }
 
-                walletAdapter.membershipCards = displayedCards
+                    walletAdapter.membershipCards = displayedCards
+                }
 
                 setSortButtonState()
 
@@ -804,10 +812,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS_24H,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
                         PollUtil.dismissPollFor24h(pollId)
                         fetchData()
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
                         PollUtil.dismissPollPermanently(pollId)
                         fetchData()
                     }

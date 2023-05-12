@@ -24,7 +24,7 @@ import com.bink.wallet.utils.nunitoSans
 
 class TakePollViewHolder(
     val binding: TakePollViewBinding,
-    val onClickListener: (Any) -> Unit = {},
+    val onOpenPollClickListener: (PollItem) -> Unit = {},
     val closeClicked: (String) -> Unit,
 ) :
     BaseViewHolder<PollItem>(binding) {
@@ -33,7 +33,7 @@ class TakePollViewHolder(
         with(binding) {
             composeView.setContent {
                 TakePollCTA(pollItem, onClick = {
-                    onClickListener(pollItem)
+                    onOpenPollClickListener(pollItem)
                 }, closeClicked = {
                     closeClicked(it)
                 })
@@ -41,7 +41,7 @@ class TakePollViewHolder(
         }
 
         binding.root.setOnClickListener {
-            onClickListener(pollItem)
+            onOpenPollClickListener(pollItem)
         }
     }
 }
