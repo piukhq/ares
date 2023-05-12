@@ -672,6 +672,9 @@
     <string name="location_open_title">Open - Closes at&#160;</string>
 
     <string name="take_poll">Take Poll</string>
+    <string name="poll_cta_dismiss_title">Help us manage your poll notifications better:</string>
+    <string name="poll_cta_dismiss_positive">Remind me tomorrow</string>
+    <string name="poll_cta_dismiss_neutral">Don\'t show me this poll again</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

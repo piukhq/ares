@@ -808,7 +808,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
-            builder.setTitle("Help us manage your poll notifications better:")
+            builder.setTitle(getString(R.string.poll_cta_dismiss_title))
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
@@ -831,8 +831,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     }
                 }
             }
-            builder.setPositiveButton("Remind me tomorrow", dialogClickListener)
-            builder.setNeutralButton("Don't show me this poll again", dialogClickListener)
+            builder.setPositiveButton(getString(R.string.poll_cta_dismiss_positive), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.poll_cta_dismiss_neutral), dialogClickListener)
             dialog = builder.create()
             dialog.show()
 
