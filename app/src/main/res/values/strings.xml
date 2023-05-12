@@ -673,6 +673,7 @@
     <string name="whats_new_ad_hoc_title">Ad Hoc Message</string>
     <string name="whats_new_new_feature_title">New Feature</string>
     <string name="whats_new_merchant_title">New Merchant</string>
+    <string name="whats_new_title">Whats new</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

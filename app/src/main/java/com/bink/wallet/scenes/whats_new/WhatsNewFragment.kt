@@ -76,7 +76,7 @@ class WhatsNewFragment :
     private fun WhatsNew(whatsNew: ArrayList<Any>?) {
         Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
             Text(modifier = Modifier.fillMaxWidth(),
-                text = "Whats new",
+                text = stringResource(R.string.whats_new_title),
                 textAlign = TextAlign.Center,
                 color = colorResource(id = R.color.blue_accent),
                 fontSize = 30.sp,
