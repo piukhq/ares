@@ -67,7 +67,7 @@ android {
         }
         debug {
 //            signingConfig signingConfigs.binkSigningConfig
-            applicationIdSuffix ".beta"
+            applicationIdSuffix ".debug"
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"

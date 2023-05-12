@@ -153,6 +153,10 @@
             app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
 
         <action
+            android:id="@+id/whats_new_to_add_join"
+            app:destination="@id/add_join" />
+
+        <action
             android:id="@+id/whats_new_to_browse_brands"
             app:destination="@+id/browse_brands" />
 

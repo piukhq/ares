@@ -34,10 +34,7 @@ class WhatsNewViewModel(private val dataStoreSource: DataStoreSourceImpl) : Base
 
         whatsNew.value?.merchants?.forEachIndexed { index, newMerchant ->
             val membershipPlan = plans.firstOrNull { it.id == newMerchant.membershipPlanId }
-            whatsNew.value?.merchants!![index].iconUrl = getIconTypeFromPlan(membershipPlan)
-            whatsNew.value?.merchants!![index].merchantName = membershipPlan?.account?.company_name
-            whatsNew.value?.merchants!![index].primaryColour = membershipPlan?.card?.colour
-            whatsNew.value?.merchants!![index].secondaryColour = membershipPlan?.card?.getSecondaryColor()
+            whatsNew.value?.merchants!![index].membershipPlan = membershipPlan
         }
     }
 

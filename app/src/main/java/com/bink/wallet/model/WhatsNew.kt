@@ -1,6 +1,7 @@
 package com.bink.wallet.model
 
 import android.os.Parcelable
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -28,4 +29,4 @@ data class NewFeature(val description: String? = null, val imageUrl: String? = n
 data class AdHocMessage(val description: String? = null, val imageUrl: String? = null, val title: String? = null, val screen: Int? = null) : Parcelable
 
 @Parcelize
-data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null, var iconUrl: String? = null, var merchantName: String? = null, var primaryColour: String? = null, var secondaryColour: String? = null) : Parcelable
+data class NewMerchant(val description: String? = null, val membershipPlanId: String? = null, var membershipPlan: MembershipPlan? = null) : Parcelable

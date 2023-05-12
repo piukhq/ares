@@ -670,6 +670,9 @@
     <string name="location_closed_title">Closed - Opens at&#160;</string>
     <string name="location_closes_soon_title">Closing Soon - Closes at&#160;</string>
     <string name="location_open_title">Open - Closes at&#160;</string>
+    <string name="whats_new_ad_hoc_title">Ad Hoc Message</string>
+    <string name="whats_new_new_feature_title">New Feature</string>
+    <string name="whats_new_merchant_title">New Merchant</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

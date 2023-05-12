@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,11 +36,10 @@ import com.bink.wallet.model.AdHocMessage
 import com.bink.wallet.model.NewFeature
 import com.bink.wallet.model.NewMerchant
 import com.bink.wallet.model.asAnyList
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.theme.White
-import com.bink.wallet.utils.ImageViaUrl
-import com.bink.wallet.utils.asJetpackColour
-import com.bink.wallet.utils.nunitoSans
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -105,7 +105,11 @@ class WhatsNewFragment :
                     when (newItem) {
                         is NewMerchant -> {
                             NewMerchant(newMerchant = newItem) {
-
+                                findNavController().navigate(WhatsNewFragmentDirections.whatsNewToAddJoin(
+                                    it,
+                                    null,
+                                    isFromJoinCard = false,
+                                    isRetryJourney = false))
                             }
                         }
                         is NewFeature -> {
@@ -114,9 +118,7 @@ class WhatsNewFragment :
                             }
                         }
                         is AdHocMessage -> {
-                            AdHocMessage(adHocMessage = newItem) {
-                                newItem.screen?.let { navigate(it) }
-                            }
+                            AdHocMessage(adHocMessage = newItem)
                         }
                     }
                 }
@@ -125,39 +127,51 @@ class WhatsNewFragment :
     }
 
     @Composable
-    private fun NewMerchant(newMerchant: NewMerchant, onClick: () -> Unit) {
+    private fun NewMerchant(newMerchant: NewMerchant, onClick: (MembershipPlan) -> Unit) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.whats_new_item_height))
             .background(Color.White)
-            .clickable {
-                onClick()
+            .noRippleClickable {
+                newMerchant.membershipPlan?.let { onClick(it) }
             }
         ) {
 
             Box(
                 modifier = Modifier
-                    .size(500.dp)
+                    .size(dimensionResource(id = R.dimen.new_merchant_box_size))
                     .offset(
                         y = (-80).dp,
                         x = 110.dp,
                     )
                     .rotate(-46f)
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(newMerchant.secondaryColour?.asJetpackColour() ?: Color.Transparent)
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.whats_new_item_corner)))
+                    .background(newMerchant.membershipPlan?.card
+                        ?.getSecondaryColor()
+                        ?.asJetpackColour() ?: Color.Transparent)
             )
 
             Box(
                 modifier = Modifier
-                    .size(500.dp)
+                    .size(dimensionResource(id = R.dimen.new_merchant_box_size))
                     .offset(
                         y = (-40).dp,
                         x = 140.dp,
                     )
                     .rotate(-23f)
-                    .clip(RoundedCornerShape(15.dp))
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(newMerchant.primaryColour?.asJetpackColour() ?: Color.Transparent)
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.whats_new_item_corner)))
+                    .background(newMerchant.membershipPlan?.card?.colour?.asJetpackColour() ?: Color.Transparent)
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .offset(
+                        y = (50).dp,
+                    )
+                    .size(dimensionResource(id = R.dimen.new_merchant_corner_box_size))
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.whats_new_item_corner)))
+                    .background(newMerchant.membershipPlan?.card?.colour?.asJetpackColour() ?: Color.Transparent)
             )
 
             Column(modifier = Modifier
@@ -166,7 +180,7 @@ class WhatsNewFragment :
                     x = 160.dp,
                 )) {
                 Text(
-                    text = newMerchant.merchantName ?: "",
+                    text = newMerchant.membershipPlan?.account?.company_name ?: "",
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -184,14 +198,14 @@ class WhatsNewFragment :
                 .align(Alignment.TopCenter)
                 .matchParentSize()
                 .fillMaxHeight()) {
-                FeatureTitle(title = "New Merchant")
+                FeatureTitle(title = stringResource(R.string.whats_new_merchant_title))
             }
 
             Row(modifier = Modifier
                 .align(Alignment.CenterStart)) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_medium)))
                 ImageViaUrl(
-                    url = newMerchant.iconUrl ?: "",
+                    url = getIconTypeFromPlan(newMerchant.membershipPlan) ?: "",
                     modifier = Modifier
                         .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                         .size(dimensionResource(id = R.dimen.merchant_icon_size))
@@ -223,7 +237,7 @@ class WhatsNewFragment :
                 .align(Alignment.TopCenter)
                 .matchParentSize()
                 .fillMaxHeight()) {
-                FeatureTitle(title = "New Feature")
+                FeatureTitle(title = stringResource(R.string.whats_new_new_feature_title))
             }
 
             Image(
@@ -261,7 +275,7 @@ class WhatsNewFragment :
     }
 
     @Composable
-    private fun AdHocMessage(adHocMessage: AdHocMessage, onClick: () -> Unit) {
+    private fun AdHocMessage(adHocMessage: AdHocMessage) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.whats_new_item_height))
@@ -272,7 +286,7 @@ class WhatsNewFragment :
                 .align(Alignment.TopCenter)
                 .matchParentSize()
                 .fillMaxHeight()) {
-                FeatureTitle(title = "Ad Hoc Message")
+                FeatureTitle(title = stringResource(R.string.whats_new_ad_hoc_title))
             }
 
             Column(modifier = Modifier
