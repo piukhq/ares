@@ -67,6 +67,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 MixpanelEvents.POLL_CLICKED,
                 JSONObject().put(MixpanelEvents.POLL_ID, it.id)
             )
+            findNavController().navigate(
+                LoyaltyWalletFragmentDirections.loyaltyToPoll(
+                    it
+                )
+            )
         },
         onClosePollClickListener = {
             dismissPollDialog(it)

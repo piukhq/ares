@@ -129,6 +129,21 @@
             android:id="@+id/loyalty_to_browse_brands"
             app:destination="@+id/browse_brands" />
 
+        <action
+            android:id="@+id/loyalty_to_poll"
+            app:destination="@+id/polls_fragment" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/polls_fragment"
+        android:name="com.bink.wallet.scenes.polls.PollsFragment">
+
+        <argument
+            android:name="poll"
+            app:argType="com.bink.wallet.model.PollItem" />
+
     </fragment>
 
     <fragment

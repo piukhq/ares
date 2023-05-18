@@ -1,5 +1,9 @@
 package com.bink.wallet.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class PollItem(
     val id: String? = null,
     val question: String = "",
@@ -9,4 +13,4 @@ data class PollItem(
     val published: Boolean = false,
     val allowCustomAnswer: Boolean = false,
     val answers: List<String>? = null,
-)
+) : Parcelable
