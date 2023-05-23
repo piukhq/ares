@@ -237,12 +237,13 @@ class LoyaltyViewModel constructor(
     fun checkWhatsNew(callback: (WhatsNew) -> Unit) {
         firebaseRepository.getCollection<WhatsNew>(Firebase.whatsNew().whereEqualTo("published", true).whereLessThan("showFrom", getTime())) { whatsNewList ->
             whatsNewList?.sortedBy { it.showFrom }?.let { sortedList ->
-                val newestItem = sortedList.first()
-                val previouslyViewedWhatsNew = SharedPreferenceManager.viewedWhatsNew
-                val hasBeenPreviouslyViewed = previouslyViewedWhatsNew?.contains(newestItem.id ?: "")
-                if (hasBeenPreviouslyViewed != true) {
-                    callback(newestItem)
-                    SharedPreferenceManager.viewedWhatsNew = "$previouslyViewedWhatsNew:${newestItem.id}"
+                sortedList.firstOrNull()?.let { newestItem ->
+                    val previouslyViewedWhatsNew = SharedPreferenceManager.viewedWhatsNew
+                    val hasBeenPreviouslyViewed = previouslyViewedWhatsNew?.contains(newestItem.id ?: "")
+                    if (hasBeenPreviouslyViewed != true) {
+                        callback(newestItem)
+                        SharedPreferenceManager.viewedWhatsNew = "$previouslyViewedWhatsNew:${newestItem.id}"
+                    }
                 }
             }
         }

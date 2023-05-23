@@ -7,7 +7,6 @@ import com.google.firebase.ktx.Firebase
 const val FIREBASE_COLLECTION_WHATS_NEW = "whatsNew"
 
 fun Firebase.whatsNew(): CollectionReference {
-    val firestore = firestore
     return firestore.collection(FIREBASE_COLLECTION_WHATS_NEW)
 }
 
