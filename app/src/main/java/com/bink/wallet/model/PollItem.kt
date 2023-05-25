@@ -12,5 +12,5 @@ data class PollItem(
     val closeTime: Int? = null,
     val published: Boolean = false,
     val allowCustomAnswer: Boolean = false,
-    val answers: List<String>? = null,
+    val answers: List<String>? = null
 ) : Parcelable

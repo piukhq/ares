@@ -173,7 +173,7 @@ val viewModelModules = module {
 
     viewModel { BetaFeatureViewModel(get()) }
 
-    viewModel { PollsViewModel(get()) }
+    viewModel { PollsViewModel(get(), get(), get()) }
 }
 
 fun provideLoginRepository(
