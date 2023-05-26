@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.polls
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
@@ -31,11 +32,15 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
     private val _answerResultUiState = MutableStateFlow(ResultUiState())
     val answerResultUiState: StateFlow<ResultUiState> = _answerResultUiState.asStateFlow()
 
-    var poll = MutableLiveData<PollItem>()
+    private val _poll = MutableLiveData<PollItem>()
+    val poll: LiveData<PollItem>
+        get() = _poll
 
     private val _theme = mutableStateOf(ThemeHelper.SYSTEM)
     val theme: MutableState<String>
         get() = _theme
+
+    private lateinit var userId: String
 
     init {
         getSelectedTheme()
@@ -49,6 +54,20 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
         }
     }
 
+    fun setPoll(pollItem: PollItem) {
+        _poll.value = pollItem
+
+        getUser { user ->
+            userId = user.uid
+            firebaseRepository.getDocument<PollResultItem>(Firebase.pollResults().whereEqualTo("userId", userId).whereEqualTo("pollId", pollItem.id)) { userResult ->
+                userResult?.answer?.let {
+                    answerSelected(it)
+                    getResultSummary()
+                }
+            }
+        }
+    }
+
     fun answerSelected(answer: String) {
         _selectedAnswerUiState.update {
             it.copy(selectedAnswer = answer)
@@ -56,31 +75,29 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
     }
 
     fun submitAnswer() {
-        getUser { user ->
-            _answerResultUiState.update {
-                it.copy(loading = true)
-            }
+        _answerResultUiState.update {
+            it.copy(loading = true)
+        }
 
-            val documentId = UUID.randomUUID().toString()
+        val documentId = UUID.randomUUID().toString()
 
-            val pollAnswer = PollResultItem(
-                answer = _selectedAnswerUiState.value.selectedAnswer,
-                createdDate = getTime(),
-                pollId = poll.value?.id ?: "",
-                userId = user.uid
-            )
+        val pollAnswer = PollResultItem(
+            answer = _selectedAnswerUiState.value.selectedAnswer,
+            createdDate = getTime(),
+            pollId = poll.value?.id ?: "",
+            userId = userId
+        )
 
-            firebaseRepository.setDocument(id = documentId, document = pollAnswer, collection = Firebase.pollResults()) { success ->
-                if (success) {
-                    getResultSummary()
-                } else {
-                    _selectedAnswerUiState.update {
-                        it.copy(error = "An unexpected error has occurred, please try again later.")
-                    }
+        firebaseRepository.setDocument(id = documentId, document = pollAnswer, collection = Firebase.pollResults()) { success ->
+            if (success) {
+                getResultSummary()
+            } else {
+                _selectedAnswerUiState.update {
+                    it.copy(error = "An unexpected error has occurred, please try again later.")
+                }
 
-                    _answerResultUiState.update {
-                        it.copy(loading = false)
-                    }
+                _answerResultUiState.update {
+                    it.copy(loading = false)
                 }
             }
         }

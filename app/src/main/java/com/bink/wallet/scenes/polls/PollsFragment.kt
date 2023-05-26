@@ -22,7 +22,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -56,7 +55,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.poll.value = args.poll
+        viewModel.setPoll(args.poll)
 
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
@@ -96,7 +95,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                         fontSize = 26.sp)
 
                     poll.answers?.let {
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
                         Answers(answers = it, answerUiState = answerUiState, answerSelected = answerSelected)
                     }
 
@@ -118,7 +117,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             color = colorResource(id = R.color.blue_accent),
                             fontSize = 16.sp)
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
                         PollResults(results = resultUiState.pollResultSummary)
                     }
                 }
@@ -159,7 +158,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         Column {
             answers.forEach { answer ->
                 AnswerRow(answer, answerUiState.selectedAnswer == answer, answerSelected)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
             }
         }
     }
@@ -169,7 +168,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         Column {
             results.forEach { result ->
                 ResultRow(result)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
             }
         }
     }
@@ -180,7 +179,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
-            .height(70.dp)
+            .height(dimensionResource(id = R.dimen.poll_answer_height))
             .background(backgroundColour)) {
 
             RadioButton(
@@ -201,24 +200,24 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     private fun ResultRow(result: PollResultSummary) {
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)) {
+            .height(dimensionResource(id = R.dimen.poll_answer_height))) {
             Row(modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                 .fillMaxWidth()
-                .height(70.dp)
+                .height(dimensionResource(id = R.dimen.poll_answer_height))
                 .background(colorResource(id = R.color.blue_light).copy(0.2f))
                 .align(Alignment.CenterEnd)) {}
 
             Row(modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                 .fillMaxWidth(result.answerPercentage / 100)
-                .height(70.dp)
+                .height(dimensionResource(id = R.dimen.poll_answer_height))
                 .background(colorResource(id = R.color.blue_light))
                 .align(Alignment.CenterStart)) {}
 
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp)
+                .height(dimensionResource(id = R.dimen.poll_answer_height))
                 .align(Alignment.Center)) {
 
                 RadioButton(
@@ -242,7 +241,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                     color = colorResource(id = R.color.blue_accent),
                     fontSize = 16.sp)
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_medium)))
             }
         }
     }
@@ -264,7 +263,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(dimensionResource(id = R.dimen.poll_submit_height))
                     .background(backgroundColour)) {
                 Text(
                     text = stringResource(R.string.submit_poll),
