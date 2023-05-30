@@ -247,4 +247,18 @@
     <dimen name="continue_button_padding">48dp</dimen>
     <dimen name="continue_button_text_padding">12dp</dimen>
 
+    <!-- Whats New -->
+    <dimen name="whats_new_item_height">125dp</dimen>
+    <dimen name="whats_new_item_corner">12dp</dimen>
+    <dimen name="merchant_icon_size">80dp</dimen>
+    <dimen name="navigate_icon_size">25dp</dimen>
+    <dimen name="new_feature_icon_size">30dp</dimen>
+
+    <dimen name="new_merchant_box_size">500dp</dimen>
+    <dimen name="new_merchant_corner_box_size">200dp</dimen>
+    <dimen name="new_merchant_primary_box">30dp</dimen>
+    <dimen name="new_merchant_corner">15dp</dimen>
+
+
+
 </resources>

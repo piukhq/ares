@@ -45,6 +45,7 @@ object SharedPreferenceManager {
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
     private const val ALLOW_BACK_ON_DELETE = "allow_back_on_delete"
     private const val SORT_WALLET_BY_RECENT = "sort_wallet_by_recent"
+    private const val VIEWED_WHATS_NEW = "viewed_whats_new"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -258,6 +259,12 @@ object SharedPreferenceManager {
         get() = preferences.getString(NETWORK_EXPORTS, null)
         set(value) = preferences.edit {
             it.putString(NETWORK_EXPORTS, value)
+        }
+
+    var viewedWhatsNew: String?
+        get() = preferences.getString(VIEWED_WHATS_NEW, null)
+        set(value) = preferences.edit {
+            it.putString(VIEWED_WHATS_NEW, value)
         }
 
     var loyaltyWalletPosition: Parcelable? = null
