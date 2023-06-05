@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.add_loyalty_card
 import android.app.Activity
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
+import android.content.DialogInterface
 import android.net.Uri
 import android.os.*
 import android.view.View
@@ -78,6 +79,7 @@ class AddLoyaltyCardFragment :
         if (resumeTimerFromMillis > 0) {
             scheduleHapticWithPause(resumeTimerFromMillis)
         }
+
     }
 
     override fun onPause() {
@@ -299,6 +301,32 @@ class AddLoyaltyCardFragment :
 
         val bounceAnimation = AnimationUtils.loadAnimation(context, R.anim.bounce)
         binding.bottomView.enterManuallyContainer.startAnimation(bounceAnimation)
+
+        showDialog()
+    }
+
+    private fun showDialog() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle("Unrecognised barcode")
+                setMessage("Would you like to add this to your wallet anyway?")
+                setPositiveButton("Add card",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        // User clicked OK button
+                    })
+                setNegativeButton("Cancel",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        // User cancelled the dialog
+                    })
+            }
+            // Set other dialog properties
+
+            // Create the AlertDialog
+            builder.create()
+        }
+
+        alertDialog?.show()
     }
 
 
