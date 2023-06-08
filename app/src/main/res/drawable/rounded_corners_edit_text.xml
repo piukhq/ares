@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="10dp"
+    android:padding="@dimen/rounder_corner_edit_text_padding"
     android:shape="rectangle">
-    <solid android:color="#FFFFFF"/>
-    <stroke android:color="@color/white" android:width="2dp"/>
+    <solid android:color="?attr/colorSurface"/>
+    <stroke android:color="@color/white" android:width="@dimen/rounder_corner_edit_text_width"/>
     <corners
-        android:radius="20dp"/>
+        android:radius="@dimen/rounder_corner_edit_text_corner_radius"/>
 </shape>

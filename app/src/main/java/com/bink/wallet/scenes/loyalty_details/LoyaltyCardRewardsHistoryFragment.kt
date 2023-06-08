@@ -1,18 +1,19 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
@@ -28,7 +29,9 @@ import com.bink.wallet.databinding.LoyaltyCardRewardsHistoryBinding
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.bindings.ACCUMULATOR
 import com.bink.wallet.utils.bindings.STAMP
 import com.bink.wallet.utils.dateFormatTransactionTime
 import com.bink.wallet.utils.enums.VoucherStates
@@ -54,14 +57,19 @@ class LoyaltyCardRewardsHistoryFragment :
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            viewModel.membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            viewModel.membershipPlan.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipCard.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
         binding.title.text = viewModel.membershipPlan.value?.account?.company_name
+        viewModel.getSelectedTheme()
 
         binding.composeView.setContent {
-            LoyaltyCardRewardsHistory(vouchers = viewModel.getFilteredVouchers())
+            AppTheme(viewModel.theme.value) {
+                LoyaltyCardRewardsHistory(vouchers = viewModel.getFilteredVouchers())
+            }
         }
     }
 
@@ -72,12 +80,14 @@ class LoyaltyCardRewardsHistoryFragment :
                 text = getString(R.string.rewards_history),
                 fontSize = 25.sp,
                 fontFamily = nunitoSans,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 text = getString(R.string.your_past_rewards),
                 fontSize = 18.sp,
                 fontFamily = nunitoSans,
+                color = MaterialTheme.colors.onSurface
             )
 
             if (vouchers.isNullOrEmpty()) {
@@ -96,14 +106,22 @@ class LoyaltyCardRewardsHistoryFragment :
 
     @Composable
     private fun EmptyState() {
-        Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium)), horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painterResource(R.drawable.ic_empty_wallet), contentDescription = "Empty Wallet", modifier = Modifier.size(dimensionResource(id = R.dimen.rewards_history_image_size)))
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_medium)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painterResource(R.drawable.ic_empty_wallet),
+                contentDescription = "Empty Wallet",
+                modifier = Modifier.size(dimensionResource(id = R.dimen.rewards_history_image_size))
+            )
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
             Text(
                 text = getString(R.string.no_rewards),
                 fontSize = 18.sp,
                 fontFamily = nunitoSans,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colors.onSurface
             )
 
         }
@@ -136,7 +154,15 @@ class LoyaltyCardRewardsHistoryFragment :
                     fontFamily = nunitoSans,
                     fontWeight = FontWeight.ExtraBold
                 )
-                DisplayVoucherCount(voucher = voucher)
+                if (voucher.earn?.type == ACCUMULATOR) {
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                    PercentageProgressBar(voucher = voucher)
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+
+                } else {
+                    DisplayVoucherCount(voucher = voucher)
+                }
+
                 val dateToDisplay =
                     if (voucher.state == VoucherStates.REDEEMED.state) voucher.date_redeemed else voucher.expiry_date
                 dateToDisplay?.let {
@@ -160,7 +186,13 @@ class LoyaltyCardRewardsHistoryFragment :
             colorResource(id = R.color.blue_inactive)
         }
 
-        LazyRow(modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))) {
+        LazyRow(
+            modifier = Modifier
+                .padding(
+                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)
+                )
+        ) {
             voucher.earn?.target_value?.toInt()?.let {
                 items(it) {
                     Row(
@@ -185,7 +217,24 @@ class LoyaltyCardRewardsHistoryFragment :
                 }
             }
         }
+    }
 
+    @Composable
+    fun PercentageProgressBar(voucher: Voucher) {
+        val colour = if (voucher.state == VoucherStates.REDEEMED.state) {
+            colorResource(id = R.color.voucher_redeemed_background)
+        } else {
+            colorResource(id = R.color.blue_inactive)
+        }
+
+        LinearProgressIndicator(
+            progress = (voucher.earn?.value ?: 0f) / (voucher.earn?.target_value ?: 1f),
+            color = colour,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.voucher_progress_bar_size))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.voucher_progress_bar_size)))
+        )
     }
 
     private fun getVoucherTitle(voucherBurn: Burn?): String {
@@ -201,11 +250,18 @@ class LoyaltyCardRewardsHistoryFragment :
     }
 
     private fun getVoucherSubTitle(voucherEarn: Earn?): String {
-        return getString(
-            R.string.voucher_stamp_subtext,
-            voucherEarn?.target_value?.toInt(),
-            voucherEarn?.suffix
-        )
+        return if (voucherEarn?.type == ACCUMULATOR) {
+            getString(
+                R.string.voucher_acc_subtext,
+                "${voucherEarn.prefix ?: ""}${voucherEarn.target_value?.toInt()}"
+            )
+        } else {
+            getString(
+                R.string.voucher_stamp_subtext,
+                voucherEarn?.target_value?.toInt(),
+                voucherEarn?.suffix
+            )
+        }
     }
 
     private fun getVoucherHeadline(voucher: Voucher): String {
@@ -242,7 +298,11 @@ class LoyaltyCardRewardsHistoryFragment :
         }
     }
 
-    private fun setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false): String {
+    private fun setTimestamp(
+        timeStamp: Long,
+        format: String = "%s",
+        shortMonth: Boolean = false,
+    ): String {
         return String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
     }
 }

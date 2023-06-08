@@ -115,7 +115,7 @@
                     android:foreground="?selectableItemBackground"
                     android:text="@string/decline_button_text"
                     android:textAllCaps="false"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/size_sub_headline"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -342,6 +342,9 @@
     <string name="contact_us_no_email_message">No Mail accounts set up, please email us directly: support@bink.com.</string>
     <string name="contact_us_select_email_client" tools:ignore="TypographyEllipsis">Choose Email Client...</string>
     <string name="settings_build_version">Bink v%1$s %2$d</string>
+    <string name="settings_menu_appearance">Appearance</string>
+    <string name="settings_menu_appearance_subtitle">Theme</string>
+    <string name="settings_menu_appearance_subtitle_detail">Change between light and dark</string>
 
     <!-- Debug Menu -->
     <string name="debug_current_version_title">Current version</string>
@@ -572,6 +575,7 @@
     </string>
     <string name="payment_card_needed_button_text">Add card</string>
     <string name="voucher_stamp_title">%s </string>
+    <string name="voucher_acc_subtext">for spending %s</string>
     <string name="voucher_stamp_subtext">for collecting %1$d %2$s</string>
     <string name="voucher_stamp_collected">%1$d/%2$d %3$s</string>
     <string name="voucher_collected">Collected:</string>

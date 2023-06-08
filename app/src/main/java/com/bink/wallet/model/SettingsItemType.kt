@@ -10,6 +10,7 @@ enum class SettingsItemType : Parcelable {
     HEADER,
     BETA,
     LOGOUT,
+    APPEARANCE,
     PREFERENCES,
     FAQS,
     CONTACT_US,

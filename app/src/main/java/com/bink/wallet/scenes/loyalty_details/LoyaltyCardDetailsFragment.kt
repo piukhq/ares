@@ -1,6 +1,9 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -9,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -81,7 +85,7 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(
                 this,
-                LoyaltyCardDetailsFragmentDirections.detailToHome(),
+                LoyaltyCardDetailsFragmentDirections.detailToHome(false),
                 currentDestination
             )
 
@@ -110,8 +114,21 @@ class LoyaltyCardDetailsFragment :
         setLocationModuleClickListener()
         handleFootersListeners()
 
-        val colorDrawable =
-            ColorDrawable(ContextCompat.getColor(requireContext(), android.R.color.white))
+        val nightModeFlags =
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        val colorDrawable = if (nightModeFlags != Configuration.UI_MODE_NIGHT_YES) ColorDrawable(
+            ContextCompat.getColor(
+                requireContext(),
+                android.R.color.white
+            )
+        ) else ColorDrawable(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.dark_theme_background
+            )
+        )
+
         colorDrawable.alpha = MIN_ALPHA.toInt()
         binding.toolbar.background = colorDrawable
 
@@ -159,7 +176,10 @@ class LoyaltyCardDetailsFragment :
 
             membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
                 binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
+
+                setupGoToSite(Color.parseColor(secondaryCardColour))
             }
+
         }
 
         val titleMessage =
@@ -393,7 +413,6 @@ class LoyaltyCardDetailsFragment :
                     aboutText,
                     summary,
                     description2 = description,
-                    firstButtonText = getString(R.string.go_to_site)
                 ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
             ),
             currentDestination
@@ -470,6 +489,16 @@ class LoyaltyCardDetailsFragment :
                 FirebaseEvents.FIREBASE_REQUEST_REVIEW,
                 getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS)
             )
+        }
+    }
+
+    private fun setupGoToSite(backgroundColor: Int){
+        binding.goToSite.setBackgroundColor(backgroundColor)
+        binding.goToSite.setOnClickListener {
+            logMixpanelEvent(MixpanelEvents.GO_TO_SITE)
+            if (isAdded){
+                findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(viewModel.membershipPlan.value?.account?.plan_url ?: ""))
+            }
         }
     }
 
@@ -824,6 +853,7 @@ class LoyaltyCardDetailsFragment :
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     return false
                 }
+
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     if (resource is GifDrawable) {
                         resource.setLoopCount(1)

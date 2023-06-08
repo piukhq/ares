@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -16,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -37,6 +40,7 @@ import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -46,7 +50,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(null).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -70,15 +74,18 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        viewModel.getSelectedTheme()
 
         binding.composeView.setContent {
-            Surface(color = MaterialTheme.colors.background) {
-                SettingsScreen()
+            AppTheme(viewModel.theme.value) {
+                SetStatusBarColour()
+                Surface(color = MaterialTheme.colors.background) {
+                    AppBar()
+                }
             }
-        }
 
-        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+
+        }
 
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
@@ -87,11 +94,44 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     }
 
     @Composable
+    @Preview
+    private fun AppBar() {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = viewModel.getSettingsTitle()),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_extra_large))
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { findNavController().popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close),
+                            contentDescription = "Close"
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.background
+            )
+        }, content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+            ) { SettingsScreen() }
+
+        })
+
+    }
+
+    @Composable
     fun SettingsScreen() {
         val settingsList = SettingsItemsPopulation.populateItems(LocalContext.current.resources)
         val uid = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)
         RemoteConfigUtil().beta?.users?.firstOrNull { it.uid == uid }?.let {
-            settingsList.add(3,
+            settingsList.add(
+                3,
                 SettingsItem(
                     getString(R.string.settings_menu_beta),
                     null,
@@ -109,6 +149,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
 
         DeleteAccountDialog()
+        ThemeDialog()
+
     }
 
     @Composable
@@ -225,7 +267,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             Dialog(onDismissRequest = { showDialog.value = false }) {
                 Column(
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(MaterialTheme.colors.surface)
                         .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
                 ) {
                     Text(
@@ -291,6 +333,42 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 }
             }
         }
+    }
+
+    @Composable
+    private fun ThemeDialog() {
+        val radioButtons = listOf(ThemeHelper.DARK_MODE, ThemeHelper.LIGHT_MODE, ThemeHelper.SYSTEM)
+        val isSelected = viewModel.theme.value
+
+        if (viewModel.showThemeDialog.value) {
+            Dialog(
+                onDismissRequest = { viewModel.showThemeDialog.value = false }) {
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.surface)
+                        .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
+                        .fillMaxWidth()
+                ) {
+                    radioButtons.forEach {
+                        Row {
+                            RadioButton(
+                                selected = isSelected == it,
+                                modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_small)),
+                                onClick = {
+                                    viewModel.showThemeDialog.value = false
+                                    viewModel.selectedTheme(it)
+                                })
+
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.theme_selector_dialog_padding))
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private fun settingsItemClick(item: SettingsItem) {
@@ -411,6 +489,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             SettingsItemType.FOOTER -> {
 
             }
+            SettingsItemType.APPEARANCE -> {
+                viewModel.showThemeDialog.value = true
+            }
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
@@ -441,12 +522,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
-    @Preview(showBackground = true)
     @Composable
-    fun DefaultPreview() {
-        Surface(color = MaterialTheme.colors.background) {
-            SettingsScreen()
-        }
+    private fun SetStatusBarColour() {
+        val activity = LocalView.current.context as Activity
+        val backgroundArgb = MaterialTheme.colors.background.toArgb()
+        activity.window.statusBarColor = backgroundArgb
+
     }
 
 }

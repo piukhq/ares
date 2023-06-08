@@ -25,6 +25,10 @@
     <dimen name="no_barcode_width">164dp</dimen>
     <dimen name="no_barcode_height">100dp</dimen>
     <dimen name="issue_button_height">65dp</dimen>
+    <dimen name="rounder_corner_edit_text_padding">10dp</dimen>
+    <dimen name="rounder_corner_edit_text_width">2dp</dimen>
+    <dimen name="rounder_corner_edit_text_corner_radius">20dp</dimen>
+    <dimen name="theme_selector_dialog_padding">20dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
@@ -47,6 +51,7 @@
     <dimen name="voucher_item_size">24dp</dimen>
     <dimen name="voucher_circle_size">18dp</dimen>
     <dimen name="voucher_circle_start_padding">4dp</dimen>
+    <dimen name="copy_card_size">28dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -177,6 +182,7 @@
     <dimen name="voucher_stamp_margin_horizontal">13dp</dimen>
     <dimen name="voucher_stamp_margin_bottom_horizontal">13dp</dimen>
     <dimen name="voucher_stamp_width">7dp</dimen>
+    <dimen name="voucher_progress_bar_size">16dp</dimen>
 
     <!-- LCD -->
     <dimen name="layout_elevation">5dp</dimen>
@@ -238,5 +244,7 @@
     <dimen name="barcode_icon_size">25dp</dimen>
     <dimen name="map_location_card_icon_size">30dp</dimen>
     <dimen name="location_gif_size">50dp</dimen>
+    <dimen name="continue_button_padding">48dp</dimen>
+    <dimen name="continue_button_text_padding">12dp</dimen>
 
 </resources>

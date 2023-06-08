@@ -31,7 +31,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.progressSpinner.visibility = View.VISIBLE
+        binding.pbPreferenceProgressBar.visibility = View.VISIBLE
 
         binding.preferenceDescription.text = HtmlCompat.fromHtml(
             getString(R.string.preference_description),
@@ -42,7 +42,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
         viewModel.preferences.observeNonNull(this) { preferences ->
             binding.preferenceError.visibility = View.GONE
-            binding.progressSpinner.visibility = View.GONE
+            binding.pbPreferenceProgressBar.visibility = View.GONE
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
@@ -70,13 +70,13 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             if (isNetworkAvailable(requireContext(), true)) {
                 binding.preferenceError.visibility = View.VISIBLE
             }
-            binding.progressSpinner.visibility = View.GONE
+            binding.pbPreferenceProgressBar.visibility = View.GONE
         }
 
         if (isNetworkAvailable(requireContext(), true)) {
             viewModel.getPreferences()
         } else {
-            binding.progressSpinner.visibility = View.GONE
+            binding.pbPreferenceProgressBar.visibility = View.GONE
         }
     }
 
