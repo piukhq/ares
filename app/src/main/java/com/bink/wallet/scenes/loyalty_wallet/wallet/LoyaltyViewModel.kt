@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
+import com.bink.wallet.model.WhatsNew
 import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
@@ -18,6 +19,7 @@ import com.bink.wallet.utils.PollUtil
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.firebase.FirebaseRepository
 import com.bink.wallet.utils.firebase.getTime
+import com.bink.wallet.utils.firebase.whatsNew
 import com.bink.wallet.utils.firebase.polls
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.logDebug
@@ -231,6 +233,21 @@ class LoyaltyViewModel constructor(
                 _isLoading.value = false
                 _loadPlansError.value = e
                 _loadCardsError.value = e
+            }
+        }
+    }
+
+    fun checkWhatsNew(callback: (WhatsNew) -> Unit) {
+        firebaseRepository.getCollection<WhatsNew>(Firebase.whatsNew().whereEqualTo("published", true).whereLessThan("showFrom", getTime())) { whatsNewList ->
+            whatsNewList?.sortedBy { it.showFrom }?.let { sortedList ->
+                sortedList.firstOrNull()?.let { newestItem ->
+                    val previouslyViewedWhatsNew = SharedPreferenceManager.viewedWhatsNew
+                    val hasBeenPreviouslyViewed = previouslyViewedWhatsNew?.contains(newestItem.id ?: "")
+                    if (hasBeenPreviouslyViewed != true) {
+                        callback(newestItem)
+                        SharedPreferenceManager.viewedWhatsNew = "$previouslyViewedWhatsNew:${newestItem.id}"
+                    }
+                }
             }
         }
     }
