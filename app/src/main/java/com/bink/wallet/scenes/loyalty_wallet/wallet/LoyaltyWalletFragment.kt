@@ -58,13 +58,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
 
-    private val walletAdapter = LoyaltyWalletAdapter(onClickListener = {
-        onCardClicked(it)
-    }, onCardLinkClickListener = {
-        onCardLinkClicked(it)
-    }, onPlaceholderClickListener = {
-        placeHolderToBrowseBrands()
-    }).apply {
+    private val walletAdapter = LoyaltyWalletAdapter(
+        onClickListener = {
+            onCardClicked(it)
+        },
+        onOpenPollClickListener = {
+            logMixpanelEvent(
+                MixpanelEvents.POLL_CLICKED,
+                JSONObject().put(MixpanelEvents.POLL_ID, it.id)
+            )
+        },
+        onClosePollClickListener = {
+            dismissPollDialog(it)
+        },
+        onCardLinkClickListener = {
+            onCardLinkClicked(it)
+        },
+        onPlaceholderClickListener = {
+            placeHolderToBrowseBrands()
+        }
+    ).apply {
         setHasStableIds(true)
     }
 
@@ -253,6 +266,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
+
         }
         mainViewModel.isLoading.value?.let {
             if (it) {
@@ -482,6 +496,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 plans = userDataResult.result.second
 
                 walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(sortPlans(ArrayList(userDataResult.result.third)))
+                
+                val displayedCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                    sortPlans(ArrayList(userDataResult.result.third))
+                )
+
+                viewModel.getPolls { pollItem ->
+                    pollItem?.let {
+                        displayedCards.add(0, it)
+                    }
+
+                    walletAdapter.membershipCards = displayedCards
+                }
 
                 viewModel.checkWhatsNew { whatsNew ->
                     val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(whatsNew, plans.toTypedArray(), cards.toTypedArray())
@@ -655,6 +681,45 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
     }
+
+    private fun dismissPollDialog(pollId: String) {
+        lateinit var dialog: AlertDialog
+        val builder = context?.let { AlertDialog.Builder(it) }
+        if (builder != null) {
+            builder.setTitle(getString(R.string.poll_cta_dismiss_title))
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS_24H,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
+                        PollUtil.dismissPollFor24h(pollId)
+                        fetchData()
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
+                        PollUtil.dismissPollPermanently(pollId)
+                        fetchData()
+                    }
+                }
+            }
+            builder.setPositiveButton(getString(R.string.poll_cta_dismiss_positive), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.poll_cta_dismiss_neutral), dialogClickListener)
+            dialog = builder.create()
+            dialog.show()
+
+            dialog.setOnCancelListener {
+                dialog.cancel()
+            }
+        }
+    }
+
 
     fun pendingCardDeleteDialog(position: Int) {
         lateinit var dialog: AlertDialog

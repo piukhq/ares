@@ -675,6 +675,11 @@
     <string name="whats_new_merchant_title">New Merchant</string>
     <string name="whats_new_title">Whats new</string>
 
+    <string name="take_poll">Take Poll</string>
+    <string name="poll_cta_dismiss_title">Help us manage your poll notifications better:</string>
+    <string name="poll_cta_dismiss_positive">Remind me tomorrow</string>
+    <string name="poll_cta_dismiss_neutral">Don\'t show me this poll again</string>
+
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

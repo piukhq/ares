@@ -23,6 +23,7 @@ class FirebaseRepository {
                     try {
                         arrayList.add(document.toObject(T::class.java))
                     } catch (e: Exception) {
+                        callback(null)
                         //Catching error incase object can't be de-serialized //TODO Analytics
                     }
                 }

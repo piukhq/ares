@@ -8,16 +8,19 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.WhatsNew
+import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.PollUtil
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.firebase.FirebaseRepository
 import com.bink.wallet.utils.firebase.getTime
 import com.bink.wallet.utils.firebase.whatsNew
+import com.bink.wallet.utils.firebase.polls
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.ktx.Firebase
@@ -246,6 +249,20 @@ class LoyaltyViewModel constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getPolls(callback: (PollItem?) -> Unit) {
+        val time = getTime()
+        firebaseRepository.getCollection<PollItem>(Firebase.polls().whereEqualTo("published", true).whereLessThan("closeTime", time)) { polls ->
+            polls?.firstOrNull { it.startTime < time }?.let { firstStartedPoll ->
+                firstStartedPoll.id?.let { pollId ->
+                    if (PollUtil.canViewPoll(pollId)) {
+                        callback(firstStartedPoll)
+                    }
+                }
+            }
+            callback(null)
         }
     }
 

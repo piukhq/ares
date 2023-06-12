@@ -261,4 +261,7 @@
 
 
 
+    <!-- Polls -->
+    <dimen name="poll_cta_image_size">25dp</dimen>
+
 </resources>
