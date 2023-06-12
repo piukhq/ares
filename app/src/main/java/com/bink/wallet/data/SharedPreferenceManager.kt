@@ -45,6 +45,7 @@ object SharedPreferenceManager {
     private const val SKIPPED_APP_VERSION = "skipped_app_version"
     private const val ALLOW_BACK_ON_DELETE = "allow_back_on_delete"
     private const val SORT_WALLET_BY_RECENT = "sort_wallet_by_recent"
+    private const val VIEWED_WHATS_NEW = "viewed_whats_new"
     private const val TEMP_DISMISS_POLL = "temp_dismiss_poll"
     private const val PERM_DISMISS_POLL = "perm_dismiss_poll"
 
@@ -260,6 +261,12 @@ object SharedPreferenceManager {
         get() = preferences.getString(NETWORK_EXPORTS, null)
         set(value) = preferences.edit {
             it.putString(NETWORK_EXPORTS, value)
+        }
+
+    var viewedWhatsNew: String?
+        get() = preferences.getString(VIEWED_WHATS_NEW, null)
+        set(value) = preferences.edit {
+            it.putString(VIEWED_WHATS_NEW, value)
         }
 
     var tempDismissedPolls: String?

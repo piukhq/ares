@@ -52,6 +52,7 @@ import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.Magi
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
+import com.bink.wallet.scenes.whats_new.WhatsNewViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
 import com.bink.wallet.utils.firebase.FirebaseRepository
 import org.koin.android.ext.koin.androidApplication
@@ -172,6 +173,8 @@ val viewModelModules = module {
     viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
 
     viewModel { BetaFeatureViewModel(get()) }
+
+    viewModel { WhatsNewViewModel(get()) }
 
     viewModel { PollsViewModel(get(), get(), get()) }
 }
