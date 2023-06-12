@@ -676,6 +676,9 @@
     <string name="poll_cta_dismiss_positive">Remind me tomorrow</string>
     <string name="poll_cta_dismiss_neutral">Don\'t show me this poll again</string>
     <string name="submit_poll">Submit</string>
+    <string name="poll_thanks_you_for_response">Thank you for your response!</string>
+    <string name="poll_add_suggestion">Add your own suggestion</string>
+    <string name="poll_expires_in">\"This poll expires in \"</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

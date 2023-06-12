@@ -74,6 +74,12 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
         }
     }
 
+    fun updateCustomAnswer(answer: String) {
+        _selectedAnswerUiState.update {
+            it.copy(customAnswer = answer)
+        }
+    }
+
     fun submitAnswer() {
         _answerResultUiState.update {
             it.copy(loading = true)
@@ -83,6 +89,7 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
 
         val pollAnswer = PollResultItem(
             answer = _selectedAnswerUiState.value.selectedAnswer,
+            customAnswer = _selectedAnswerUiState.value.customAnswer,
             createdDate = getTime(),
             pollId = poll.value?.id ?: "",
             userId = userId
@@ -114,8 +121,15 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
                 PollResultSummary(answer, percentage, answer == userAnswer)
             }.orEmpty().toMutableList()
 
+            //If results doesn't include users, it'll be a custom answer instead.
+            val customerAnswer = if (pollResultSummary.none { it.isUsersAnswer }) {
+                results?.find { it.userId == userId }?.customAnswer
+            } else {
+                null
+            }
+
             _answerResultUiState.update {
-                it.copy(loading = false, pollResultSummary = pollResultSummary)
+                it.copy(loading = false, pollResultSummary = pollResultSummary, customAnswer = customerAnswer)
             }
         }
     }
@@ -135,6 +149,6 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
 
 }
 
-data class AnswerUiState(val selectedAnswer: String = "", val error: String = "")
+data class AnswerUiState(val selectedAnswer: String = "", val error: String = "", val customAnswer: String = "")
 
-data class ResultUiState(val loading: Boolean = false, val pollResultSummary: MutableList<PollResultSummary> = arrayListOf())
+data class ResultUiState(val loading: Boolean = false, val pollResultSummary: MutableList<PollResultSummary> = arrayListOf(), val customAnswer: String? = null)

@@ -7,11 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.navArgs
@@ -96,16 +95,16 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
 
                     poll.answers?.let {
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
-                        Answers(answers = it, answerUiState = answerUiState, answerSelected = answerSelected)
+                        Answers(answers = it, allowCustom = poll.allowCustomAnswer, answerUiState = answerUiState, answerSelected = answerSelected)
                     }
 
-                    SubmitPoll(answerUiState = answerUiState, submitAnswer = submitAnswer)
+                    SubmitPoll(answerUiState = answerUiState, allowCustom = poll.allowCustomAnswer, submitAnswer = submitAnswer)
                 }
 
                 AnimatedVisibility(visible = userHasAnswered) {
                     Column {
                         Text(
-                            text = "Thank you for your response!",
+                            text = stringResource(R.string.poll_thanks_you_for_response),
                             fontFamily = nunitoSans,
                             color = MaterialTheme.colors.onSurface,
                             fontSize = 26.sp)
@@ -118,7 +117,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             fontSize = 16.sp)
 
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
-                        PollResults(results = resultUiState.pollResultSummary)
+                        PollResults(results = resultUiState.pollResultSummary, customAnswer = resultUiState.customAnswer)
                     }
                 }
 
@@ -146,7 +145,10 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         }
 
         Text(
-            text = "This poll expires in $endDate",
+            text = buildString {
+                append(stringResource(R.string.poll_expires_in))
+                append(endDate)
+            },
             fontFamily = nunitoSans,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.blue_accent),
@@ -154,24 +156,33 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     }
 
     @Composable
-    private fun Answers(answers: List<String>, answerUiState: AnswerUiState, answerSelected: (String) -> Unit) {
+    private fun Answers(answers: List<String>, allowCustom: Boolean, answerUiState: AnswerUiState, answerSelected: (String) -> Unit) {
         Column {
             answers.forEach { answer ->
                 AnswerRow(answer, answerUiState.selectedAnswer == answer, answerSelected)
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+            }
+            if (allowCustom) {
+                AnswerRow(answerUiState)
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
             }
         }
     }
 
     @Composable
-    private fun PollResults(results: MutableList<PollResultSummary>) {
+    private fun PollResults(results: MutableList<PollResultSummary>, customAnswer: String?) {
         Column {
             results.forEach { result ->
                 ResultRow(result)
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
             }
+
+            customAnswer?.let {
+                CustomResult(result = it)
+            }
         }
     }
+
 
     @Composable
     private fun AnswerRow(answer: String, isSelected: Boolean, answerSelected: (String) -> Unit) {
@@ -182,10 +193,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             .height(dimensionResource(id = R.dimen.poll_answer_height))
             .background(backgroundColour)) {
 
-            RadioButton(
-                selected = (isSelected),
-                onClick = { answerSelected(answer) }
-            )
+            RadioButton(selected = isSelected, onClick = { answerSelected(answer) })
 
             Text(
                 text = answer,
@@ -193,6 +201,45 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 16.sp)
+
+        }
+    }
+
+
+    @Composable
+    private fun AnswerRow(answerUiState: AnswerUiState) {
+        val isSelected = answerUiState.customAnswer.isNotEmpty()
+        val backgroundColour = if (isSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
+            .fillMaxWidth()
+            .height(dimensionResource(id = R.dimen.poll_answer_height))
+            .background(backgroundColour)) {
+
+            TextField(
+                value = answerUiState.customAnswer,
+                onValueChange = {
+                    viewModel.updateCustomAnswer(it)
+                },
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent, textColor = MaterialTheme.colors.onSurface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                label = {
+                    Text(
+                        text = stringResource(R.string.poll_add_suggestion),
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
+                        fontSize = 16.sp)
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+
         }
     }
 
@@ -247,8 +294,27 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     }
 
     @Composable
-    private fun SubmitPoll(answerUiState: AnswerUiState, submitAnswer: () -> Unit) {
-        val isAnswerSelected = answerUiState.selectedAnswer.isNotEmpty()
+    private fun CustomResult(result: String) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
+            .fillMaxWidth()
+            .height(dimensionResource(id = R.dimen.poll_answer_height))
+            .background(colorResource(id = R.color.blue_light))) {
+
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_small)))
+
+            Text(
+                text = result,
+                fontFamily = nunitoSans,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 16.sp)
+        }
+    }
+
+    @Composable
+    private fun SubmitPoll(answerUiState: AnswerUiState, allowCustom: Boolean, submitAnswer: () -> Unit) {
+        val isAnswerSelected = answerUiState.selectedAnswer.isNotEmpty() || if (allowCustom) answerUiState.customAnswer.isNotEmpty() else false
         val backgroundColour = if (isAnswerSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
         Button(
             modifier = Modifier
