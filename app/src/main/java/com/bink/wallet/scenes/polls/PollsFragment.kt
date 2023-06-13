@@ -332,7 +332,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             modifier = Modifier
                 .height(dimensionResource(id = R.dimen.poll_submit_height))
                 .fillMaxWidth(),
-            border = BorderStroke(2.dp, MaterialTheme.colors.onSurface),
+            border = BorderStroke(dimensionResource(id = R.dimen.poll_button_border), MaterialTheme.colors.onSurface),
             shape = RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)),
             onClick = { viewModel.deleteAnswer() }) {
             Text(
