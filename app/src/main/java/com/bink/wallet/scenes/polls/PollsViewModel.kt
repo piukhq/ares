@@ -70,13 +70,13 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
 
     fun answerSelected(answer: String) {
         _selectedAnswerUiState.update {
-            it.copy(selectedAnswer = answer)
+            it.copy(selectedAnswer = answer, customAnswer = "")
         }
     }
 
     fun updateCustomAnswer(answer: String) {
         _selectedAnswerUiState.update {
-            it.copy(customAnswer = answer)
+            it.copy(customAnswer = answer, selectedAnswer = "")
         }
     }
 

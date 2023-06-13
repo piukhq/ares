@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -186,6 +187,8 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
 
     @Composable
     private fun AnswerRow(answer: String, isSelected: Boolean, answerSelected: (String) -> Unit) {
+        val focusManager = LocalFocusManager.current
+
         val backgroundColour = if (isSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
@@ -193,7 +196,10 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             .height(dimensionResource(id = R.dimen.poll_answer_height))
             .background(backgroundColour)) {
 
-            RadioButton(selected = isSelected, onClick = { answerSelected(answer) })
+            RadioButton(selected = isSelected, onClick = {
+                focusManager.clearFocus()
+                answerSelected(answer)
+            })
 
             Text(
                 text = answer,
