@@ -42,6 +42,8 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
 
     private lateinit var userId: String
 
+    private var userResult: PollResultItem? = null
+
     init {
         getSelectedTheme()
     }
@@ -92,7 +94,8 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
             customAnswer = _selectedAnswerUiState.value.customAnswer,
             createdDate = getTime(),
             pollId = poll.value?.id ?: "",
-            userId = userId
+            userId = userId,
+            id = documentId
         )
 
         firebaseRepository.setDocument(id = documentId, document = pollAnswer, collection = Firebase.pollResults()) { success ->
@@ -110,26 +113,50 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
         }
     }
 
+    fun deleteAnswer() {
+        _answerResultUiState.update {
+            it.copy(loading = true)
+        }
+        userResult?.id?.let { resultId ->
+            firebaseRepository.deleteDocument(id = resultId, collection = Firebase.pollResults()) { exception ->
+                if (exception == null) {
+                    _answerResultUiState.update {
+                        it.copy(loading = false, pollResultSummary = arrayListOf(), customAnswer = null, isEditable = false)
+                    }
+                } else {
+                    _selectedAnswerUiState.update {
+                        it.copy(error = "An unexpected error has occurred, please try again later.")
+                    }
+                    _answerResultUiState.update {
+                        it.copy(loading = false)
+                    }
+                }
+            }
+        }
+    }
+
     private fun getResultSummary() {
         val userAnswer = _selectedAnswerUiState.value.selectedAnswer
 
         firebaseRepository.getCollection<PollResultItem>(Firebase.pollResults().whereEqualTo("pollId", poll.value?.id)) { results ->
-
             val pollResultSummary = poll.value?.answers?.map { answer ->
                 val answerResults = results?.filter { it.answer == answer }
                 val percentage = (answerResults?.size?.toFloat() ?: 0f) / (results?.size?.toFloat() ?: 1f) * 100
                 PollResultSummary(answer, percentage, answer == userAnswer)
             }.orEmpty().toMutableList()
 
+            userResult = results?.find { it.userId == userId }
             //If results doesn't include users, it'll be a custom answer instead.
             val customerAnswer = if (pollResultSummary.none { it.isUsersAnswer }) {
-                results?.find { it.userId == userId }?.customAnswer
+                userResult?.customAnswer
             } else {
                 null
             }
 
+            val isEditable = (getTime() - (userResult?.createdDate ?: 0)) < (poll.value?.editTimeLimit ?: 0)
+
             _answerResultUiState.update {
-                it.copy(loading = false, pollResultSummary = pollResultSummary, customAnswer = customerAnswer)
+                it.copy(loading = false, pollResultSummary = pollResultSummary, customAnswer = customerAnswer, isEditable = isEditable)
             }
         }
     }
@@ -151,4 +178,4 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
 
 data class AnswerUiState(val selectedAnswer: String = "", val error: String = "", val customAnswer: String = "")
 
-data class ResultUiState(val loading: Boolean = false, val pollResultSummary: MutableList<PollResultSummary> = arrayListOf(), val customAnswer: String? = null)
+data class ResultUiState(val loading: Boolean = false, val pollResultSummary: MutableList<PollResultSummary> = arrayListOf(), val customAnswer: String? = null, val isEditable: Boolean = false)

@@ -265,5 +265,6 @@
     <dimen name="poll_cta_image_size">25dp</dimen>
     <dimen name="poll_answer_height">70dp</dimen>
     <dimen name="poll_submit_height">50dp</dimen>
+    <dimen name="poll_button_rounding">25dp</dimen>
 
 </resources>

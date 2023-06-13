@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.polls
 import android.os.Bundle
 import android.view.View
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -118,7 +120,13 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             fontSize = 16.sp)
 
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+
                         PollResults(results = resultUiState.pollResultSummary, customAnswer = resultUiState.customAnswer)
+
+                        if (resultUiState.isEditable) {
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+                            EditPoll()
+                        }
                     }
                 }
 
@@ -319,12 +327,32 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     }
 
     @Composable
+    private fun EditPoll() {
+        OutlinedButton(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.poll_submit_height))
+                .fillMaxWidth(),
+            border = BorderStroke(2.dp, MaterialTheme.colors.onSurface),
+            shape = RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)),
+            onClick = { viewModel.deleteAnswer() }) {
+            Text(
+                text = stringResource(R.string.edit_vote),
+                fontFamily = nunitoSans,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+
+    @Composable
     private fun SubmitPoll(answerUiState: AnswerUiState, allowCustom: Boolean, submitAnswer: () -> Unit) {
         val isAnswerSelected = answerUiState.selectedAnswer.isNotEmpty() || if (allowCustom) answerUiState.customAnswer.isNotEmpty() else false
         val backgroundColour = if (isAnswerSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
         Button(
             modifier = Modifier
-                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)))
                 .fillMaxWidth(),
             contentPadding = PaddingValues(),
             enabled = isAnswerSelected,

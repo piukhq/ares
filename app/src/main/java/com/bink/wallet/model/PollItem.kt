@@ -10,7 +10,8 @@ data class PollItem(
     val title: String = "",
     val startTime: Int = 0,
     val closeTime: Int? = null,
+    val editTimeLimit: Int = 0,
     val published: Boolean = false,
     val allowCustomAnswer: Boolean = false,
-    val answers: List<String>? = null
+    val answers: List<String>? = null,
 ) : Parcelable
