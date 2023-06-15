@@ -59,13 +59,22 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
     fun setPoll(pollItem: PollItem) {
         _poll.value = pollItem
 
+        _answerResultUiState.update {
+            it.copy(loading = true)
+        }
+
         getUser { user ->
             userId = user.uid
             firebaseRepository.getDocument<PollResultItem>(Firebase.pollResults().whereEqualTo("userId", userId).whereEqualTo("pollId", pollItem.id)) { userResult ->
                 userResult?.answer?.let {
                     answerSelected(it)
                     getResultSummary()
+                } ?: run {
+                    _answerResultUiState.update {
+                        it.copy(loading = false)
+                    }
                 }
+
             }
         }
     }

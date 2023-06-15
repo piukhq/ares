@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -33,6 +32,7 @@ import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.PollResultSummary
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.getFormattedEndDate
+import com.bink.wallet.utils.noRippleClickable
 import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.delay
@@ -87,7 +87,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         ) {
             poll.closeTime?.let { closeTime ->
 
-                if (!userHasAnswered) {
+                if (!userHasAnswered && !resultUiState.loading) {
                     CloseTime(closeTime = closeTime)
 
                     Text(
@@ -111,6 +111,8 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             fontFamily = nunitoSans,
                             color = MaterialTheme.colors.onSurface,
                             fontSize = 26.sp)
+
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium_large)))
 
                         Text(
                             text = poll.question,
@@ -136,6 +138,12 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                         fontFamily = nunitoSans,
                         color = Color.Red,
                         fontSize = 26.sp)
+                }
+
+                AnimatedVisibility(visible = resultUiState.loading) {
+                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = colorResource(id = R.color.blue_light))
+                    }
                 }
             }
 
@@ -202,7 +210,10 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.poll_answer_height))
-            .background(backgroundColour)) {
+            .background(backgroundColour)
+            .noRippleClickable {
+                answerSelected(answer)
+            }) {
 
             RadioButton(selected = isSelected, onClick = {
                 focusManager.clearFocus()
@@ -214,7 +225,11 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.onSurface,
-                fontSize = 16.sp)
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .noRippleClickable {
+                        answerSelected(answer)
+                    })
 
         }
     }
