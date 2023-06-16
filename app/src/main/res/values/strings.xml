@@ -683,7 +683,7 @@
     <string name="edit_vote">Edit my vote</string>
     <string name="poll_thanks_you_for_response">Thank you for your response!</string>
     <string name="poll_add_suggestion">Add your own suggestion</string>
-    <string name="poll_expires_in">\"This poll expires in \"</string>
+    <string name="poll_expires_in">This poll expires in&#160;</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">
