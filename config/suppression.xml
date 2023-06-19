@@ -14,4 +14,11 @@
         <packageUrl regex="true">^pkg:maven/org\.tensorflow/tensorflow\-lite@.*$</packageUrl>
         <cve>CVE-2021-35958</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: sqlite-jdbc-3.36.0.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.xerial/sqlite\-jdbc@.*$</packageUrl>
+        <cve>CVE-2023-32697</cve>
+    </suppress>
 </suppressions>
