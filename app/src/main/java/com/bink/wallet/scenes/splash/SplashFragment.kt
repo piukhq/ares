@@ -76,6 +76,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun getDirections(): Int {
+        return getUnRootedDirections()
         val rootBeer = RootBeer(context)
         return when (rootBeer.isRooted) {
             true -> R.id.splash_to_rooted_device
