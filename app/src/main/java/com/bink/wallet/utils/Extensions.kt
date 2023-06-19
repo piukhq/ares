@@ -32,6 +32,7 @@ import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.firebase.getTime
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -43,7 +44,7 @@ fun Context.toPixelFromDip(value: Float) =
 
 fun NavController.navigateIfAdded(
     fragment: Fragment, @IdRes resId: Int,
-    currentDestinationId: Int? = null
+    currentDestinationId: Int? = null,
 ) {
     if (currentDestinationId != null) {
         if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
@@ -59,7 +60,7 @@ fun NavController.navigateIfAdded(
 fun NavController.navigateIfAdded(
     fragment: Fragment,
     navDirections: NavDirections,
-    currentDestinationId: Int? = null
+    currentDestinationId: Int? = null,
 ) {
     if (currentDestinationId != null) {
         if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
@@ -79,7 +80,7 @@ fun Context.displayModalPopup(
     cancelAction: () -> Unit = {},
     buttonText: Int = R.string.ok,
     hasNegativeButton: Boolean = false,
-    isCancelable: Boolean = true
+    isCancelable: Boolean = true,
 ) {
     val builder = AlertDialog.Builder(this)
 
@@ -122,7 +123,7 @@ fun LiveData<Exception>.observeErrorNonNull(
     defaultErrorTitle: String,
     defaultErrorMessage: String,
     isUserDriven: Boolean,
-    observer: ((t: Exception) -> Unit)?
+    observer: ((t: Exception) -> Unit)?,
 ) {
     this.observe(owner) {
         it?.let {
@@ -158,13 +159,13 @@ fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
     isUserDriven: Boolean,
-    observer: ((t: Exception) -> Unit)?
+    observer: ((t: Exception) -> Unit)?,
 ) = observeErrorNonNull(context, owner, EMPTY_STRING, EMPTY_STRING, isUserDriven, observer)
 
 fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     isUserDriven: Boolean,
-    owner: LifecycleOwner
+    owner: LifecycleOwner,
 ) = observeErrorNonNull(context, owner, EMPTY_STRING, EMPTY_STRING, isUserDriven, null)
 
 fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
@@ -173,7 +174,7 @@ fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
     defaultErrorTitle: String,
     defaultErrorMessage: String,
     isUserDriven: Boolean,
-    observer: ((t: Exception) -> Unit)?
+    observer: ((t: Exception) -> Unit)?,
 ) {
     if (UtilFunctions.isNetworkAvailable(context, true)) {
         observeErrorNonNull(
@@ -320,7 +321,7 @@ fun TextView.setTermsAndPrivacyUrls(
     checkBoxText: String,
     termsAndConditions: String,
     privacyPolicy: String,
-    urlClickListener: (String) -> Unit
+    urlClickListener: (String) -> Unit,
 ) {
     val checkBoxSpannable = SpannableString(checkBoxText)
     checkBoxSpannable.setSpan(
@@ -350,7 +351,7 @@ fun TextView.setTermsAndPrivacyUrls(
 fun TextView.setMagicLinkUrl(
     magicLinkText: String,
     urlText: String,
-    urlClickListener: (String) -> Unit
+    urlClickListener: (String) -> Unit,
 ) {
     val magicLinkSpannable = SpannableString(magicLinkText)
     magicLinkSpannable.setSpan(
@@ -433,7 +434,7 @@ fun Context.showDialog(
     negativeBtn: String? = null,
     cancelable: Boolean = false,
     positiveCallback: () -> Unit = {},
-    negativeCallback: () -> Unit = {}
+    negativeCallback: () -> Unit = {},
 ) {
     val builder = androidx.appcompat.app.AlertDialog.Builder(this)
     builder.apply {
@@ -457,6 +458,19 @@ inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier
         onClick()
     }
 }
+
+fun Int?.getFormattedEndDate() = this?.let {
+    val timeRemaining = (it.toLong() - getTime()) * 1000
+    val secs = timeRemaining / 1000 % 60
+    val mins = timeRemaining / 60000 % 60
+    val hours = timeRemaining / 3600000 % 24
+    val days = timeRemaining / 86400000
+    if (days > 0) {
+        if (days > 1) "$days days" else "$days day"
+    } else {
+        String.format("%02d:%02d:%02d", hours, mins, secs)
+    }
+} ?: ""
 
 
 

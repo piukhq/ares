@@ -42,6 +42,7 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.polls.PollsViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.settings.*
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
@@ -174,6 +175,8 @@ val viewModelModules = module {
     viewModel { BetaFeatureViewModel(get()) }
 
     viewModel { WhatsNewViewModel(get()) }
+
+    viewModel { PollsViewModel(get(), get(), get()) }
 }
 
 fun provideLoginRepository(
