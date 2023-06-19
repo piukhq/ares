@@ -144,6 +144,14 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
         }
     }
 
+    fun checkEditable(){
+        val isEditable = (getTime() - (userResult?.createdDate ?: 0)) < (poll.value?.editTimeLimit ?: 0)
+
+        _answerResultUiState.update {
+            it.copy(isEditable = isEditable)
+        }
+    }
+
     private fun getResultSummary() {
         val userAnswer = _selectedAnswerUiState.value.selectedAnswer
 
@@ -162,10 +170,10 @@ class PollsViewModel(private val dataStoreSource: DataStoreSourceImpl, private v
                 null
             }
 
-            val isEditable = (getTime() - (userResult?.createdDate ?: 0)) < (poll.value?.editTimeLimit ?: 0)
+            checkEditable()
 
             _answerResultUiState.update {
-                it.copy(loading = false, pollResultSummary = pollResultSummary, customAnswer = customerAnswer, isEditable = isEditable)
+                it.copy(loading = false, pollResultSummary = pollResultSummary, customAnswer = customerAnswer)
             }
         }
     }

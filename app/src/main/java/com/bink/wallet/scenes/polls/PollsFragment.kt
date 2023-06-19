@@ -129,6 +129,13 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
                             EditPoll()
                         }
+
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                delay(10000)
+                                viewModel.checkEditable()
+                            }
+                        }
                     }
                 }
 
