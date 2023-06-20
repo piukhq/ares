@@ -331,6 +331,10 @@ class LoyaltyWalletRepository(
         }
     }
 
+    suspend fun addCustomCardToDatabase(membershipCard: MembershipCard){
+        membershipCardDao.storeMembershipCard(membershipCard)
+    }
+
     private fun encryptMembershipCardFields(account: Account) {
         doEncryptionMembershipCardFields(account.registration_fields)
         doEncryptionMembershipCardFields(account.add_fields)

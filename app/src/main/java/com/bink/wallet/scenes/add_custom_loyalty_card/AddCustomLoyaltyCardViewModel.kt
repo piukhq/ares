@@ -2,6 +2,8 @@ package com.bink.wallet.scenes.add_custom_loyalty_card
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.DataStoreSourceImpl
@@ -19,6 +21,10 @@ class AddCustomLoyaltyCardViewModel(
     val theme: MutableState<String>
         get() = _theme
 
+    val navigateToLcd: LiveData<MembershipCard>
+        get() = _navigateToLcd
+    private val _navigateToLcd = MutableLiveData<MembershipCard>()
+
     fun getSelectedTheme() {
         viewModelScope.launch {
             dataStoreSource.getCurrentlySelectedTheme().collect {
@@ -28,6 +34,14 @@ class AddCustomLoyaltyCardViewModel(
     }
 
     fun createMembershipCard(membershipCard: MembershipCard) {
-        loyaltyWalletRepository.storeMembershipCard(membershipCard)
+        viewModelScope.launch {
+            try {
+                loyaltyWalletRepository.addCustomCardToDatabase(membershipCard)
+                _navigateToLcd.value = membershipCard
+            } catch (e: Exception) {
+
+            }
+
+        }
     }
 }

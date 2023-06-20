@@ -238,7 +238,7 @@
 
         <action
             android:id="@+id/add_loyalty_to_add_custom"
-            app:destination="@+id/add_custom_card"/>
+            app:destination="@+id/add_custom_card" />
 
         <argument
             android:name="membershipPlans"
@@ -364,6 +364,7 @@
 
         <argument
             android:name="membershipPlan"
+            app:nullable="true"
             app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
         <argument
@@ -1051,6 +1052,12 @@
 
     <fragment
         android:id="@+id/add_custom_card"
-        android:name="com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardFragment" />
+        android:name="com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardFragment">
+
+        <action
+            android:id="@+id/customCard_to_lcd"
+            app:destination="@+id/loyalty_card_detail_fragment" />
+
+    </fragment>
 
 </navigation>

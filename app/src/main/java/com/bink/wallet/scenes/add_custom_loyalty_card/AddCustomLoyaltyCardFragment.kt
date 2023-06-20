@@ -15,13 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddCustomCardFragmentBinding
 import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.Account
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ColourPalette
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.zxing.BarcodeFormat
@@ -39,12 +43,16 @@ class AddCustomLoyaltyCardFragment :
             .build()
     }
 
+    lateinit var membershipPlan : MembershipPlan
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.composeView.setContent {
             AppTheme(theme = viewModel.theme.value) {
                 CustomCard()
             }
+        }
+        viewModel.navigateToLcd.observeNonNull(viewLifecycleOwner){
+                findNavController().navigate(AddCustomLoyaltyCardFragmentDirections.customCardToLcd(null,it))
         }
     }
 
