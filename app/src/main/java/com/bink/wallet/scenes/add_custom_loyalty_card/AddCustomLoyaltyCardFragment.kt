@@ -21,6 +21,7 @@ import com.bink.wallet.databinding.AddCustomCardFragmentBinding
 import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.theme.AppTheme
+import com.bink.wallet.utils.ColourPalette
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.zxing.BarcodeFormat
@@ -57,6 +58,9 @@ class AddCustomLoyaltyCardFragment :
             )
             var cardNumber by remember { mutableStateOf("") }
             var storeName by remember { mutableStateOf("") }
+            val enabled = remember { mutableStateOf(false) }
+
+            enabled.value = (cardNumber.isNotEmpty() && storeName.isNotEmpty())
 
             TextField(
                 value = cardNumber,
@@ -70,7 +74,10 @@ class AddCustomLoyaltyCardFragment :
                 label = { Text("Store name") }
             )
 
-            Button(onClick = { generateCustomCard(cardNumber,storeName)}, enabled = areFieldsValid()) {
+            Button(
+                onClick = { generateCustomCard(cardNumber, storeName) },
+                enabled = enabled.value
+            ) {
 
             }
         }
@@ -78,11 +85,12 @@ class AddCustomLoyaltyCardFragment :
 
     private fun generateCustomCard(cardNumber: String, storeName: String) {
 
-        val card = Card(barcode = cardNumber,BarcodeFormat.QR_CODE,cardNumber,)
-        MembershipCard(id = "","",null,null,)
-    }
+        val card = Card(barcode = cardNumber, 1, cardNumber, ColourPalette.getRandomColour(), null)
+        val membershipId = UUID.randomUUID().toString()
 
-    private fun areFieldsValid(): Boolean{
-        return false
+        val membershipCard = MembershipCard(id = membershipId, "9999", null, null, card, null,
+            null, null, null, null,null)
+
+        viewModel.createMembershipCard(membershipCard)
     }
 }

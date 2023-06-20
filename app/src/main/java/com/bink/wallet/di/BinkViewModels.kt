@@ -171,7 +171,7 @@ val viewModelModules = module {
 
     viewModel { BetaFeatureViewModel(get()) }
 
-    viewModel { AddCustomLoyaltyCardViewModel(get()) }
+    viewModel { AddCustomLoyaltyCardViewModel(get(),get()) }
 }
 
 fun provideLoginRepository(
