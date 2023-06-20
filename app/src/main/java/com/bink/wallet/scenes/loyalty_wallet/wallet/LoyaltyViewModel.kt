@@ -254,7 +254,7 @@ class LoyaltyViewModel constructor(
 
     fun getPolls(callback: (PollItem?) -> Unit) {
         val time = getTime()
-        firebaseRepository.getCollection<PollItem>(Firebase.polls().whereEqualTo("published", true).whereLessThan("closeTime", time)) { polls ->
+        firebaseRepository.getCollection<PollItem>(Firebase.polls().whereEqualTo("published", true).whereGreaterThan("closeTime", time)) { polls ->
             polls?.firstOrNull { it.startTime < time }?.let { firstStartedPoll ->
                 firstStartedPoll.id?.let { pollId ->
                     if (PollUtil.canViewPoll(pollId)) {

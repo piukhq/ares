@@ -67,6 +67,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 MixpanelEvents.POLL_CLICKED,
                 JSONObject().put(MixpanelEvents.POLL_ID, it.id)
             )
+            findNavController().navigate(
+                LoyaltyWalletFragmentDirections.loyaltyToPoll(
+                    it
+                )
+            )
         },
         onClosePollClickListener = {
             dismissPollDialog(it)
@@ -495,8 +500,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 cards = userDataResult.result.first
                 plans = userDataResult.result.second
 
-                walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(sortPlans(ArrayList(userDataResult.result.third)))
-                
                 val displayedCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(
                     sortPlans(ArrayList(userDataResult.result.third))
                 )

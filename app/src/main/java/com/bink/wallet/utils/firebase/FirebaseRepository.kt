@@ -1,5 +1,7 @@
 package com.bink.wallet.utils.firebase
 
+import android.util.Log
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 
 class FirebaseRepository {
@@ -34,6 +36,22 @@ class FirebaseRepository {
                 //Connection failed //TODO Analytics
                 callback(null)
             }
+    }
+
+    fun <T> setDocument(id: String, document: T, collection: CollectionReference, callback: (Boolean) -> Unit? = {}) {
+        if (document == null) {
+            callback(false)
+        } else {
+            collection.document(id).set(document)
+                .addOnSuccessListener {
+                    callback(true)
+                }
+                .addOnFailureListener {
+
+                    Log.d("pollStuff", "error ${it.localizedMessage}")
+                    callback(false)
+                }
+        }
     }
 
 }
