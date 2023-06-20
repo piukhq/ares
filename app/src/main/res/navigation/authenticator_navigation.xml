@@ -97,9 +97,6 @@
             android:id="@+id/loyalty_to_whats_new"
             app:destination="@id/whats_new_fragment" />
 
-        <action
-            android:id="@+id/loyalty_to_add"
-            app:destination="@id/add_fragment" />
 
         <action
             android:id="@+id/loyalty_to_add_join"
@@ -200,9 +197,6 @@
         android:id="@+id/payment_card_wallet"
         android:name="com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment">
 
-        <action
-            android:id="@+id/payment_wallet_to_add"
-            app:destination="@id/add_fragment" />
 
         <action
             android:id="@+id/payment_wallet_to_add_join"
@@ -229,6 +223,11 @@
             android:id="@+id/payment_to_dynamic_action"
             app:destination="@id/dynamic_action_fragment" />
 
+        <action
+            android:id="@+id/payment_to_browse_brands"
+            app:destination="@+id/browse_brands" />
+
+
     </fragment>
 
     <fragment
@@ -238,29 +237,6 @@
         <action
             android:id="@+id/login_to_forgot_password"
             app:destination="@+id/forgot_password" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/add_fragment"
-        android:name="com.bink.wallet.scenes.add.AddFragment"
-        tools:layout="@layout/add_fragment">
-
-        <action
-            android:id="@+id/add_to_browse"
-            app:destination="@id/browse_brands" />
-
-        <action
-            android:id="@+id/add_to_pcd"
-            app:destination="@id/add_payment_card" />
-
-        <action
-            android:id="@+id/add_to_add_loyalty"
-            app:destination="@id/add_loyalty_card" />
-
-        <action
-            android:id="@+id/add_to_add_card"
-            app:destination="@+id/addCardFragment" />
 
     </fragment>
 
@@ -327,11 +303,13 @@
 
         <argument
             android:name="membershipPlans"
-            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]"
+            app:nullable="true" />
 
         <argument
             android:name="membershipCards"
-            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
+            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]"
+            app:nullable="true"  />
 
     </fragment>
 
@@ -647,14 +625,9 @@
             app:argType="string" />
 
         <action
-            android:id="@+id/card_terms_to_add"
-            app:destination="@+id/add_payment_card"
-            app:popUpTo="@id/add_fragment" />
-
-        <action
             android:id="@+id/card_terms_to_details"
-            app:destination="@+id/payment_card_detail"
-            app:popUpTo="@id/add_fragment" />
+            app:destination="@id/payment_card_detail"/>
+
     </fragment>
 
     <fragment

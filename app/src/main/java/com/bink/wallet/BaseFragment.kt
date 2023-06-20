@@ -67,7 +67,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     open fun createDynamicAction(
         dynamicActionLocation: DynamicActionLocation,
-        dynamicAction: DynamicAction
+        dynamicAction: DynamicAction,
     ) {
     }
 
@@ -90,7 +90,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         container?.let {
             init(inflater, container)
@@ -257,7 +257,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     fun bindEventToDynamicAction(
         view: View,
         dynamicActionLocation: DynamicActionLocation,
-        dynamicAction: DynamicAction
+        dynamicAction: DynamicAction,
     ) {
         dynamicActionLocation.action?.let { action ->
             when (action) {
@@ -279,7 +279,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     private fun launchDynamicActionEvent(
         type: DynamicActionType?,
         event: DynamicActionEvent,
-        dynamicActionName: String
+        dynamicActionName: String,
     ) {
         if (type == null) return
         when (type) {
@@ -322,8 +322,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 R.id.add_menu_item -> {
                     val directions =
                         when (findNavController().currentDestination?.id) {
-                            R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToAdd()
-                            R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentWalletToAdd()
+                            R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(null, null)
+                            R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToBrowseBrands(null, null)
                             else -> null
                         }
                     directions?.let { findNavController().navigateIfAdded(this, directions) }
@@ -514,7 +514,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected fun getAddPaymentCardFailMap(
         paymentSchemeValue: String,
         error_code: Int,
-        error_message: String
+        error_message: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
@@ -527,7 +527,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         paymentCardId: String,
         paymentSchemeValue: String,
         isAccountNew: String,
-        paymentStatus: String
+        paymentStatus: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
 
@@ -543,7 +543,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected fun getAddLoyaltyCardRequestMap(
         journeyValue: String,
         membershipPlanId: String,
-        isAScannedCard: String
+        isAScannedCard: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
@@ -560,7 +560,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         loyaltyStatus: String,
         reasonCode: String,
         membershipPlanId: String,
-        isAccountNew: String
+        isAccountNew: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
@@ -575,7 +575,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeletePaymentCardGenericMap(
         paymentSchemeValue: String,
-        paymentCardId: String
+        paymentCardId: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
@@ -588,7 +588,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         paymentSchemeValue: String,
         paymentCardId: String,
         error_code: Int,
-        error_message: String
+        error_message: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
@@ -603,7 +603,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         journeyValue: String,
         membershipPlanId: String,
         error_code: Int,
-        error_message: String
+        error_message: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
@@ -616,7 +616,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getAddLoyaltyResponseFailureMap(
         journeyValue: String,
-        membershipPlanId: String
+        membershipPlanId: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
@@ -627,7 +627,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeleteLoyaltyCardGenericMap(
         loyaltyPlan: String,
-        loyaltyCardId: String
+        loyaltyCardId: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
@@ -640,7 +640,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         loyaltyPlan: String,
         loyaltyCardId: String,
         error_code: Int,
-        error_message: String
+        error_message: String,
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
@@ -676,7 +676,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         fun getPaymentCardStatusMap(
             paymentSchemeValue: String,
             uuid: String,
-            status: String
+            status: String,
         ): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
@@ -689,7 +689,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         fun getLoyaltyCardStatusMap(
             uuid: String,
             status: String,
-            planId: String
+            planId: String,
         ): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
@@ -702,7 +702,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         fun getPllPatchMap(
             paymentUuid: String,
             loyaltyUuid: String,
-            state: String
+            state: String,
         ): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[PLL_PAYMENT_ID_KEY] = paymentUuid

@@ -14,7 +14,6 @@ import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
@@ -85,11 +84,9 @@ val viewModelModules = module {
     viewModel { GetNewCardViewModel(get(), get()) }
     viewModel { GhostCardViewModel(get(), get()) }
 
-    viewModel { BrowseBrandsViewModel() }
+    viewModel { BrowseBrandsViewModel(get(), get()) }
 
     viewModel { BarcodeViewModel(get(), get()) }
-
-    viewModel { AddViewModel(get(), get()) }
 
     viewModel { AddJoinViewModel(get()) }
 
