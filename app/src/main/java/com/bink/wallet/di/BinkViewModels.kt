@@ -19,6 +19,7 @@ import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GhostCardViewModel
+import com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
@@ -169,6 +170,8 @@ val viewModelModules = module {
     viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
 
     viewModel { BetaFeatureViewModel(get()) }
+
+    viewModel { AddCustomLoyaltyCardViewModel(get()) }
 }
 
 fun provideLoginRepository(

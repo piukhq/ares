@@ -236,6 +236,10 @@
             app:popUpTo="@+id/add_loyalty_card"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/add_loyalty_to_add_custom"
+            app:destination="@+id/add_custom_card"/>
+
         <argument
             android:name="membershipPlans"
             app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]"
@@ -435,8 +439,7 @@
     <fragment
         android:id="@+id/loyalty_card_locations"
         android:name="com.bink.wallet.scenes.loyalty_details.locations.LoyaltyCardLocationsFragment"
-        tools:layout="@layout/loyalty_card_location_fragment">
-    </fragment>
+        tools:layout="@layout/loyalty_card_location_fragment"></fragment>
 
     <fragment
         android:id="@+id/voucher_details_fragment"
@@ -678,12 +681,12 @@
 
     <fragment
         android:id="@+id/beta_features_fragment"
-        android:name="com.bink.wallet.scenes.settings.BetaFeatureFragment"/>
+        android:name="com.bink.wallet.scenes.settings.BetaFeatureFragment" />
 
 
     <fragment
         android:id="@+id/delete_account_screen"
-        android:name="com.bink.wallet.scenes.settings.DeleteAccountFragment"/>
+        android:name="com.bink.wallet.scenes.settings.DeleteAccountFragment" />
 
     <fragment
         android:id="@+id/who_are_we_fragment"
@@ -1045,5 +1048,9 @@
     <fragment
         android:id="@+id/debug_color_swatches"
         android:name="com.bink.wallet.scenes.settings.DebugColorSwatchesFragment" />
+
+    <fragment
+        android:id="@+id/add_custom_card"
+        android:name="com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardFragment" />
 
 </navigation>

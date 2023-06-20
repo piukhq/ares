@@ -1,21 +1,88 @@
 package com.bink.wallet.scenes.add_custom_loyalty_card
 
+import android.os.Bundle
+import android.view.View
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.res.painterResource
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.bink.wallet.BaseFragment
-import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
+import com.bink.wallet.R
+import com.bink.wallet.databinding.AddCustomCardFragmentBinding
+import com.bink.wallet.model.response.membership_card.Card
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.theme.AppTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.zxing.BarcodeFormat
+import java.util.*
 
 class AddCustomLoyaltyCardFragment :
-    BaseFragment<AddCustomLoyaltyCardViewModel, AddLoyaltyCardFragmentBinding>() {
+    BaseFragment<AddCustomLoyaltyCardViewModel, AddCustomCardFragmentBinding>() {
 
     override val layoutRes: Int
-        get() = TODO("Not yet implemented")
-    override val viewModel: AddCustomLoyaltyCardViewModel
-        get() = TODO("Not yet implemented")
+        get() = R.layout.add_custom_card_fragment
+    override val viewModel: AddCustomLoyaltyCardViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
-        TODO("Not yet implemented")
+        return FragmentToolbar.Builder()
+            .build()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.composeView.setContent {
+            AppTheme(theme = viewModel.theme.value) {
+                CustomCard()
+            }
+        }
+    }
 
+    @Composable
+    private fun CustomCard() {
+        Column() {
+            Image(
+                painter = painterResource(id = R.drawable.ic_bink_icon),
+                contentDescription = "Bink logo",
+                modifier = Modifier.padding(start = 80.dp)
+            )
+            var cardNumber by remember { mutableStateOf("") }
+            var storeName by remember { mutableStateOf("") }
 
+            TextField(
+                value = cardNumber,
+                onValueChange = { cardNumber = it },
+                label = { Text("Card number") }
+            )
+
+            TextField(
+                value = storeName,
+                onValueChange = { storeName = it },
+                label = { Text("Store name") }
+            )
+
+            Button(onClick = { generateCustomCard(cardNumber,storeName)}, enabled = areFieldsValid()) {
+
+            }
+        }
+    }
+
+    private fun generateCustomCard(cardNumber: String, storeName: String) {
+
+        val card = Card(barcode = cardNumber,BarcodeFormat.QR_CODE,cardNumber,)
+        MembershipCard(id = "","",null,null,)
+    }
+
+    private fun areFieldsValid(): Boolean{
+        return false
+    }
 }

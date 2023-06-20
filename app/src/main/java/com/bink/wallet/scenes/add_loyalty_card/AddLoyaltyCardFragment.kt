@@ -17,6 +17,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
 import com.bink.wallet.utils.enums.SignUpFieldTypes
@@ -311,13 +312,17 @@ class AddLoyaltyCardFragment :
             builder.apply {
                 setTitle("Unrecognised barcode")
                 setMessage("Would you like to add this to your wallet anyway?")
-                setPositiveButton("Add card",
+                setPositiveButton("Cancel",
                     DialogInterface.OnClickListener { dialog, id ->
                         // User clicked OK button
+
                     })
-                setNegativeButton("Cancel",
+                setNegativeButton("Add custom",
                     DialogInterface.OnClickListener { dialog, id ->
                         // User cancelled the dialog
+                        dialog.dismiss()
+                        findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
+
                     })
             }
             // Set other dialog properties
