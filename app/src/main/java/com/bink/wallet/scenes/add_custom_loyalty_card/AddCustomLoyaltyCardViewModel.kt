@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_custom_loyalty_card
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -39,7 +40,6 @@ class AddCustomLoyaltyCardViewModel(
                 loyaltyWalletRepository.addCustomCardToDatabase(membershipCard)
                 _navigateToLcd.value = membershipCard
             } catch (e: Exception) {
-
             }
 
         }

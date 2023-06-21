@@ -93,7 +93,7 @@ class AddCustomLoyaltyCardFragment :
 
     private fun generateCustomCard(cardNumber: String, storeName: String) {
 
-        val card = Card(barcode = cardNumber, 1, cardNumber, ColourPalette.getRandomColour(), null)
+        val card = Card(barcode = cardNumber, 1, cardNumber, ColourPalette.getRandomColour(), null,storeName)
         val membershipId = UUID.randomUUID().toString()
 
         val membershipCard = MembershipCard(id = membershipId, "9999", null, null, card, null,
