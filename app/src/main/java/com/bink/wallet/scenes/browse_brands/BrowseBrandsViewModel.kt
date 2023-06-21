@@ -19,8 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class BrowseBrandsViewModel(
-    private val membershipCardDao: MembershipCardDao,
-    private val membershipPlanDao: MembershipPlanDao,
+    private val browseBrandsRepository: BrowseBrandsRepository
 ) : BaseViewModel() {
     private val membershipPlans = MutableLiveData<List<MembershipPlan>>()
     private val membershipCardIds = MutableLiveData<List<String>>()
@@ -65,8 +64,8 @@ class BrowseBrandsViewModel(
 
             viewModelScope.launch {
                 try {
-                    val cards = async(Dispatchers.IO) { membershipCardDao.getAllAsync() }
-                    val plans = async(Dispatchers.IO) { membershipPlanDao.getAllAsync() }
+                    val cards = async(Dispatchers.IO) { browseBrandsRepository.getAllMembershipCards() }
+                    val plans = async(Dispatchers.IO) { browseBrandsRepository.getAllMembershipPlans() }
                     setupBrandItems(plans.await(), cards.await().getOwnedMembershipCardsIds())
                 } catch (e: Exception) {
                     _isLoading.value = false

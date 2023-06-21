@@ -21,6 +21,7 @@ import com.bink.wallet.scenes.add_auth_enrol.view_models.GhostCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
+import com.bink.wallet.scenes.browse_brands.BrowseBrandsRepository
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.dynamic_actions.DynamicActionViewModel
 import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
@@ -84,7 +85,11 @@ val viewModelModules = module {
     viewModel { GetNewCardViewModel(get(), get()) }
     viewModel { GhostCardViewModel(get(), get()) }
 
-    viewModel { BrowseBrandsViewModel(get(), get()) }
+    single {
+        provideBrowseBrandsRepository(get(), get())
+    }
+
+    viewModel { BrowseBrandsViewModel(get()) }
 
     viewModel { BarcodeViewModel(get(), get()) }
 
@@ -174,6 +179,7 @@ val viewModelModules = module {
     viewModel { WhatsNewViewModel(get()) }
 
     viewModel { PollsViewModel(get(), get(), get()) }
+
 }
 
 fun provideLoginRepository(
@@ -229,6 +235,11 @@ fun provideAddPaymentCardRepository(
         membershipCardDao,
         membershipPlanDao
     )
+
+fun provideBrowseBrandsRepository(
+    membershipCardDao: MembershipCardDao,
+    membershipPlanDao: MembershipPlanDao,
+): BrowseBrandsRepository = BrowseBrandsRepository(membershipCardDao, membershipPlanDao)
 
 fun provideDataStore(context: Context): DataStore<Preferences> =
     PreferenceDataStoreFactory.create(
