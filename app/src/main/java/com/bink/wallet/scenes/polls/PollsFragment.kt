@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.polls
 import android.os.Bundle
 import android.view.View
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,7 @@ import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.PollResultSummary
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.getFormattedEndDate
+import com.bink.wallet.utils.noRippleClickable
 import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.delay
@@ -85,7 +87,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
         ) {
             poll.closeTime?.let { closeTime ->
 
-                if (!userHasAnswered) {
+                if (!userHasAnswered && !resultUiState.loading) {
                     CloseTime(closeTime = closeTime)
 
                     Text(
@@ -110,6 +112,8 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             color = MaterialTheme.colors.onSurface,
                             fontSize = 26.sp)
 
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium_large)))
+
                         Text(
                             text = poll.question,
                             fontFamily = nunitoSans,
@@ -118,7 +122,20 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                             fontSize = 16.sp)
 
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+
                         PollResults(results = resultUiState.pollResultSummary, customAnswer = resultUiState.customAnswer)
+
+                        if (resultUiState.isEditable) {
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
+                            EditPoll()
+                        }
+
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                delay(10000)
+                                viewModel.checkEditable()
+                            }
+                        }
                     }
                 }
 
@@ -128,6 +145,12 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                         fontFamily = nunitoSans,
                         color = Color.Red,
                         fontSize = 26.sp)
+                }
+
+                AnimatedVisibility(visible = resultUiState.loading) {
+                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = colorResource(id = R.color.blue_light))
+                    }
                 }
             }
 
@@ -194,7 +217,10 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.poll_answer_height))
-            .background(backgroundColour)) {
+            .background(backgroundColour)
+            .noRippleClickable {
+                answerSelected(answer)
+            }) {
 
             RadioButton(selected = isSelected, onClick = {
                 focusManager.clearFocus()
@@ -206,7 +232,11 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.onSurface,
-                fontSize = 16.sp)
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .noRippleClickable {
+                        answerSelected(answer)
+                    })
 
         }
     }
@@ -319,12 +349,32 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     }
 
     @Composable
+    private fun EditPoll() {
+        OutlinedButton(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.poll_submit_height))
+                .fillMaxWidth(),
+            border = BorderStroke(dimensionResource(id = R.dimen.poll_button_border), MaterialTheme.colors.onSurface),
+            shape = RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)),
+            onClick = { viewModel.deleteAnswer() }) {
+            Text(
+                text = stringResource(R.string.edit_vote),
+                fontFamily = nunitoSans,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+
+    @Composable
     private fun SubmitPoll(answerUiState: AnswerUiState, allowCustom: Boolean, submitAnswer: () -> Unit) {
         val isAnswerSelected = answerUiState.selectedAnswer.isNotEmpty() || if (allowCustom) answerUiState.customAnswer.isNotEmpty() else false
         val backgroundColour = if (isAnswerSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
         Button(
             modifier = Modifier
-                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)))
                 .fillMaxWidth(),
             contentPadding = PaddingValues(),
             enabled = isAnswerSelected,
