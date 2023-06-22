@@ -16,7 +16,7 @@ data class Card(
     @ColumnInfo(name = "membership_id") var membership_id: String?,
     @ColumnInfo(name = "colour") var colour: String?,
     @ColumnInfo(name = "secondary_colour") var secondary_colour: String?,
-    @ColumnInfo(name = "secondary_colour") var merchant_name: String?
+    @ColumnInfo(name = "merchant_name") var merchant_name: String?
 ) : Parcelable {
 
     fun getSecondaryColor(): String {

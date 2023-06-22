@@ -868,6 +868,7 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
+    // TODO: Handle the click to barcode screen 
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
             if (!membershipCard.card?.barcode.isNullOrEmpty() ||

@@ -28,7 +28,8 @@ data class MembershipCard(
     @ColumnInfo(name = "account") var account: Account?,
     @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?,
     @ColumnInfo(name = "uuid") var uuid: String? = null,
-    @ColumnInfo(name = "isScraped") var isScraped: Boolean? = false
+    @ColumnInfo(name = "isScraped") var isScraped: Boolean? = false,
+    @ColumnInfo(name = "isCustomCard") var isCustomCard: Boolean? = false
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore
