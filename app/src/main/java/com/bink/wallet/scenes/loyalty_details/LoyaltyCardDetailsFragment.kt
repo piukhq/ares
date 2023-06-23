@@ -339,6 +339,24 @@ class LoyaltyCardDetailsFragment :
 
             colorDrawable.alpha = scrollValue
             if (scrollValue == MAX_ALPHA.toInt()) {
+                // TODO: Sort this 
+                //Check whether it is a custom card then show title on toolbar
+                val isMembershipCard = viewModel.membershipCard.value?.isCustomCard ?: false
+
+                if (isMembershipCard) {
+                    binding.toolbarTitle.text =  viewModel.membershipCard.value?.card?.merchant_name
+                    if (!isAnimating) {
+                        isAnimating = true
+                        binding.containerToolbarTitle.visibility = View.VISIBLE
+                        binding.containerToolbarTitle.startAnimation(
+                            AnimationUtils.loadAnimation(
+                                requireContext(),
+                                android.R.anim.fade_in
+                            )
+                        )
+                    }
+                }
+
                 viewModel.membershipPlan.value?.account?.company_name?.let { name ->
                     binding.toolbarTitle.text = name
                     if (!isAnimating) {

@@ -47,6 +47,7 @@ data class MembershipCard(
         null,
         null,
         null,
+        null,
         null
     )
 

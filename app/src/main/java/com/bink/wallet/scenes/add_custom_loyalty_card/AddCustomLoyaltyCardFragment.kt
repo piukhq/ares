@@ -25,6 +25,7 @@ import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ColourPalette
+import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -52,7 +53,7 @@ class AddCustomLoyaltyCardFragment :
             }
         }
         viewModel.navigateToLcd.observeNonNull(viewLifecycleOwner){
-                findNavController().navigate(AddCustomLoyaltyCardFragmentDirections.customCardToLcd(null,it))
+                findNavController().navigate(AddCustomLoyaltyCardFragmentDirections.customCardToLcd(MembershipPlanUtils.getBlankMembershipPlan(),it))
         }
     }
 
@@ -97,7 +98,7 @@ class AddCustomLoyaltyCardFragment :
         val membershipId = UUID.randomUUID().toString()
 
         val membershipCard = MembershipCard(id = membershipId, "9999", null, null, card, null,
-            null, null, null, null,null)
+            null, null, null, null,null,null,true)
 
         viewModel.createMembershipCard(membershipCard)
     }

@@ -12,10 +12,10 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Database(
     entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class],
-    version = 22,
+    version = 24,
     exportSchema = true,
     autoMigrations = [
-        AutoMigration (from = 21, to = 22)
+        AutoMigration (from = 23, to = 24)
     ]
 )
 @TypeConverters(
