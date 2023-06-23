@@ -1,18 +1,16 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -73,6 +71,8 @@ class LoyaltyCardDetailsFragment :
     private var isFromPll = false
     private var isAnimating = false
     private var handler = Handler(Looper.getMainLooper())
+    private var isCustomCard: Boolean = false
+
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -108,6 +108,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
+        isCustomCard = viewModel.membershipCard.value?.isCustomCard ?: false
         handleBrandHeader()
         setPointsModuleClickListener()
         setLinkModuleClickListener()
@@ -341,9 +342,8 @@ class LoyaltyCardDetailsFragment :
             if (scrollValue == MAX_ALPHA.toInt()) {
                 // TODO: Sort this 
                 //Check whether it is a custom card then show title on toolbar
-                val isMembershipCard = viewModel.membershipCard.value?.isCustomCard ?: false
 
-                if (isMembershipCard) {
+                if (isCustomCard) {
                     binding.toolbarTitle.text =  viewModel.membershipCard.value?.card?.merchant_name
                     if (!isAnimating) {
                         isAnimating = true
@@ -519,6 +519,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun handleFootersListeners() {
+        binding.footerAbout.visibility = if (isCustomCard) View.GONE else View.VISIBLE
         binding.footerAbout.setOnClickListener {
             viewAboutInformation()
         }

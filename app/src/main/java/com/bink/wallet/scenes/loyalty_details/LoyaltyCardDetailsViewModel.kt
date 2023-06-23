@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.Images
@@ -11,6 +12,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import kotlinx.coroutines.launch
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
@@ -57,6 +59,16 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
 
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, _deleteError)
+    }
+
+    fun deleteCustomCard(id: String) {
+        viewModelScope.launch {
+            try {
+                repository.deleteCardFromDatabase(id)
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     fun updateMembershipCard(bool: Boolean = false) {

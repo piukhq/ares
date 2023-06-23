@@ -32,7 +32,7 @@ class LoyaltyCardDetailsRepository(
                         apiService.deleteCardAsync(it)
                     }
                 }
-                membershipCardDao.deleteCard(id.toString())
+                deleteCardFromDatabase(id)
                 mutableDeleteCard.value = id
             } catch (e: HttpException) {
                 error.value = e
@@ -40,6 +40,10 @@ class LoyaltyCardDetailsRepository(
                 error.value = e
             }
         }
+    }
+
+     suspend fun deleteCardFromDatabase(id: String?) {
+        membershipCardDao.deleteCard(id.toString())
     }
 
     fun refreshMembershipCard(
