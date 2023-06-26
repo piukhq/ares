@@ -377,7 +377,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.Default).launch {
             val cardsFromDb = membershipCardDao.getAllAsync()
             val cardIdInDb =
-                withContext(Dispatchers.IO) { cardsFromDb }.map { card -> card.id }
+                withContext(Dispatchers.IO) { cardsFromDb }.filter { card -> card.isCustomCard != true }.map { card -> card.id }
             val idFromApi = membershipCards?.map { card -> card.id }
 
             //list of Id's which are available in database but not in return api
