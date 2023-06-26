@@ -57,10 +57,10 @@
 
         <Button
             android:id="@+id/go_to_inbox"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             android:layout_marginBottom="@dimen/button_vertical_margin_size_large"
             android:alpha="0"
-            android:background="@drawable/gradient_button_selector"
+            android:background="@drawable/button_selector"
             android:text="@string/magic_link_open_mail"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"

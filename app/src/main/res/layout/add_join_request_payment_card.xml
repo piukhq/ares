@@ -52,7 +52,7 @@
 
         <Button
             android:id="@+id/get_card_button"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/button_margin"

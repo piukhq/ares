@@ -72,9 +72,9 @@
 
                 <Button
                     android:id="@+id/first_button"
-                    style="@style/RoundedGradientButton"
+                    style="@style/RoundedButton"
                     android:layout_marginTop="@dimen/margin_padding_size_large"
-                    android:background="@drawable/rounded_corners_gradient_button"
+                    android:background="@drawable/rounded_corners_button"
                     android:visibility="gone"
                     app:backgroundTint="@null"
                     app:layout_constraintEnd_toEndOf="parent"

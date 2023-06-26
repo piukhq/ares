@@ -127,7 +127,7 @@
 
         <Button
             android:id="@+id/log_in_button"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             android:layout_marginBottom="@dimen/button_vertical_margin_size_large"
             android:enabled="@{viewModel.isLoginEnabled}"
             android:text="@string/continue_text"

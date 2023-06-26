@@ -130,7 +130,7 @@
 
         <Button
             android:id="@+id/button_done"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             isVisible="@{!viewModel.isLCDJourney()}"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
             android:text="@string/done_button"
@@ -141,7 +141,7 @@
 
         <Button
             android:id="@+id/add_payment_card_modal"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             isVisible="@{viewModel.isLCDJourney()}"
             android:layout_marginBottom="@dimen/gradient_button_margin"
             android:text="@string/add_payment_cards"

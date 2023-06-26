@@ -121,7 +121,7 @@
 
                 <Button
                     android:id="@+id/add_card_button"
-                    style="@style/RoundedGradientButton"
+                    style="@style/RoundedButton"
                     android:layout_marginBottom="@dimen/cta_margin_bottom"
                     android:text="@string/sign_up_text"
                     app:backgroundTint="@null"

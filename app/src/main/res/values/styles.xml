@@ -4,8 +4,8 @@
         <item name="android:src">@drawable/ic_settings</item>
     </style>
 
-    <style name="RoundedGradientButton" parent="TextAppearance.AppCompat.Button">
-        <item name="android:background">@drawable/gradient_button_selector</item>
+    <style name="RoundedButton" parent="TextAppearance.AppCompat.Button">
+        <item name="android:background">@drawable/button_selector</item>
         <item name="fontFamily">@font/nunito_sans_bold</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_height">wrap_content</item>
@@ -106,7 +106,7 @@
     <style name="TextAppearance.Progress.Button" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/nunito_sans_bold</item>
         <item name="android:textSize">@dimen/size_sub_headline</item>]
-        <item name="android:background">@drawable/gradient_button_selector</item>
+        <item name="android:background">@drawable/button_selector</item>
     </style>
 
     <style name="rounded_corner">
