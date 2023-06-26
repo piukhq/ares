@@ -64,8 +64,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         arguments?.let {
             viewModel.getSelectedTheme()
             BarcodeFragmentArgs.fromBundle(it).apply {
-                viewModel.companyName.value = currentMembershipPlan.account?.company_name
-                binding.title.text = currentMembershipPlan.account?.company_name
+                val companyName = currentMembershipPlan.account?.company_name
+                viewModel.companyName.value = companyName ?: membershipCard.card?.merchant_name
+                binding.title.text = companyName ?: membershipCard.card?.merchant_name
                 binding.composeView.setContent {
                     AppTheme(viewModel.theme.value) {
                         BarcodeScreen(membershipCard, currentMembershipPlan)

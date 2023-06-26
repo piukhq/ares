@@ -344,7 +344,7 @@ class LoyaltyCardDetailsFragment :
                 //Check whether it is a custom card then show title on toolbar
 
                 if (isCustomCard) {
-                    binding.toolbarTitle.text =  viewModel.membershipCard.value?.card?.merchant_name
+                    binding.toolbarTitle.text = viewModel.membershipCard.value?.card?.merchant_name
                     if (!isAnimating) {
                         isAnimating = true
                         binding.containerToolbarTitle.visibility = View.VISIBLE
@@ -510,11 +510,15 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-    private fun setupGoToSite(backgroundColor: Int){
+    private fun setupGoToSite(backgroundColor: Int) {
         binding.goToSite.setBackgroundColor(backgroundColor)
         binding.goToSite.setOnClickListener {
             logMixpanelEvent(MixpanelEvents.GO_TO_SITE)
-            findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(viewModel.membershipPlan.value?.account?.plan_url ?: ""))
+            findNavController().navigate(
+                LoyaltyCardDetailsFragmentDirections.globalToWeb(
+                    viewModel.membershipPlan.value?.account?.plan_url ?: ""
+                )
+            )
         }
     }
 
@@ -540,53 +544,58 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.footerDelete.setOnClickListener {
-            if (viewModel.membershipCard.value?.status?.state == MembershipCardStatus.PENDING.status) {
-                lateinit var dialog: androidx.appcompat.app.AlertDialog
-                val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
-                if (builder != null) {
-                    builder.setCancelable(false)
-                    builder.setTitle(getString(R.string.pending_card_delete_title))
-                    builder.setMessage(getString(R.string.pending_card_delete_message))
-                    builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
-                        dialogInterface.cancel()
+            if (!isCustomCard) {
+                if (viewModel.membershipCard.value?.status?.state == MembershipCardStatus.PENDING.status) {
+                    lateinit var dialog: androidx.appcompat.app.AlertDialog
+                    val builder = context?.let { androidx.appcompat.app.AlertDialog.Builder(it) }
+                    if (builder != null) {
+                        builder.setCancelable(false)
+                        builder.setTitle(getString(R.string.pending_card_delete_title))
+                        builder.setMessage(getString(R.string.pending_card_delete_message))
+                        builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
+                            dialogInterface.cancel()
+                        }
+                        dialog = builder.create()
+                        dialog.show()
                     }
-                    dialog = builder.create()
-                    dialog.show()
-                }
-            } else {
-                with(AlertDialog.Builder(requireContext())) {
-                    setMessage(getString(R.string.delete_card_modal_body))
-                    setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-                    setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
-                        if (isNetworkAvailable(requireActivity(), true)) {
-                            runBlocking {
-                                logMixpanelEvent(
-                                    MixpanelEvents.CARD_DELETED,
-                                    JSONObject().put(
-                                        MixpanelEvents.BRAND_NAME,
-                                        viewModel.membershipCard.value?.plan?.account?.company_name
-                                            ?: MixpanelEvents.VALUE_UNKNOWN
-                                    ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
-                                )
-                                viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                                val planId = viewModel.membershipCard.value?.membership_plan
-                                val uuid = viewModel.membershipCard.value?.uuid
-                                if (planId == null || uuid == null) {
-                                    failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST)
-                                } else {
-                                    logEvent(
-                                        FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST,
-                                        getDeleteLoyaltyCardGenericMap(planId, uuid)
+                } else {
+                    with(AlertDialog.Builder(requireContext())) {
+                        setMessage(getString(R.string.delete_card_modal_body))
+                        setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                        setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
+                            if (isNetworkAvailable(requireActivity(), true)) {
+                                runBlocking {
+                                    logMixpanelEvent(
+                                        MixpanelEvents.CARD_DELETED,
+                                        JSONObject().put(
+                                            MixpanelEvents.BRAND_NAME,
+                                            viewModel.membershipCard.value?.plan?.account?.company_name
+                                                ?: MixpanelEvents.VALUE_UNKNOWN
+                                        ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
                                     )
+                                    viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                                    val planId = viewModel.membershipCard.value?.membership_plan
+                                    val uuid = viewModel.membershipCard.value?.uuid
+                                    if (planId == null || uuid == null) {
+                                        failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST)
+                                    } else {
+                                        logEvent(
+                                            FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST,
+                                            getDeleteLoyaltyCardGenericMap(planId, uuid)
+                                        )
+
+                                    }
 
                                 }
-
                             }
+                            dialog.dismiss()
                         }
-                        dialog.dismiss()
+                        create().show()
                     }
-                    create().show()
                 }
+            } else {
+                val customCardId = viewModel.membershipCard.value?.id ?: ""
+                viewModel.deleteCustomCard(customCardId)
             }
         }
     }
@@ -862,25 +871,45 @@ class LoyaltyCardDetailsFragment :
 
     private fun setLocationModuleClickListener() {
         val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
-        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
-        if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
+        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter {
+            it.slug.lowercase(Locale.ROOT)
+                .contains(companyName.lowercase(Locale.ROOT)) && it.enabled
+        }
+        if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(
+                locationEnabledFeatures.firstOrNull()?.slug ?: ""
+            )
+        ) binding.showLocationWrapper.visibility = View.VISIBLE
         with(binding) {
             locationsTitle.text = getString(R.string.show_locations, companyName)
-            Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    if (resource is GifDrawable) {
-                        resource.setLoopCount(1)
+            Glide.with(requireContext()).load(R.drawable.location_gif)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
                     }
-                    return false
-                }
-            }).into(locationsGif)
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        if (resource is GifDrawable) {
+                            resource.setLoopCount(1)
+                        }
+                        return false
+                    }
+                }).into(locationsGif)
             binding.showLocationWrapper.setOnClickListener {
                 findNavController().navigateIfAdded(
-                    this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(), currentDestination
+                    this@LoyaltyCardDetailsFragment,
+                    LoyaltyCardDetailsFragmentDirections.detailToLocations(),
+                    currentDestination
                 )
 
             }
@@ -899,7 +928,7 @@ class LoyaltyCardDetailsFragment :
                             MixpanelEvents.BARCODE_VIEWED,
                             JSONObject().put(
                                 MixpanelEvents.BRAND_NAME,
-                                plan.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                                membershipCard.card?.merchant_name ?: plan.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
                             ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
                         )
                         findNavController().navigateIfAdded(
