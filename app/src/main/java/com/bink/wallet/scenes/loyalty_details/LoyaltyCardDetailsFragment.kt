@@ -511,6 +511,8 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setupGoToSite(backgroundColor: Int) {
+        binding.goToSite.visibility = if (isCustomCard) View.GONE else View.VISIBLE
+
         binding.goToSite.setBackgroundColor(backgroundColor)
         binding.goToSite.setOnClickListener {
             logMixpanelEvent(MixpanelEvents.GO_TO_SITE)
@@ -928,7 +930,8 @@ class LoyaltyCardDetailsFragment :
                             MixpanelEvents.BARCODE_VIEWED,
                             JSONObject().put(
                                 MixpanelEvents.BRAND_NAME,
-                                membershipCard.card?.merchant_name ?: plan.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                                membershipCard.card?.merchant_name ?: plan.account?.company_name
+                                ?: MixpanelEvents.VALUE_UNKNOWN
                             ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD)
                         )
                         findNavController().navigateIfAdded(

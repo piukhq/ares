@@ -21,7 +21,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddCustomCardFragmentBinding
 import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.ColourPalette
@@ -29,7 +28,6 @@ import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.zxing.BarcodeFormat
 import java.util.*
 
 class AddCustomLoyaltyCardFragment :
@@ -44,7 +42,7 @@ class AddCustomLoyaltyCardFragment :
             .build()
     }
 
-    lateinit var membershipPlan : MembershipPlan
+    lateinit var membershipPlan: MembershipPlan
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.composeView.setContent {
@@ -52,8 +50,13 @@ class AddCustomLoyaltyCardFragment :
                 CustomCard()
             }
         }
-        viewModel.navigateToLcd.observeNonNull(viewLifecycleOwner){
-                findNavController().navigate(AddCustomLoyaltyCardFragmentDirections.customCardToLcd(MembershipPlanUtils.getBlankMembershipPlan(),it))
+        viewModel.navigateToLcd.observeNonNull(viewLifecycleOwner) {
+            findNavController().navigate(
+                AddCustomLoyaltyCardFragmentDirections.customCardToLcd(
+                    MembershipPlanUtils.getBlankMembershipPlan(),
+                    it
+                )
+            )
         }
     }
 
@@ -94,12 +97,26 @@ class AddCustomLoyaltyCardFragment :
 
     private fun generateCustomCard(cardNumber: String, storeName: String) {
 
-        val card = Card(barcode = cardNumber, 1, cardNumber, ColourPalette.getRandomColour(), null,storeName)
+        val card = Card(
+            barcode = cardNumber,
+            null,
+            cardNumber,
+            ColourPalette.getRandomColour(),
+            null,
+            storeName
+        )
         val membershipId = UUID.randomUUID().toString()
 
-        val membershipCard = MembershipCard(id = membershipId, "9999", null, null, card, null,
-            null, null, null, null,null,null,true)
+        val membershipCard = MembershipCard(
+            id = generateCustomCardId(), "9999", null, null, card, null,
+            null, null, null, null, null, null, true
+        )
 
         viewModel.createMembershipCard(membershipCard)
+    }
+
+    private fun generateCustomCardId(): String {
+        val id = (2000..18000).random() + System.currentTimeMillis().toInt()
+        return id.toString()
     }
 }

@@ -33,9 +33,10 @@ class LoyaltyWalletRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val membershipCards = apiService.getMembershipCardsAsync()
+//                val membershipCards = apiService.getMembershipCardsAsync()
+                val membershipCards = membershipCardDao.getAllAsync()
                 withContext(Dispatchers.Main) {
-                    processMembershipCardsResult(membershipCards)
+//                    processMembershipCardsResult(membershipCards)
                     mutableMembershipCards.value = membershipCards
                     callback?.let { it(membershipCards) }
                 }
@@ -56,7 +57,7 @@ class LoyaltyWalletRepository(
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
                 } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName + 60, e.toString())
                 }
             }
         }
@@ -107,7 +108,7 @@ class LoyaltyWalletRepository(
         //If any one of the api calls fails,the other one will also fail
         return coroutineScope {
             val membershipPlansRequest = async { apiService.getMembershipPlansAsync() }
-            val membershipCardsRequest = async { apiService.getMembershipCardsAsync() }
+            val membershipCardsRequest = async { membershipCardDao.getAllAsync() }
             val cardsFromDb = retrieveStoredMembershipCards()
 
             val membershipPlansResult = membershipPlansRequest.await()
@@ -116,7 +117,7 @@ class LoyaltyWalletRepository(
             val remappedCards =
                 WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
 
-            processMembershipCardsResult(remappedCards)
+//            processMembershipCardsResult(remappedCards)
 
             processMembershipPlansResult(membershipPlansResult)
 
@@ -133,7 +134,7 @@ class LoyaltyWalletRepository(
                     localMembershipPlans.value = response
                 } catch (e: Exception) {
                     // TODO: Have error catching here in a mutable
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName + 137, e.toString())
                 }
             }
         }
@@ -173,7 +174,7 @@ class LoyaltyWalletRepository(
                     databaseUpdated?.value = true
                 } catch (e: Exception) {
                     loadPlansError.value = e
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName + 177, e.toString())
                 }
             }
         }
@@ -191,7 +192,7 @@ class LoyaltyWalletRepository(
                         membershipCardDao.storeMembershipCard(card)
                     }
                 } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName +195, e.toString())
                 }
             }
         }
@@ -376,6 +377,7 @@ class LoyaltyWalletRepository(
     private fun processMembershipCardsResult(membershipCards: List<MembershipCard>?) {
         CoroutineScope(Dispatchers.Default).launch {
             val cardsFromDb = membershipCardDao.getAllAsync()
+//            val customCards = cardsFromDb.filter { card -> card.isCustomCard == true }
             val cardIdInDb =
                 withContext(Dispatchers.IO) { cardsFromDb }.filter { card -> card.isCustomCard != true }.map { card -> card.id }
             val idFromApi = membershipCards?.map { card -> card.id }
@@ -387,6 +389,10 @@ class LoyaltyWalletRepository(
                     deleteFromDb(it)
                 }
             }
+
+//            customCards.forEach {
+//                membershipCards?.toMutableList()?.add(it)
+//            }
 
             membershipCards?.let {
                 generateUuidForMembershipCards(

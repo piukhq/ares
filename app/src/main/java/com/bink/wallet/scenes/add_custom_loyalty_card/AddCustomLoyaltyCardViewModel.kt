@@ -11,6 +11,7 @@ import com.bink.wallet.data.DataStoreSourceImpl
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.ThemeHelper
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.launch
 
 class AddCustomLoyaltyCardViewModel(
@@ -40,6 +41,7 @@ class AddCustomLoyaltyCardViewModel(
                 loyaltyWalletRepository.addCustomCardToDatabase(membershipCard)
                 _navigateToLcd.value = membershipCard
             } catch (e: Exception) {
+                logDebug("CustomCardViewModel",e.message)
             }
 
         }
