@@ -49,6 +49,8 @@ class LoyaltyWalletViewHolder(
 
         }
 
+        cardBinding.companyName.text = item.card?.merchant_name
+
         with(cardBinding.cardView) {
             setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
             setSecondColor(Color.parseColor(item.card?.colour))

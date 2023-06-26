@@ -132,7 +132,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             ?: viewModel.localMembershipPlanData.value
                         val plan = membershipPlanData?.firstOrNull {
                             it.id == card.membership_plan
-                        }
+                        } ?: MembershipPlanUtils.getBlankMembershipPlan()
 
                         if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
                             if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
@@ -143,8 +143,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     logMixpanelEvent(
                                         MixpanelEvents.BARCODE_VIEWED,
                                         JSONObject().put(
-                                            MixpanelEvents.BRAND_NAME,
-                                            plan.account?.company_name
+                                             MixpanelEvents.BRAND_NAME,
+                                            plan.account?.company_name ?: card.card?.merchant_name
                                                 ?: MixpanelEvents.VALUE_UNKNOWN
                                         ).put(
                                             MixpanelEvents.ROUTE,

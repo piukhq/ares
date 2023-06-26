@@ -105,11 +105,10 @@ class AddCustomLoyaltyCardFragment :
             null,
             storeName
         )
-        val membershipId = UUID.randomUUID().toString()
 
         val membershipCard = MembershipCard(
             id = generateCustomCardId(), "9999", null, null, card, null,
-            null, null, null, null, null, null, true
+            null, null, null, null, UUID.randomUUID().toString(), null, true
         )
 
         viewModel.createMembershipCard(membershipCard)
