@@ -227,7 +227,7 @@ class WhatsNewFragment :
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.whats_new_item_height))
-            .background("#33aeb9".asJetpackColour())
+            .background(colorResource(id = R.color.blue_accent))
             .clickable {
                 onClick()
             }
@@ -279,7 +279,7 @@ class WhatsNewFragment :
         BoxWithConstraints(modifier = Modifier
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.whats_new_item_height))
-            .background("#33aeb9".asJetpackColour())
+            .background(colorResource(id = R.color.blue_accent))
         ) {
 
             Column(modifier = Modifier
