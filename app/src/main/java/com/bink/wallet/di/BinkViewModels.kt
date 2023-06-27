@@ -44,6 +44,7 @@ import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.polls.PollsViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
+import com.bink.wallet.scenes.prev_updates.PrevUpdatesViewModel
 import com.bink.wallet.scenes.settings.*
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
@@ -179,6 +180,8 @@ val viewModelModules = module {
     viewModel { WhatsNewViewModel(get()) }
 
     viewModel { PollsViewModel(get(), get(), get()) }
+
+    viewModel { PrevUpdatesViewModel(get()) }
 
 }
 

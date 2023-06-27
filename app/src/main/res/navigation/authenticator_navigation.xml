@@ -701,7 +701,15 @@
             android:id="@+id/action_settings_screen_to_binkWebFragment"
             app:destination="@id/binkWebFragment" />
 
+        <action
+            android:id="@+id/settings_to_prev_updates"
+            app:destination="@+id/prev_updates_fragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/prev_updates_fragment"
+        android:name="com.bink.wallet.scenes.prev_updates.PrevUpdatesFragment" />
 
     <fragment
         android:id="@+id/beta_features_fragment"

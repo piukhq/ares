@@ -61,6 +61,14 @@ object SettingsItemsPopulation {
         )
         itemsList.add(
             SettingsItem(
+                res.getString(R.string.settings_menu_prev_updates),
+                res.getString(R.string.settings_menu_prev_updates_subtitle),
+                SettingsItemType.PREV_UPDATE,
+                null
+            )
+        )
+        itemsList.add(
+            SettingsItem(
                 res.getString(R.string.settings_menu_faqs),
                 res.getString(R.string.settings_menu_faqs_subtitle),
                 SettingsItemType.FAQS,
