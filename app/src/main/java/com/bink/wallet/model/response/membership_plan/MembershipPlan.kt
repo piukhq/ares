@@ -69,6 +69,6 @@ class MembershipPlan(
 
         val difference = TimeUnit.MILLISECONDS.toDays(currentDate.time - (goLiveDate?.time ?: return false))
 
-        return difference <= 30
+        return difference in 0..30
     }
 }
