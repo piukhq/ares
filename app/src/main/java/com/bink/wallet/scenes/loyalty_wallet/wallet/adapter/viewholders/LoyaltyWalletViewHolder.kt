@@ -49,8 +49,6 @@ class LoyaltyWalletViewHolder(
 
         }
 
-        cardBinding.companyName.text = item.card?.merchant_name
-
         with(cardBinding.cardView) {
             setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
             setSecondColor(Color.parseColor(item.card?.colour))
@@ -66,6 +64,15 @@ class LoyaltyWalletViewHolder(
     ) {
         with(cardBinding) {
             plan = currentMembershipPlan
+            membershipCard = item
+
+            cardBinding.companyName.text =
+                if (item.isCustomCard == true) {
+                    item.card?.merchant_name
+                } else {
+                    currentMembershipPlan.account?.company_name
+                }
+
             item.plan = plan
             mainLayout.setOnClickListener { onClickListener(item) }
 
@@ -73,22 +80,24 @@ class LoyaltyWalletViewHolder(
                 cardLogin.visibility = View.GONE
                 valueWrapper.visibility = View.VISIBLE
                 if (!item.vouchers.isNullOrEmpty()) {
-                    item.vouchers?.firstOrNull { it.state == VoucherStates.IN_PROGRESS.state }?.let { voucher ->
+                    item.vouchers?.firstOrNull { it.state == VoucherStates.IN_PROGRESS.state }
+                        ?.let { voucher ->
 
-                        if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
-                            loyaltyValue.setVoucherCollectedProgress(voucher.earn)
-                        } else {
-                            loyaltyValue.text =
-                                root.context.displayVoucherEarnAndTarget(voucher)
+                            if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
+                                loyaltyValue.setVoucherCollectedProgress(voucher.earn)
+                            } else {
+                                loyaltyValue.text =
+                                    root.context.displayVoucherEarnAndTarget(voucher)
+                            }
+
+                            loyaltyValueExtra.text =
+                                if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) root.context.getString(
+                                    R.string.earned
+                                ) else root.context.getString(
+                                    R.string.spent
+                                )
+
                         }
-
-                        loyaltyValueExtra.text = if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) root.context.getString(
-                            R.string.earned
-                        ) else root.context.getString(
-                            R.string.spent
-                        )
-
-                    }
                 } else if (!item.balances.isNullOrEmpty()) {
 
                     item.balances?.firstOrNull()?.let { balance ->
@@ -151,11 +160,12 @@ class LoyaltyWalletViewHolder(
 
     private fun bindSecondaryColorChanges(binding: CardItemBinding, primaryColor: Int) {
 
-        val textColor: Int = if (ColorUtil.isColorLight(primaryColor, ColorUtil.LIGHT_THRESHOLD_TEXT)) {
-            android.R.color.black
-        } else {
-            android.R.color.white
-        }
+        val textColor: Int =
+            if (ColorUtil.isColorLight(primaryColor, ColorUtil.LIGHT_THRESHOLD_TEXT)) {
+                android.R.color.black
+            } else {
+                android.R.color.white
+            }
 
         binding.companyName.setTextColor(binding.root.context.getColor(textColor))
         binding.loyaltyValue.setTextColor(binding.root.context.getColor(textColor))

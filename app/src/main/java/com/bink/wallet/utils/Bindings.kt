@@ -46,8 +46,8 @@ import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
 
-@BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipPlan?) {
+@BindingAdapter("imageUrl", "merchantDetail", requireAll = false)
+fun ImageView.loadImage(item: MembershipPlan?, card: MembershipCard? = null) {
     if (!item?.images.isNullOrEmpty()) {
         visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
@@ -60,7 +60,9 @@ fun ImageView.loadImage(item: MembershipPlan?) {
             logError("loadImage", e.localizedMessage, e)
         }
     } else {
-        visibility = View.INVISIBLE
+        val merchantName = card?.card?.merchant_name ?: ""
+        val colour = card?.card?.colour ?: ColourPalette.getRandomColour()
+        Glide.with(context).load(TextDrawable(merchantName, colour)).into(this)
     }
 }
 
@@ -342,7 +344,8 @@ private fun copyCardNumber(context: Context, cardNumber: String) {
     clipboard.setPrimaryClip(clip)
     Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_LONG).show()
 
-    val mixpanelKey = if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
+    val mixpanelKey =
+        if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
     val mixpanel = MixpanelAPI.getInstance(context, mixpanelKey)
     mixpanel.track(MixpanelEvents.COPY_CARD)
 }
