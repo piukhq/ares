@@ -26,6 +26,7 @@ class PrevUpdatesFragment : BaseFragment<PrevUpdatesViewModel, PrevUpdatesFragme
 
         binding.composeView.setContent {
             AppTheme(viewModel.theme.value) {
+
             }
         }
     }

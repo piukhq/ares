@@ -7,6 +7,7 @@ import com.google.firebase.ktx.Firebase
 const val FIREBASE_COLLECTION_WHATS_NEW = "whatsNew"
 const val FIREBASE_COLLECTION_POLLS = "polls"
 const val FIREBASE_COLLECTION_POLL_RESULTS = "pollResults"
+const val FIREBASE_COLLECTION_RELEASE_NOTES = "releaseNotes"
 
 fun Firebase.whatsNew(): CollectionReference {
     return firestore.collection(FIREBASE_COLLECTION_WHATS_NEW)
@@ -18,6 +19,10 @@ fun Firebase.polls(): CollectionReference {
 
 fun Firebase.pollResults(): CollectionReference {
     return firestore.collection(FIREBASE_COLLECTION_POLL_RESULTS)
+}
+
+fun Firebase.releaseNotes(): CollectionReference {
+    return firestore.collection(FIREBASE_COLLECTION_RELEASE_NOTES)
 }
 
 fun getTime(): Int {

@@ -181,7 +181,7 @@ val viewModelModules = module {
 
     viewModel { PollsViewModel(get(), get(), get()) }
 
-    viewModel { PrevUpdatesViewModel(get()) }
+    viewModel { PrevUpdatesViewModel(get(), get()) }
 
 }
 
