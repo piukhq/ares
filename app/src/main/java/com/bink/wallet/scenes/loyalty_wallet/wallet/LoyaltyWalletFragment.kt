@@ -143,9 +143,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     logMixpanelEvent(
                                         MixpanelEvents.BARCODE_VIEWED,
                                         JSONObject().put(
-                                             MixpanelEvents.BRAND_NAME,
+                                            MixpanelEvents.BRAND_NAME,
                                             plan.account?.company_name ?: card.card?.merchant_name
-                                                ?: MixpanelEvents.VALUE_UNKNOWN
+                                            ?: MixpanelEvents.VALUE_UNKNOWN
                                         ).put(
                                             MixpanelEvents.ROUTE,
                                             MixpanelEvents.ROUTE_WALLET
@@ -455,7 +455,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             setSortButtonState(SortState.CUSTOM)
                         }
                         R.id.recent_item -> {
-                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            val unsortedCards =
+                                walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
                             if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
                                 requireContext().showDialog(
                                     title = getString(R.string.newest_sort_title),
@@ -469,7 +470,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             }
                         }
                         R.id.newest_item -> {
-                            val unsortedCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
+                            val unsortedCards =
+                                walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
                             if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
                                 requireContext().showDialog(
                                     title = getString(R.string.newest_sort_title),
@@ -505,7 +507,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setSortButtonState()
     }
 
-    private fun sortByRecent(unsortedCards: List<MembershipCard>? = null, localResort: Boolean = false) {
+    private fun sortByRecent(
+        unsortedCards: List<MembershipCard>? = null,
+        localResort: Boolean = false
+    ) {
         val cardsAsRecent = unsortedCards?.let { WalletOrderingUtil.getRecentLoyaltyCardList(it) }
 
         val listAsAny = ArrayList<Any>()
@@ -664,38 +669,52 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
-                val list =
-                    viewModel.localMembershipPlanData.value ?: viewModel.membershipPlanData.value
-                list?.let {
-                    for (membershipPlan in it) {
-                        if (item.membership_plan == membershipPlan.id) {
-                            WalletOrderingUtil.addRecentCard(item)
+                if (item.isCustomCard != true) {
+                    val list =
+                        viewModel.localMembershipPlanData.value
+                            ?: viewModel.membershipPlanData.value
+                    list?.let {
+                        for (membershipPlan in it) {
+                            if (item.membership_plan == membershipPlan.id) {
+                                WalletOrderingUtil.addRecentCard(item)
 
-                            if (SharedPreferenceManager.orderWalletByRecent) {
-                                val userDataResult = viewModel.cardsDataMerger.value
-                                if (userDataResult is UserDataResult.UserDataSuccess) {
-                                    val cardsAsMembershipCard = arrayListOf<MembershipCard>()
-                                    userDataResult.result.third.forEach {
-                                        if (it is MembershipCard) {
-                                            cardsAsMembershipCard.add(it)
+                                if (SharedPreferenceManager.orderWalletByRecent) {
+                                    val userDataResult = viewModel.cardsDataMerger.value
+                                    if (userDataResult is UserDataResult.UserDataSuccess) {
+                                        val cardsAsMembershipCard = arrayListOf<MembershipCard>()
+                                        userDataResult.result.third.forEach {
+                                            if (it is MembershipCard) {
+                                                cardsAsMembershipCard.add(it)
+                                            }
                                         }
+                                        sortByRecent(cardsAsMembershipCard, true)
                                     }
-                                    sortByRecent(cardsAsMembershipCard, true)
                                 }
-                            }
 
-                            val directions =
-                                LoyaltyWalletFragmentDirections.loyaltyToDetail(
-                                    membershipPlan,
-                                    item
+                                val directions =
+                                    LoyaltyWalletFragmentDirections.loyaltyToDetail(
+                                        membershipPlan,
+                                        item
+                                    )
+                                findNavController().navigateIfAdded(
+                                    this@LoyaltyWalletFragment,
+                                    directions,
+                                    currentDestination
                                 )
-                            findNavController().navigateIfAdded(
-                                this@LoyaltyWalletFragment,
-                                directions,
-                                currentDestination
-                            )
+                            }
                         }
                     }
+                } else {
+                    val directions =
+                        LoyaltyWalletFragmentDirections.loyaltyToDetail(
+                            MembershipPlanUtils.getBlankMembershipPlan(),
+                            item
+                        )
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyWalletFragment,
+                        directions,
+                        currentDestination
+                    )
                 }
             }
             is MembershipPlan -> {
@@ -942,16 +961,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun setSortButtonState(forcedType: SortState = SortState.NEWEST) {
-        val sortType = if (forcedType == SortState.RECENT || SharedPreferenceManager.orderWalletByRecent) {
-            SharedPreferenceManager.orderWalletByRecent = true
-            getString(R.string.menu_recent)
-        } else if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forcedType == SortState.CUSTOM) {
-            SharedPreferenceManager.orderWalletByRecent = false
-            getString(R.string.menu_custom)
-        } else {
-            SharedPreferenceManager.orderWalletByRecent = false
-            getString(R.string.menu_newest)
-        }
+        val sortType =
+            if (forcedType == SortState.RECENT || SharedPreferenceManager.orderWalletByRecent) {
+                SharedPreferenceManager.orderWalletByRecent = true
+                getString(R.string.menu_recent)
+            } else if (WalletOrderingUtil.hasCustomWalletState(walletAdapter.membershipCards.filterIsInstance<MembershipCard>()) || forcedType == SortState.CUSTOM) {
+                SharedPreferenceManager.orderWalletByRecent = false
+                getString(R.string.menu_custom)
+            } else {
+                SharedPreferenceManager.orderWalletByRecent = false
+                getString(R.string.menu_newest)
+            }
         setMixpanelProperty(
             MixpanelEvents.WALLET_SORT,
             sortType

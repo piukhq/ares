@@ -33,16 +33,20 @@ class LoyaltyWalletRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val membershipCards = apiService.getMembershipCardsAsync()
-                val customCard = membershipCardDao.getAllAsync().filter { card -> card.isCustomCard == true }
-                val allCards = membershipCards.plus(customCard)
+                val membershipCardsApiCall = async {  apiService.getMembershipCardsAsync()}
+                val customCardDbCall = async {  membershipCardDao.getAllAsync()}
+                val membershipCards = membershipCardsApiCall.await()
+                val customCardCards = customCardDbCall.await()
+                val allCards = membershipCards.plus(customCardCards)
+
                 withContext(Dispatchers.Main) {
-                    processMembershipCardsResult(membershipCards)
+//                    processMembershipCardsResult(membershipCards)
                     mutableMembershipCards.value = allCards
                     callback?.let { it(membershipCards) }
                 }
             } catch (e: Exception) {
                 loadCardsError.postValue(e)
+                logDebug("LoyaltyWalletRepo",e.message)
             }
         }
     }

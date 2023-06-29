@@ -11,13 +11,10 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.utils.ColorUtil
-import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
-import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
-import com.bink.wallet.utils.formatBalance
 
 class LoyaltyWalletViewHolder(
     val binding: LoyaltyWalletItemBinding,
@@ -47,6 +44,11 @@ class LoyaltyWalletViewHolder(
                 bindVouchersToDisplay(cardBinding, membershipPlan, item)
             }
 
+        }
+
+        if(item.isCustomCard == true){
+            val mPlan = item.plan ?: MembershipPlanUtils.getBlankMembershipPlan()
+             bindVouchersToDisplay(cardBinding, mPlan,item)
         }
 
         with(cardBinding.cardView) {

@@ -2,6 +2,7 @@ package com.bink.wallet.utils
 
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import androidx.compose.ui.text.toUpperCase
 
 class TextDrawable(private var merchantLetter: String, private var colour: String) : Drawable() {
 
@@ -20,7 +21,7 @@ class TextDrawable(private var merchantLetter: String, private var colour: Strin
 
     override fun draw(canvas: Canvas) {
         canvas.drawColor(Color.parseColor(colour))
-        canvas.drawText(merchantLetter.first().toString(), (bounds.width()/2).toFloat(),
+        canvas.drawText(merchantLetter.first().toString().uppercase(), (bounds.width()/2).toFloat(),
             (bounds.height()/1.3).toFloat(), paint)
     }
 
