@@ -272,5 +272,6 @@
     <dimen name="prev_updates_corner">8dp</dimen>
     <dimen name="prev_settings_icon_corner">4dp</dimen>
     <dimen name="poll_icon_size">20dp</dimen>
+    <dimen name="poll_bullet_size">10dp</dimen>
 
 </resources>
