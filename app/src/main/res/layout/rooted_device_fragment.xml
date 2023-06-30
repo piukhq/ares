@@ -20,7 +20,7 @@
                     android:id="@+id/bink_logo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_bink_logo"
+                    android:src="@drawable/ic_logo_light"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium_large"
                     android:gravity="center"
                     android:text="@string/rooted_device_text"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="@dimen/size_headline"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
