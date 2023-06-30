@@ -164,7 +164,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         ) {
 
             Image(
-                painter = painterResource(if (viewModel.theme.value != ThemeHelper.DARK_MODE) R.drawable.ic_logo_dark else R.drawable.ic_logo_light),
+                painter = painterResource(if (viewModel.theme.value != ThemeHelper.DARK_MODE) R.drawable.ic_logo_light else R.drawable.ic_logo_dark),
                 contentDescription = "Logo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
