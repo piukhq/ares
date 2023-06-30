@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toolbar
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -164,7 +165,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         ) {
 
             Image(
-                painter = painterResource(if (viewModel.theme.value != ThemeHelper.DARK_MODE) R.drawable.ic_logo_light else R.drawable.ic_logo_dark),
+                painter = painterResource(if (viewModel.theme.value != ThemeHelper.DARK_MODE && !isSystemInDarkTheme()) R.drawable.ic_logo_light else R.drawable.ic_logo_dark),
                 contentDescription = "Logo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
