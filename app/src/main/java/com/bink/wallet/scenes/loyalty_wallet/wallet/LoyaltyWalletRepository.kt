@@ -35,6 +35,7 @@ class LoyaltyWalletRepository(
             try {
                 val membershipCardsApiCall = async {  apiService.getMembershipCardsAsync()}
                 val customCardDbCall = async {  membershipCardDao.getAllAsync()}
+
                 val membershipCards = membershipCardsApiCall.await()
                 val customCardCards = customCardDbCall.await()
                 val allCards = membershipCards.plus(customCardCards)
@@ -428,5 +429,6 @@ class LoyaltyWalletRepository(
         SharedPreferenceManager.membershipPlansLastRequestTime =
             System.currentTimeMillis()
     }
+
 
 }
