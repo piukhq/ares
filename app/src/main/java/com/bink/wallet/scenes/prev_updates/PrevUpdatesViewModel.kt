@@ -59,6 +59,7 @@ class PrevUpdatesViewModel(
 
         }
     }
+
 }
 
 data class PreviousUpdatesUiState(val releaseNotes: Releases? = null, val loading: Boolean = false)

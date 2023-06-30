@@ -268,4 +268,9 @@
     <dimen name="poll_button_rounding">25dp</dimen>
     <dimen name="poll_button_border">2dp</dimen>
 
+    <!-- Prev Updates -->
+    <dimen name="prev_updates_corner">8dp</dimen>
+    <dimen name="prev_settings_icon_corner">4dp</dimen>
+    <dimen name="poll_icon_size">20dp</dimen>
+
 </resources>
