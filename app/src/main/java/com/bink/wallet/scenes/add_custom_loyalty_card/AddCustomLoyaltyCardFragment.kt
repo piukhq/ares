@@ -48,6 +48,8 @@ class AddCustomLoyaltyCardFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -85,10 +87,12 @@ class AddCustomLoyaltyCardFragment :
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(
-                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
-                    start = 24.dp,
-                ), text = "Enter credentials",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                        start = 24.dp,
+                    ), text = "Enter credentials",
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp,
@@ -97,12 +101,14 @@ class AddCustomLoyaltyCardFragment :
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth().padding(
-                    top = 2.dp,
-                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                    start = 24.dp,
-                    end = 24.dp
-                ), text = "Please enter your credentials below to add this card to your wallet.",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 2.dp,
+                        bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                        start = 24.dp,
+                        end = 24.dp
+                    ), text = "Please enter your credentials below to add this card to your wallet.",
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
                 fontSize = 21.sp,
