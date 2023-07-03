@@ -157,6 +157,8 @@
     <dimen name="image_suggested_pll_size">60dp</dimen>
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
+    <dimen name="logo_size">150dp</dimen>
+    <dimen name="onboarding_size">200dp</dimen>
 
     <!-- Login Screen -->
     <dimen name="gradient_button_margin">52dp</dimen>

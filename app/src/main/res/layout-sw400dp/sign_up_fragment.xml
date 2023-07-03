@@ -240,7 +240,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                     android:layout_marginEnd="@dimen/gradient_button_margin"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                    android:background="@drawable/gradient_button_selector"
+                    android:background="@drawable/button_selector"
                     android:enabled="@{viewModel.isSignUpEnabled}"
                     android:text="@string/continue_text"
                     android:textAllCaps="false"

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -75,7 +76,7 @@ fun GradientButton(
     ) {
         Box(
             modifier = Modifier
-                .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F), Color(0xFF194B53))))
+                .background(MaterialTheme.colors.primary)
                 .then(modifier),
             contentAlignment = Alignment.Center,
         ) {

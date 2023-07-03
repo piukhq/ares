@@ -141,7 +141,7 @@
 
         <Button
             android:id="@+id/button_done"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             android:layout_marginBottom="@dimen/margin_padding_size_large"
             android:text="@string/done_button"
             app:backgroundTint="@null"

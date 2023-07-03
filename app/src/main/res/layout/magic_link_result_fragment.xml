@@ -109,7 +109,7 @@
 
                     <Button
                         android:id="@+id/continue_button"
-                        style="@style/RoundedGradientButton"
+                        style="@style/RoundedButton"
                         android:layout_marginTop="@dimen/margin_padding_size_large"
                         android:layout_marginBottom="@dimen/margin_padding_size_large"
                         android:text="@string/continue_text"
@@ -160,7 +160,7 @@
 
                     <Button
                         android:id="@+id/error_retry"
-                        style="@style/RoundedGradientButton"
+                        style="@style/RoundedButton"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/magic_link_retry"
                         app:backgroundTint="@null"

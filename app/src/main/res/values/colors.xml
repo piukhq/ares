@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#077EA8</color>
+    <color name="colorPrimaryInactive">#80077EA8</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
@@ -12,7 +13,7 @@
     <color name="blue_dark_inactive">#80194B53</color>
     <color name="blue_light">#3D908F</color>
     <color name="blue_light_inactive">#803D908F</color>
-    <color name="blue_accent">#438086</color>
+    <color name="blue_accent">#077EA8</color>
     <color name="blue_inactive">#b1c2cb</color>
     <color name="grey_50">#7f7f7f</color>
     <color name="red_attention">#eb001b</color>
