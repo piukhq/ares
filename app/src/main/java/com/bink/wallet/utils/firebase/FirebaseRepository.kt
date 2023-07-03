@@ -33,7 +33,6 @@ class FirebaseRepository {
                 callback(arrayList)
             }
             .addOnFailureListener {
-                //Connection failed //TODO Analytics
                 callback(null)
             }
     }
@@ -52,6 +51,16 @@ class FirebaseRepository {
                     callback(false)
                 }
         }
+    }
+
+    fun deleteDocument(id: String, collection: CollectionReference, callback: (Exception?) -> Unit? = {}) {
+        collection.document(id).delete()
+            .addOnSuccessListener {
+                callback(null)
+            }
+            .addOnFailureListener {
+                callback(it)
+            }
     }
 
 }

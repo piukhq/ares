@@ -4,18 +4,23 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
+import com.bink.wallet.data.MembershipCardDao
+import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.canPlanBeAdded
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.sortedByCardTypeAndCompany
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.*
 
-class BrowseBrandsViewModel : BaseViewModel() {
+class BrowseBrandsViewModel(
+    private val browseBrandsRepository: BrowseBrandsRepository
+) : BaseViewModel() {
     private val membershipPlans = MutableLiveData<List<MembershipPlan>>()
     private val membershipCardIds = MutableLiveData<List<String>>()
 
@@ -27,6 +32,10 @@ class BrowseBrandsViewModel : BaseViewModel() {
     val activeFilters: LiveData<List<String>>
         get() = _activeFilters
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     val searchText = MutableLiveData<String>()
     val isClearButtonVisible: LiveData<Boolean> = Transformations.map(searchText) {
         !searchText.value.isNullOrEmpty()
@@ -35,18 +44,35 @@ class BrowseBrandsViewModel : BaseViewModel() {
     val isFilterSelected = ObservableBoolean(false)
 
     fun setupBrandItems(
-        membershipPlans: List<MembershipPlan>,
-        membershipCardIds: List<String>,
+        membershipPlans: List<MembershipPlan>?,
+        membershipCardIds: List<String>?,
     ) {
-        val formattedBrandItems = formatBrandItemsList(
-            membershipPlans.sortedByCardTypeAndCompany(),
-            membershipCardIds
-        )
-        this.membershipPlans.value =
-            membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
-        this.membershipCardIds.value = membershipCardIds
-        _filteredBrandItems.value = formattedBrandItems
-        _activeFilters.value = membershipPlans.getCategories()
+        _isLoading.value = false
+
+        if (membershipPlans != null && membershipCardIds != null) {
+            val formattedBrandItems = formatBrandItemsList(
+                membershipPlans.sortedByCardTypeAndCompany(),
+                membershipCardIds
+            )
+            this.membershipPlans.value =
+                membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
+            this.membershipCardIds.value = membershipCardIds
+            _filteredBrandItems.value = formattedBrandItems
+            _activeFilters.value = membershipPlans.getCategories()
+        } else {
+            _isLoading.value = true
+
+            viewModelScope.launch {
+                try {
+                    val cards = async(Dispatchers.IO) { browseBrandsRepository.getAllMembershipCards() }
+                    val plans = async(Dispatchers.IO) { browseBrandsRepository.getAllMembershipPlans() }
+                    setupBrandItems(plans.await(), cards.await().getOwnedMembershipCardsIds())
+                } catch (e: Exception) {
+                    _isLoading.value = false
+                }
+            }
+        }
+
     }
 
     fun filterBrandItems() {

@@ -7,4 +7,5 @@ data class PollResultItem(
     val overwritten: Boolean = false,
     val pollId: String? = null,
     val userId: String = "",
+    val id: String = ""
 )

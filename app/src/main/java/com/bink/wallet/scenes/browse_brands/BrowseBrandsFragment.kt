@@ -63,8 +63,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
         viewModel.setupBrandItems(
-            args.membershipPlans.toList(),
-            args.membershipCards.toList().getOwnedMembershipCardsIds()
+            args.membershipPlans?.toList(),
+            args.membershipCards?.toList()?.getOwnedMembershipCardsIds()
         )
 
         binding.brandsRecyclerView.adapter = adapter.apply {
@@ -90,7 +90,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     if (viewModel.activeFilters.value?.size ==
-                        args.membershipPlans.toList().getCategories().size
+                        args.membershipPlans?.toList()?.getCategories()?.size
                     ) {
                         binding.brandsRecyclerView.scrollToPosition(0)
                     }
@@ -104,7 +104,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             setOnFilterClickListener {
                 viewModel.updateFilters(it)
             }
-            setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
+            args.membershipPlans?.toList()?.getCategories()?.map { BrandsFilter(it) }?.let { setFilters(it) }
         }
 
         binding.buttonClearSearch.setOnClickListener {
@@ -114,6 +114,19 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.buttonFilters.setOnClickListener {
             viewModel.isFilterSelected.set(!viewModel.isFilterSelected.get())
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
+        }
+
+        viewModel.isLoading.observeNonNull(this) {
+            with(binding) {
+                progressSpinner.visibility = when (it) {
+                    true -> {
+                        View.VISIBLE
+                    }
+                    else -> {
+                        View.GONE
+                    }
+                }
+            }
         }
 
         initBrowseBrandsList()
