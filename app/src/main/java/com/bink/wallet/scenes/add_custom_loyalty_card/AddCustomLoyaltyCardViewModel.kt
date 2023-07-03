@@ -41,7 +41,6 @@ class AddCustomLoyaltyCardViewModel(
                 loyaltyWalletRepository.addCustomCardToDatabase(membershipCard)
                 _navigateToLcd.value = membershipCard
             } catch (e: Exception) {
-                logDebug("CustomCardViewModel",e.message)
             }
 
         }

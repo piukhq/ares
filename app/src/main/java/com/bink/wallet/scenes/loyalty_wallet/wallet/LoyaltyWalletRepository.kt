@@ -33,21 +33,21 @@ class LoyaltyWalletRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val membershipCardsApiCall = async {  apiService.getMembershipCardsAsync()}
-                val customCardDbCall = async {  membershipCardDao.getAllAsync()}
+                val membershipCardsApiCall = async { apiService.getMembershipCardsAsync() }
+                val customCardDbCall = async { membershipCardDao.getAllAsync() }
 
                 val membershipCards = membershipCardsApiCall.await()
                 val customCardCards = customCardDbCall.await()
-                val allCards = membershipCards.plus(customCardCards)
+                val allCards =
+                    membershipCards.plus(customCardCards.filter { card -> card.isCustomCard == true })
 
                 withContext(Dispatchers.Main) {
-//                    processMembershipCardsResult(membershipCards)
+                    processMembershipCardsResult(allCards)
                     mutableMembershipCards.value = allCards
-                    callback?.let { it(membershipCards) }
+                    callback?.let { it(allCards) }
                 }
             } catch (e: Exception) {
                 loadCardsError.postValue(e)
-                logDebug("LoyaltyWalletRepo",e.message)
             }
         }
     }
@@ -114,16 +114,20 @@ class LoyaltyWalletRepository(
         //If any one of the api calls fails,the other one will also fail
         return coroutineScope {
             val membershipPlansRequest = async { apiService.getMembershipPlansAsync() }
-            val membershipCardsRequest = async { membershipCardDao.getAllAsync() }
+            val membershipCardsRequest = async { apiService.getMembershipCardsAsync() }
             val cardsFromDb = retrieveStoredMembershipCards()
+            val customCards = cardsFromDb.filter { it.isCustomCard == true }
 
             val membershipPlansResult = membershipPlansRequest.await()
             val membershipCardsResult = membershipCardsRequest.await()
 
             val remappedCards =
-                WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
+                WebScrapableManager.mapOldToNewCards(
+                    cardsFromDb,
+                    membershipCardsResult.plus(customCards)
+                )
 
-//            processMembershipCardsResult(remappedCards)
+            processMembershipCardsResult(remappedCards)
 
             processMembershipPlansResult(membershipPlansResult)
 
@@ -198,7 +202,7 @@ class LoyaltyWalletRepository(
                         membershipCardDao.storeMembershipCard(card)
                     }
                 } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName +195, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName + 195, e.toString())
                 }
             }
         }
@@ -338,8 +342,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun addCustomCardToDatabase(membershipCard: MembershipCard){
-//        membershipCardDao.storeMembershipCard(membershipCard)
+    fun addCustomCardToDatabase(membershipCard: MembershipCard) {
         storeMembershipCard(membershipCard)
     }
 
@@ -385,7 +388,8 @@ class LoyaltyWalletRepository(
             val cardsFromDb = membershipCardDao.getAllAsync()
 //            val customCards = cardsFromDb.filter { card -> card.isCustomCard == true }
             val cardIdInDb =
-                withContext(Dispatchers.IO) { cardsFromDb }.filter { card -> card.isCustomCard != true }.map { card -> card.id }
+                withContext(Dispatchers.IO) { cardsFromDb }.filter { card -> card.isCustomCard != true }
+                    .map { card -> card.id }
             val idFromApi = membershipCards?.map { card -> card.id }
 
             //list of Id's which are available in database but not in return api
