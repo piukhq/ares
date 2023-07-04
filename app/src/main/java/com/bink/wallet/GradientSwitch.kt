@@ -16,8 +16,8 @@ class GradientSwitch @JvmOverloads constructor(
     }
 
     private fun displaySwitchEnabled() {
-        setThumbResource(R.drawable.gradient_switch_thumb)
-        setTrackResource(R.drawable.gradient_switch_track)
+        setThumbResource(R.drawable.switch_thumb)
+        setTrackResource(R.drawable.switch_track)
     }
 
     private fun displaySwitchDisabled() {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toolbar
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -11,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -111,8 +111,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Spacer(Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_large)))
-
             HorizontalPager(
                 modifier = Modifier.noRippleClickable {
                     debugClickCounter++
@@ -165,13 +163,22 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
+            Image(
+                painter = painterResource(if (viewModel.theme.value != ThemeHelper.DARK_MODE && !isSystemInDarkTheme()) R.drawable.ic_logo_light else R.drawable.ic_logo_dark),
+                contentDescription = "Logo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(dimensionResource(id = R.dimen.logo_size))
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(id = R.dimen.margin_padding_size_extra_large))
+            )
+
             Image(
                 painter = painterResource(onboardingItem.image),
                 contentDescription = "Onboarding",
-                contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .wrapContentSize()
-                    .padding(dimensionResource(id = R.dimen.margin_padding_size_medium))
+                    .size(dimensionResource(id = R.dimen.onboarding_size))
             )
 
             Text(

@@ -210,7 +210,7 @@
 
                     <Button
                         android:id="@+id/add_card_button"
-                        style="@style/RoundedGradientButton"
+                        style="@style/RoundedButton"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/add_join_add_card"
                         android:visibility="visible"
@@ -218,7 +218,7 @@
 
                     <Button
                         android:id="@+id/get_card_button"
-                        style="@style/RoundedGradientButton"
+                        style="@style/RoundedButton"
                         android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
                         android:text="@string/add_join_get_new_card"
                         app:backgroundTint="@null" />

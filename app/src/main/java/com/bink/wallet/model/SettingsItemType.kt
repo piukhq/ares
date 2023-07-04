@@ -12,6 +12,7 @@ enum class SettingsItemType : Parcelable {
     LOGOUT,
     APPEARANCE,
     PREFERENCES,
+    PREV_UPDATE,
     FAQS,
     CONTACT_US,
     RATE_APP,

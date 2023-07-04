@@ -8,12 +8,12 @@ sealed class BrowseBrandsListItem(val id: Int) {
     data class BrandItem(
         val membershipPlan: MembershipPlan,
         val isPlanInLoyaltyWallet: Boolean = false,
-        var hasSeparator: Boolean
+        var hasSeparator: Boolean,
     ) : BrowseBrandsListItem(R.layout.item_brand)
 
     data class SectionTitleItem(
         @StringRes val sectionTitle: Int,
-        @StringRes val sectionDescription: Int
+        @StringRes val sectionDescription: Int?,
     ) :
         BrowseBrandsListItem(R.layout.item_brands_section_title)
 

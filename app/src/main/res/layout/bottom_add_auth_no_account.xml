@@ -17,7 +17,7 @@
 
         <Button
             android:id="@+id/add_auth_cta"
-            style="@style/RoundedGradientButton"
+            style="@style/RoundedButton"
             android:layout_marginBottom="@dimen/cta_margin_bottom"
             android:enabled="@{viewModel.haveValidationsPassed}"
             android:text="@{viewModel.ctaText}"

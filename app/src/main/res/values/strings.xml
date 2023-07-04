@@ -235,6 +235,7 @@
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
+    <string name="new_card_title">New for you</string>
     <string name="pll_title">Link to your Payment Cards</string>
     <string name="all_text">All</string>
     <string name="balance_text">See your balance</string>
@@ -308,6 +309,8 @@
     <string name="settings_menu_beta">Beta Features</string>
     <string name="settings_menu_log_out">Log out</string>
     <string name="settings_menu_support_and_feedback">Support and feedback</string>
+    <string name="settings_menu_prev_updates">Previous Updates</string>
+    <string name="settings_menu_prev_updates_subtitle">Release Notes</string>
     <string name="settings_menu_faqs">FAQs</string>
     <string name="settings_menu_faqs_subtitle">Frequently asked questions</string>
     <string name="settings_menu_contact_us">Contact us</string>
@@ -670,6 +673,23 @@
     <string name="location_closed_title">Closed - Opens at&#160;</string>
     <string name="location_closes_soon_title">Closing Soon - Closes at&#160;</string>
     <string name="location_open_title">Open - Closes at&#160;</string>
+    <string name="whats_new_ad_hoc_title">Ad Hoc Message</string>
+    <string name="whats_new_new_feature_title">New Feature</string>
+    <string name="whats_new_merchant_title">New Merchant</string>
+    <string name="whats_new_title">Whats new</string>
+
+    <string name="take_poll">Take Poll</string>
+    <string name="poll_cta_dismiss_title">Help us manage your poll notifications better:</string>
+    <string name="poll_cta_dismiss_positive">Remind me tomorrow</string>
+    <string name="poll_cta_dismiss_neutral">Don\'t show me this poll again</string>
+    <string name="submit_poll">Submit</string>
+    <string name="edit_vote">Edit my vote</string>
+    <string name="poll_thanks_you_for_response">Thank you for your response!</string>
+    <string name="poll_add_suggestion">Add your own suggestion</string>
+    <string name="poll_expires_in">This poll expires in&#160;</string>
+
+
+    <string name="prev_updates_title">Previous Updates</string>
 
     <!-- Custom cards -->
     <string name="custom_card_main_header"> Enter credentials</string>

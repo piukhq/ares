@@ -340,7 +340,7 @@ class LoyaltyCardDetailsFragment :
 
             colorDrawable.alpha = scrollValue
             if (scrollValue == MAX_ALPHA.toInt()) {
-                // TODO: Sort this 
+                // TODO: Sort this
                 //Check whether it is a custom card then show title on toolbar
 
                 if (isCustomCard) {
@@ -918,7 +918,6 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-    // TODO: Handle the click to barcode screen 
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
             if (!membershipCard.card?.barcode.isNullOrEmpty() ||

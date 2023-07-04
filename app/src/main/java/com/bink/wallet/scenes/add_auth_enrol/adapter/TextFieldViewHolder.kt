@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
 import android.app.DatePickerDialog
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.InputType
@@ -37,6 +38,11 @@ class TextFieldViewHolder(
     private var cardPlanField: PlanField? = null
     private var barcodePlanField: PlanField? = null
     private var isFromBarcodeScan: Boolean = false
+
+    private fun isDarkModeOn(): Boolean {
+        val currentNightMode = binding.titleAddAuthText.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
+    }
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -248,7 +254,8 @@ class TextFieldViewHolder(
                     if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.compoundDrawables[DRAWABLE_END].bounds.width())) {
                         if (shouldClearText) {
                             binding.titleAddAuthText.text = planField.column
-                            binding.titleAddAuthText.setTextColor(Color.BLACK)
+                            val colour = if(isDarkModeOn()) Color.GRAY else Color.BLACK
+                            binding.titleAddAuthText.setTextColor(colour)
                             clearField()
                             editTextState(true)
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
@@ -265,6 +272,8 @@ class TextFieldViewHolder(
     }
 
     private fun TextInputEditText.editTextState(isEnabled: Boolean) {
+        val colour = if(isDarkModeOn()) Color.GRAY else Color.BLACK
+
         if (isEnabled) {
             this.isFocusable = true
             this.isFocusableInTouchMode = true
@@ -272,12 +281,12 @@ class TextFieldViewHolder(
                 this.requestFocus()
                 this.isCursorVisible = true
             }
-            this.setTextColor(Color.BLACK)
+            this.setTextColor(colour)
         } else {
             this.isFocusable = false
             this.isCursorVisible = false
             this.setTextColor(Color.GRAY)
-            binding.titleAddAuthText.setTextColor(Color.GRAY)
+            binding.titleAddAuthText.setTextColor(colour)
 
         }
     }

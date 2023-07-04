@@ -20,7 +20,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_onboarding_item_background">
+                android:background="@color/colorPrimary">
 
                 <TextView
                     android:id="@+id/tv_card_title"

@@ -199,7 +199,7 @@
 
                 <Button
                     android:id="@+id/add_button"
-                    style="@style/RoundedGradientButton"
+                    style="@style/RoundedButton"
                     android:layout_marginTop="@dimen/margin_padding_size_large"
                     android:layout_marginEnd="@dimen/custom_text_card_margin"
                     android:enabled="@{viewModel.isAddButtonEnabled}"

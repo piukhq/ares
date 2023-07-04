@@ -63,7 +63,7 @@ class LoyaltyWalletRepository(
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
                 } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName + 60, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -144,7 +144,7 @@ class LoyaltyWalletRepository(
                     localMembershipPlans.value = response
                 } catch (e: Exception) {
                     // TODO: Have error catching here in a mutable
-                    logDebug(LoyaltyWalletRepository::class.simpleName + 137, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -184,7 +184,7 @@ class LoyaltyWalletRepository(
                     databaseUpdated?.value = true
                 } catch (e: Exception) {
                     loadPlansError.value = e
-                    logDebug(LoyaltyWalletRepository::class.simpleName + 177, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -202,7 +202,7 @@ class LoyaltyWalletRepository(
                         membershipCardDao.storeMembershipCard(card)
                     }
                 } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName + 195, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -386,7 +386,6 @@ class LoyaltyWalletRepository(
     private fun processMembershipCardsResult(membershipCards: List<MembershipCard>?) {
         CoroutineScope(Dispatchers.Default).launch {
             val cardsFromDb = membershipCardDao.getAllAsync()
-//            val customCards = cardsFromDb.filter { card -> card.isCustomCard == true }
             val cardIdInDb =
                 withContext(Dispatchers.IO) { cardsFromDb }.filter { card -> card.isCustomCard != true }
                     .map { card -> card.id }
@@ -399,7 +398,6 @@ class LoyaltyWalletRepository(
                     deleteFromDb(it)
                 }
             }
-
 
             membershipCards?.let {
                 generateUuidForMembershipCards(
@@ -433,6 +431,5 @@ class LoyaltyWalletRepository(
         SharedPreferenceManager.membershipPlansLastRequestTime =
             System.currentTimeMillis()
     }
-
 
 }

@@ -361,7 +361,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
                             Text(
                                 text = it,
-                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
+                                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.theme_selector_dialog_padding))
                             )
                         }
                     }
@@ -407,6 +407,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 findNavController().navigateIfAdded(
                     this,
                     SettingsFragmentDirections.settingsToDebug()
+                )
+            }
+            SettingsItemType.PREV_UPDATE -> {
+                findNavController().navigateIfAdded(
+                    this,
+                    SettingsFragmentDirections.settingsToPrevUpdates()
                 )
             }
             SettingsItemType.FAQS -> {

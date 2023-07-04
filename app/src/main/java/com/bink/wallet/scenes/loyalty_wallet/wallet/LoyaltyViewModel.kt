@@ -7,20 +7,29 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
+import com.bink.wallet.model.WhatsNew
+import com.bink.wallet.model.PollItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.PollUtil
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.firebase.FirebaseRepository
+import com.bink.wallet.utils.firebase.getTime
+import com.bink.wallet.utils.firebase.whatsNew
+import com.bink.wallet.utils.firebase.polls
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.logDebug
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,
-    private val paymentWalletRepository: PaymentWalletRepository
+    private val paymentWalletRepository: PaymentWalletRepository,
+    private val firebaseRepository: FirebaseRepository,
 ) :
     BaseViewModel() {
 
@@ -78,7 +87,7 @@ class LoyaltyViewModel constructor(
     private fun combineCardsData(
         cardsReceived: LiveData<List<MembershipCard>>,
         plansReceived: LiveData<List<MembershipPlan>>,
-        dismissedCards: LiveData<List<BannerDisplay>>
+        dismissedCards: LiveData<List<BannerDisplay>>,
     ): UserDataResult {
         val cardsReceivedValue = cardsReceived.value
         val plansReceivedValue = plansReceived.value
@@ -105,7 +114,7 @@ class LoyaltyViewModel constructor(
 
     fun fetchMembershipCards(
         context: Context?,
-        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit,
     ) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
             checkCardScrape(it, context, lpsCardStatus)
@@ -115,7 +124,7 @@ class LoyaltyViewModel constructor(
     private fun checkCardScrape(
         cards: List<MembershipCard>,
         context: Context?,
-        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit,
     ) {
         val shouldScrapeCards =
             DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(
@@ -134,7 +143,7 @@ class LoyaltyViewModel constructor(
 
     private fun setMembershipCardsFromDb(
         cardsFromDb: List<MembershipCard>,
-        cards: List<MembershipCard>
+        cards: List<MembershipCard>,
     ) {
         if (WebScrapableManager.mapOldToNewCards(cardsFromDb, cards).isNotEmpty()){
             membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
@@ -143,7 +152,7 @@ class LoyaltyViewModel constructor(
 
     fun fetchPeriodicMembershipCards(
         context: Context,
-        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit,
     ) {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(
@@ -187,7 +196,7 @@ class LoyaltyViewModel constructor(
 
     fun fetchMembershipCardsAndPlansForRefresh(
         context: Context?,
-        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit,
     ) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
@@ -230,10 +239,39 @@ class LoyaltyViewModel constructor(
         }
     }
 
+    fun checkWhatsNew(callback: (WhatsNew) -> Unit) {
+        firebaseRepository.getCollection<WhatsNew>(Firebase.whatsNew().whereEqualTo("published", true).whereLessThan("showFrom", getTime())) { whatsNewList ->
+            whatsNewList?.sortedBy { it.showFrom }?.let { sortedList ->
+                sortedList.firstOrNull()?.let { newestItem ->
+                    val previouslyViewedWhatsNew = SharedPreferenceManager.viewedWhatsNew
+                    val hasBeenPreviouslyViewed = previouslyViewedWhatsNew?.contains(newestItem.id ?: "")
+                    if (hasBeenPreviouslyViewed != true) {
+                        callback(newestItem)
+                        SharedPreferenceManager.viewedWhatsNew = "$previouslyViewedWhatsNew:${newestItem.id}"
+                    }
+                }
+            }
+        }
+    }
+
+    fun getPolls(callback: (PollItem?) -> Unit) {
+        val time = getTime()
+        firebaseRepository.getCollection<PollItem>(Firebase.polls().whereEqualTo("published", true).whereGreaterThan("closeTime", time)) { polls ->
+            polls?.firstOrNull { it.startTime < time }?.let { firstStartedPoll ->
+                firstStartedPoll.id?.let { pollId ->
+                    if (PollUtil.canViewPoll(pollId)) {
+                        callback(firstStartedPoll)
+                    }
+                }
+            }
+            callback(null)
+        }
+    }
+
     private fun scrapeCards(
         cards: List<MembershipCard>,
         context: Context?,
-        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit,
     ) {
         WebScrapableManager.tryScrapeCards(
             0,

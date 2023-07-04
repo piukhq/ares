@@ -31,6 +31,19 @@ class BinkDatabaseMigrations {
                 database.execSQL("ALTER TABLE membership_card ADD COLUMN isScraped INTEGER DEFAULT 0")
             }
         }
+
+        val MIGRATION_21_22: Migration = object : Migration(21, 22) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE membership_plan ADD COLUMN go_live TEXT")
+            }
+
+        }
+
+        val MIGRATION_22_23: Migration = object : Migration(22, 23) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE membership_card ADD COLUMN isCustomCard INTEGER DEFAULT 0")
+            }
+        }
     }
 
 }

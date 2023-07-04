@@ -1,6 +1,5 @@
 package com.bink.wallet.utils
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -9,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -86,8 +84,8 @@ fun GradientButton(
                 modifier = textModifier
             )
         }
+    }
 
-}
 
 
 @Composable
@@ -102,4 +100,8 @@ fun ImageViaUrl(url: String, contentDesc: String = "", modifier: Modifier) {
         modifier = modifier,
         alignment = Alignment.Center
     )
+}
+
+fun String.asJetpackColour(): Color {
+    return Color(android.graphics.Color.parseColor(this))
 }

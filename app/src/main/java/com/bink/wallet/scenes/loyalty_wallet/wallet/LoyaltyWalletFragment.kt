@@ -63,6 +63,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         onClickListener = {
             onCardClicked(it)
         },
+        onOpenPollClickListener = {
+            logMixpanelEvent(
+                MixpanelEvents.POLL_CLICKED,
+                JSONObject().put(MixpanelEvents.POLL_ID, it.id)
+            )
+            findNavController().navigate(
+                LoyaltyWalletFragmentDirections.loyaltyToPoll(
+                    it
+                )
+            )
+        },
+        onClosePollClickListener = {
+            dismissPollDialog(it)
+        },
         onCardLinkClickListener = {
             onCardLinkClicked(it)
         },
@@ -350,10 +364,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             if (planId == null || uuid == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_SUCCESS)
             } else {
-                logEvent(
-                    DELETE_LOYALTY_CARD_RESPONSE_SUCCESS,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
-                )
+                logEvent(DELETE_LOYALTY_CARD_RESPONSE_SUCCESS, getDeleteLoyaltyCardGenericMap(planId, uuid))
 
             }
 
@@ -389,15 +400,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
                 val httpException = it as HttpException
-                logEvent(
-                    DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardFailMap(
-                        planId,
-                        cardId,
-                        httpException.code(),
-                        httpException.getErrorBody()
-                    )
-                )
+                logEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE, getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody()))
             }
         }
 
@@ -440,10 +443,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.settingsButton.setOnClickListener {
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
-            )
+            findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen())
         }
 
         binding.sortButton.setOnClickListener { view ->
@@ -458,13 +458,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             val unsortedCards =
                                 walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
                             if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
-                                requireContext().showDialog(
-                                    title = getString(R.string.newest_sort_title),
-                                    message = getString(R.string.newest_sort_warning),
-                                    positiveBtn = getString(R.string.ok),
-                                    negativeBtn = getString(R.string.cancel_text),
-                                    positiveCallback = { sortByRecent(unsortedCards) },
-                                    negativeCallback = { })
+                                requireContext().showDialog(title = getString(R.string.newest_sort_title), message = getString(R.string.newest_sort_warning), positiveBtn = getString(R.string.ok), negativeBtn = getString(R.string.cancel_text), positiveCallback = { sortByRecent(unsortedCards) }, negativeCallback = { })
                             } else {
                                 sortByRecent(unsortedCards)
                             }
@@ -473,13 +467,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             val unsortedCards =
                                 walletAdapter.membershipCards.filterIsInstance<MembershipCard>()
                             if (WalletOrderingUtil.hasCustomWalletState(unsortedCards)) {
-                                requireContext().showDialog(
-                                    title = getString(R.string.newest_sort_title),
-                                    message = getString(R.string.newest_sort_warning),
-                                    positiveBtn = getString(R.string.ok),
-                                    negativeBtn = getString(R.string.cancel_text),
-                                    positiveCallback = { sortByNewest(unsortedCards) },
-                                    negativeCallback = { })
+                                requireContext().showDialog(title = getString(R.string.newest_sort_title), message = getString(R.string.newest_sort_warning), positiveBtn = getString(R.string.ok), negativeBtn = getString(R.string.cancel_text), positiveCallback = { sortByNewest(unsortedCards) }, negativeCallback = { })
                             } else {
                                 sortByNewest(unsortedCards)
                             }
@@ -542,18 +530,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        scanResult(
-            requestCode,
-            resultCode,
-            data,
-            { navigateToAddPaymentCard(it) },
-            { logPaymentCardSuccess(it) })
+        scanResult(requestCode, resultCode, data, { navigateToAddPaymentCard(it) }, { logPaymentCardSuccess(it) })
     }
 
     override fun builder(): FragmentToolbar {
-        return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
-            .build()
+        return FragmentToolbar.Builder().withId(FragmentToolbar.NO_TOOLBAR).build()
     }
 
     override fun createDynamicAction(
@@ -564,11 +545,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(
-                        binding.leftTopBar,
-                        dynamicActionLocation,
-                        dynamicAction
-                    )
+                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
                 }
             }
         }
@@ -586,13 +563,24 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 cards = userDataResult.result.first
                 plans = userDataResult.result.second
 
-                walletAdapter.membershipCards =
-                    WalletOrderingUtil.getSavedLoyaltyCardWallet(
-                        sortPlans(ArrayList(userDataResult.result.third))
-                    )
+                val displayedCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                    sortPlans(ArrayList(userDataResult.result.third))
+                )
+
+                viewModel.getPolls { pollItem ->
+                    pollItem?.let {
+                        displayedCards.add(0, it)
+                    }
+
+                    walletAdapter.membershipCards = displayedCards
+                }
+
+                viewModel.checkWhatsNew { whatsNew ->
+                    val directions = LoyaltyWalletFragmentDirections.loyaltyToWhatsNew(whatsNew, plans.toTypedArray(), cards.toTypedArray())
+                    findNavController().navigateIfAdded(this@LoyaltyWalletFragment, directions, currentDestination)
+                }
 
                 setSortButtonState()
-
                 disableIndicators()
             }
 
@@ -606,10 +594,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             if (userDataResult.result.first.size > 4) {
                 RequestReviewUtil.triggerViaCards(this) {
-                    logEvent(
-                        FIREBASE_REQUEST_REVIEW,
-                        getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
-                    )
+                    logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
                 }
             }
         }
@@ -718,20 +703,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             is MembershipPlan -> {
-                findNavController().navigate(
-                    LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(
-                        plans.toTypedArray(),
-                        cards.toTypedArray()
-                    )
-                )
+                findNavController().navigate(LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(plans.toTypedArray(), cards.toTypedArray()))
             }
         }
     }
 
     private fun navigateToAddPaymentCard(cardNumber: String = "") {
-        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddPaymentCard(
-            cardNumber
-        )
+        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddPaymentCard(cardNumber)
         findNavController().navigateIfAdded(this, directions)
     }
 
@@ -759,14 +737,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                            logMixpanelEvent(
-                                MixpanelEvents.CARD_DELETED,
-                                JSONObject().put(
-                                    MixpanelEvents.BRAND_NAME,
-                                    membershipCard.plan?.account?.company_name
-                                        ?: MixpanelEvents.VALUE_UNKNOWN
-                                ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
-                            )
+                            logMixpanelEvent(MixpanelEvents.CARD_DELETED, JSONObject().put(MixpanelEvents.BRAND_NAME, membershipCard.plan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET))
                             WalletOrderingUtil.deleteLoyaltyCardFromOrder(membershipCard.id.toLong())
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
@@ -776,10 +747,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             if (planId == null || uuid == null) {
                                 failedEvent(DELETE_LOYALTY_CARD_REQUEST)
                             } else {
-                                logEvent(
-                                    DELETE_LOYALTY_CARD_REQUEST,
-                                    getDeleteLoyaltyCardGenericMap(planId, uuid)
-                                )
+                                logEvent(DELETE_LOYALTY_CARD_REQUEST, getDeleteLoyaltyCardGenericMap(planId, uuid))
 
                             }
                         } else {
@@ -807,6 +775,45 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
+    private fun dismissPollDialog(pollId: String) {
+        lateinit var dialog: AlertDialog
+        val builder = context?.let { AlertDialog.Builder(it) }
+        if (builder != null) {
+            builder.setTitle(getString(R.string.poll_cta_dismiss_title))
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS_24H,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
+                        PollUtil.dismissPollFor24h(pollId)
+                        fetchData()
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        logMixpanelEvent(
+                            MixpanelEvents.POLL_DISMISS,
+                            JSONObject().put(MixpanelEvents.POLL_ID, pollId)
+                        )
+
+                        PollUtil.dismissPollPermanently(pollId)
+                        fetchData()
+                    }
+                }
+            }
+            builder.setPositiveButton(getString(R.string.poll_cta_dismiss_positive), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.poll_cta_dismiss_neutral), dialogClickListener)
+            dialog = builder.create()
+            dialog.show()
+
+            dialog.setOnCancelListener {
+                dialog.cancel()
+            }
+        }
+    }
+
+
     fun pendingCardDeleteDialog(position: Int) {
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
@@ -824,42 +831,28 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun displayNoBarcodeDialog(position: Int) {
-        requireContext().displayModalPopup(
-            getString(R.string.loyalty_wallet_no_barcode_title),
-            getString(R.string.loyalty_wallet_no_barcode_message),
-            okAction = {
-                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
-            },
-            cancelAction = {
-                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
-            }
-        )
+        requireContext().displayModalPopup(getString(R.string.loyalty_wallet_no_barcode_title), getString(R.string.loyalty_wallet_no_barcode_message), okAction = {
+            binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+        }, cancelAction = {
+            binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+        })
     }
 
     private fun handleServerDownError(throwable: Throwable) {
         if (isRefresh) {
-            if (((throwable is HttpException)
-                        && throwable.code() >= ApiErrorUtils.SERVER_ERROR)
-                || throwable is SocketTimeoutException
-            ) {
+            if (((throwable is HttpException) && throwable.code() >= ApiErrorUtils.SERVER_ERROR) || throwable is SocketTimeoutException) {
                 if (!isErrorShowing) {
                     isErrorShowing = true
-                    requireContext().displayModalPopup(
-                        requireContext().getString(R.string.error_server_down_title),
-                        requireContext().getString(R.string.error_server_down_message), {
-                            isErrorShowing = false
-                        }
-                    )
+                    requireContext().displayModalPopup(requireContext().getString(R.string.error_server_down_title), requireContext().getString(R.string.error_server_down_message), {
+                        isErrorShowing = false
+                    })
                 }
             }
         }
     }
 
     private fun onCardLinkClicked(item: MembershipPlan) {
-        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddJoin(
-            item,
-            null, isFromJoinCard = false, isRetryJourney = false
-        )
+        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddJoin(item, null, isFromJoinCard = false, isRetryJourney = false)
         findNavController().navigateIfAdded(this, directions, R.id.loyalty_fragment)
     }
 
@@ -916,24 +909,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun placeHolderToBrowseBrands() {
-        findNavController().navigate(
-            LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(
-                plans.toTypedArray(),
-                cards.toTypedArray()
-            )
-        )
+        findNavController().navigate(LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(plans.toTypedArray(), cards.toTypedArray()))
     }
 
     private fun setMixpanelCardProperties(membershipCards: List<MembershipCard>) {
-        setMixpanelProperty(
-            MixpanelEvents.TOTAL_CARDS_PROP,
-            "${membershipCards.size}"
-        )
+        setMixpanelProperty(MixpanelEvents.TOTAL_CARDS_PROP, "${membershipCards.size}")
 
-        setMixpanelProperty(
-            MixpanelEvents.TOTAL_PLL_CARDS_PROP,
-            membershipCards.filter { it.plan?.isPlanPLL() == true }.size.toString()
-        )
+        setMixpanelProperty(MixpanelEvents.TOTAL_PLL_CARDS_PROP, membershipCards.filter { it.plan?.isPlanPLL() == true }.size.toString())
 
         setMixpanelProperty(
             MixpanelEvents.TOTAL_LINKED_PLL_CARDS_PROP,

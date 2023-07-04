@@ -147,7 +147,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito_sans"
-                            android:textColor="@color/black"
+                            android:textColor="?attr/colorOnSurface"
                             android:textSize="@dimen/size_sub_headline"
                             tools:text="@string/bonus_card_number"
                             tools:textColor="@color/black" />
@@ -163,7 +163,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/nunito_sans_extrabold"
-                                android:textColor="@color/black"
+                                android:textColor="?attr/colorOnSurface"
                                 android:textSize="@dimen/size_sub_headline"
                                 tools:textColor="@color/black" />
 

@@ -1,6 +1,5 @@
 package com.bink.wallet.data
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -12,11 +11,8 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Database(
     entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class],
-    version = 24,
-    exportSchema = true,
-    autoMigrations = [
-        AutoMigration (from = 23, to = 24)
-    ]
+    version = 23,
+    exportSchema = false
 )
 @TypeConverters(
     MembershipCardConverters::class,

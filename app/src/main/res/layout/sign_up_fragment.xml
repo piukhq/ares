@@ -234,7 +234,7 @@
 
                 <Button
                     android:id="@+id/sign_up_button"
-                    style="@style/RoundedGradientButton"
+                    style="@style/RoundedButton"
                     android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                     android:enabled="@{viewModel.isSignUpEnabled}"

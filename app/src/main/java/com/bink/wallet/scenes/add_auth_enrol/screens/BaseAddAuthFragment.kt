@@ -18,14 +18,12 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.add.AddFragmentDirections
 import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AutoCompleteAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException

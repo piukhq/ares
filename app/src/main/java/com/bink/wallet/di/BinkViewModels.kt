@@ -14,7 +14,6 @@ import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
@@ -23,6 +22,7 @@ import com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardViewMo
 import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
+import com.bink.wallet.scenes.browse_brands.BrowseBrandsRepository
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.dynamic_actions.DynamicActionViewModel
 import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
@@ -43,7 +43,9 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.polls.PollsViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
+import com.bink.wallet.scenes.prev_updates.PrevUpdatesViewModel
 import com.bink.wallet.scenes.settings.*
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
@@ -52,7 +54,9 @@ import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.Magi
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
+import com.bink.wallet.scenes.whats_new.WhatsNewViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import com.bink.wallet.utils.firebase.FirebaseRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -61,6 +65,7 @@ val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    single { provideFirebaseRepository() }
     single { provideDataStoreSource(get()) }
     single { provideDataStore(get()) }
 
@@ -75,18 +80,20 @@ val viewModelModules = module {
             get()
         )
     }
-    viewModel { LoyaltyViewModel(get(), get()) }
+    viewModel { LoyaltyViewModel(get(), get(), get()) }
 
     viewModel { AddAuthViewModel(get(), get()) }
     viewModel { AddCardViewModel(get(), get()) }
     viewModel { GetNewCardViewModel(get(), get()) }
     viewModel { GhostCardViewModel(get(), get()) }
 
-    viewModel { BrowseBrandsViewModel() }
+    single {
+        provideBrowseBrandsRepository(get(), get())
+    }
+
+    viewModel { BrowseBrandsViewModel(get()) }
 
     viewModel { BarcodeViewModel(get(), get()) }
-
-    viewModel { AddViewModel(get(), get()) }
 
     viewModel { AddJoinViewModel(get()) }
 
@@ -171,6 +178,13 @@ val viewModelModules = module {
 
     viewModel { BetaFeatureViewModel(get()) }
 
+    viewModel { WhatsNewViewModel(get()) }
+
+    viewModel { PollsViewModel(get(), get(), get()) }
+
+    viewModel { PrevUpdatesViewModel(get(), get()) }
+
+
     viewModel { AddCustomLoyaltyCardViewModel(get(),get()) }
 }
 
@@ -228,6 +242,11 @@ fun provideAddPaymentCardRepository(
         membershipPlanDao
     )
 
+fun provideBrowseBrandsRepository(
+    membershipCardDao: MembershipCardDao,
+    membershipPlanDao: MembershipPlanDao,
+): BrowseBrandsRepository = BrowseBrandsRepository(membershipCardDao, membershipPlanDao)
+
 fun provideDataStore(context: Context): DataStore<Preferences> =
     PreferenceDataStoreFactory.create(
         produceFile = {
@@ -237,3 +256,5 @@ fun provideDataStore(context: Context): DataStore<Preferences> =
 
 fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreSourceImpl =
     DataStoreSourceImpl(dataStore)
+
+fun provideFirebaseRepository(): FirebaseRepository = FirebaseRepository()

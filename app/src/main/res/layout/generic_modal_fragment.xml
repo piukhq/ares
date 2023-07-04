@@ -91,7 +91,7 @@
 
                 <Button
                     android:id="@+id/first_button"
-                    style="@style/RoundedGradientButton"
+                    style="@style/RoundedButton"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:text="@string/accept_button_text"
                     app:backgroundTint="@null"
