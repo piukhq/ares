@@ -677,6 +677,10 @@
     <string name="custom_card_card_number"> Card number</string>
     <string name="custom_card_store_name"> Store name</string>
     <string name="custom_card_button_text"> Add card</string>
+    <string name="custom_card_dialog_title">Unrecognised barcode</string>
+    <string name="custom_card_dialog_message">Would you like to add this to your wallet anyway?</string>
+    <string name="custom_card_cancel">Cancel</string>
+    <string name="custom_card_add">Add custom</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

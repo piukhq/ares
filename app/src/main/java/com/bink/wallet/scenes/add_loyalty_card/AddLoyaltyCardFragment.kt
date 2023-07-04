@@ -39,11 +39,12 @@ class AddLoyaltyCardFragment :
     private var isFromAddAuth = false
     private var account: Account? = null
 
-    private val galleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        handleGalleryResult(uri) {
-            handleResultText(it)
+    private val galleryResult =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            handleGalleryResult(uri) {
+                handleResultText(it)
+            }
         }
-    }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -115,7 +116,8 @@ class AddLoyaltyCardFragment :
             }
 
         } else {
-            val membershipPlan: MembershipPlan? = MembershipPlanUtils.findMembershipPlan(brands!!, text)
+            val membershipPlan: MembershipPlan? =
+                MembershipPlanUtils.findMembershipPlan(brands!!, text)
 
             membershipPlan?.also {
 
@@ -126,7 +128,7 @@ class AddLoyaltyCardFragment :
                     barcode = text
                 )
                 binding.progressSpinner.visibility = View.VISIBLE
-                    findNavController().navigateIfAdded(this, action)
+                findNavController().navigateIfAdded(this, action)
 
 
             } ?: run {
@@ -195,10 +197,10 @@ class AddLoyaltyCardFragment :
     }
 
     private fun setBottomLayout() {
-                binding.bottomView.root.setPadding(0, 800, 0, 0)
-                binding.bottomView.root.alpha = 0f
-                binding.bottomView.root.setVisible(true)
-                binding.bottomView.root.animate().alpha(1f)
+        binding.bottomView.root.setPadding(0, 800, 0, 0)
+        binding.bottomView.root.alpha = 0f
+        binding.bottomView.root.setVisible(true)
+        binding.bottomView.root.animate().alpha(1f)
 
         binding.bottomView.enterManuallyContainer.setOnClickListener()
         {
@@ -274,7 +276,8 @@ class AddLoyaltyCardFragment :
         text: String = getString(R.string.enter_manually_cant_scan),
     ) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = requireActivity().getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager =
+                requireActivity().getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
@@ -310,24 +313,22 @@ class AddLoyaltyCardFragment :
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
-                setTitle("Unrecognised barcode")
-                setMessage("Would you like to add this to your wallet anyway?")
-                setPositiveButton("Cancel",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // User clicked OK button
+                setTitle(getString(R.string.custom_card_dialog_title))
+                setMessage(getString(R.string.custom_card_dialog_message))
+                setPositiveButton(
+                    getString(R.string.custom_card_cancel)
+                ) { dialog, _ ->
+                    dialog.dismiss()
 
-                    })
-                setNegativeButton("Add custom",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // User cancelled the dialog
-                        dialog.dismiss()
-                        findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
-
-                    })
+                }
+                setNegativeButton(
+                    getString(R.string.custom_card_add)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
+                }
             }
-            // Set other dialog properties
 
-            // Create the AlertDialog
             builder.create()
         }
 
