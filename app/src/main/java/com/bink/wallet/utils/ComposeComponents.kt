@@ -106,3 +106,7 @@ fun ImageViaUrl(url: String, contentDesc: String = "", modifier: Modifier) {
         alignment = Alignment.Center
     )
 }
+
+fun String.asJetpackColour(): Color {
+    return Color(android.graphics.Color.parseColor(this))
+}

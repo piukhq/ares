@@ -42,6 +42,7 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.polls.PollsViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.settings.*
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
@@ -51,7 +52,9 @@ import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.Magi
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
+import com.bink.wallet.scenes.whats_new.WhatsNewViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import com.bink.wallet.utils.firebase.FirebaseRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -60,6 +63,7 @@ val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    single { provideFirebaseRepository() }
     single { provideDataStoreSource(get()) }
     single { provideDataStore(get()) }
 
@@ -74,7 +78,7 @@ val viewModelModules = module {
             get()
         )
     }
-    viewModel { LoyaltyViewModel(get(), get()) }
+    viewModel { LoyaltyViewModel(get(), get(), get()) }
 
     viewModel { AddAuthViewModel(get(), get()) }
     viewModel { AddCardViewModel(get(), get()) }
@@ -169,6 +173,10 @@ val viewModelModules = module {
     viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
 
     viewModel { BetaFeatureViewModel(get()) }
+
+    viewModel { WhatsNewViewModel(get()) }
+
+    viewModel { PollsViewModel(get(), get(), get()) }
 }
 
 fun provideLoginRepository(
@@ -234,3 +242,5 @@ fun provideDataStore(context: Context): DataStore<Preferences> =
 
 fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreSourceImpl =
     DataStoreSourceImpl(dataStore)
+
+fun provideFirebaseRepository(): FirebaseRepository = FirebaseRepository()
