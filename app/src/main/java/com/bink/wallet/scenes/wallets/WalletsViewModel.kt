@@ -32,13 +32,10 @@ class WalletsViewModel(
         if (shouldMakePeriodicCall) {
             repository.retrieveMembershipCards(membershipCardData, _loadCardsError)
         }
-        logDebug("ApiCalls","Call from WalletViewModel")
     }
 
     fun fetchStoredMembershipPlans() {
         repository.retrieveStoredMembershipPlans(membershipPlanData)
-        logDebug("ApiCalls","Call from WalletViewModel")
-
     }
 
     fun fetchPaymentCards() {
@@ -51,7 +48,5 @@ class WalletsViewModel(
                 _fetchError
             )
         }
-        logDebug("ApiCalls","Call from WalletViewModel")
-
     }
 }

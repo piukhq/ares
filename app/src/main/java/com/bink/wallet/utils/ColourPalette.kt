@@ -15,13 +15,13 @@ object ColourPalette {
     val sleek = listOf("#d5d6d2", "#3a5199", "#2f2e33", "#ffffff")
     val school = listOf("#fdc3c3", "#138d90", "#061283", "#ffb74c")
 
-    val ps = listOf(
+    private val coloursList = listOf(
         grecian, antique, warm, serene, lemonade, muted, watery, outdoorsy, primary,
         sleek, school
     )
 
     fun getRandomColour(): String {
-        val colourList = ps.random()
+        val colourList = coloursList.random()
         return colourList.random()
     }
 

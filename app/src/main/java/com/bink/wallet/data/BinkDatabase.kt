@@ -26,5 +26,4 @@ abstract class BinkDatabase : RoomDatabase() {
     abstract fun paymentCardDao(): PaymentCardDao
     abstract fun loginDataDao(): LoginDataDao
     abstract fun bannersDisplayDao(): BannersDisplayDao
-
 }

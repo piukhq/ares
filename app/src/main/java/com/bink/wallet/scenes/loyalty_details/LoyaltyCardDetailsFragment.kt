@@ -340,8 +340,6 @@ class LoyaltyCardDetailsFragment :
 
             colorDrawable.alpha = scrollValue
             if (scrollValue == MAX_ALPHA.toInt()) {
-                // TODO: Sort this
-                //Check whether it is a custom card then show title on toolbar
 
                 if (isCustomCard) {
                     binding.toolbarTitle.text = viewModel.membershipCard.value?.card?.merchant_name

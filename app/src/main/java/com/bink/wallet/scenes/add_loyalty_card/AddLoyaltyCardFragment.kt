@@ -79,7 +79,6 @@ class AddLoyaltyCardFragment :
         if (resumeTimerFromMillis > 0) {
             scheduleHapticWithPause(resumeTimerFromMillis)
         }
-
     }
 
     override fun onPause() {
