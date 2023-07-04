@@ -301,6 +301,6 @@ object MembershipPlanUtils {
     }
 
     fun getBlankMembershipPlan(): MembershipPlan {
-        return MembershipPlan("", null, null, null, null, null, null, null, null)
+        return MembershipPlan("", null, null, null, null, null, null, null, null,null)
     }
 }
