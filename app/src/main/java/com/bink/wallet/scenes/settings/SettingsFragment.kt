@@ -409,6 +409,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     SettingsFragmentDirections.settingsToDebug()
                 )
             }
+            SettingsItemType.PREV_UPDATE -> {
+                findNavController().navigateIfAdded(
+                    this,
+                    SettingsFragmentDirections.settingsToPrevUpdates()
+                )
+            }
             SettingsItemType.FAQS -> {
                 item.url?.let { url ->
                     findNavController().navigate(

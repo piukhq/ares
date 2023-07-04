@@ -309,6 +309,8 @@
     <string name="settings_menu_beta">Beta Features</string>
     <string name="settings_menu_log_out">Log out</string>
     <string name="settings_menu_support_and_feedback">Support and feedback</string>
+    <string name="settings_menu_prev_updates">Previous Updates</string>
+    <string name="settings_menu_prev_updates_subtitle">Release Notes</string>
     <string name="settings_menu_faqs">FAQs</string>
     <string name="settings_menu_faqs_subtitle">Frequently asked questions</string>
     <string name="settings_menu_contact_us">Contact us</string>
@@ -685,6 +687,9 @@
     <string name="poll_thanks_you_for_response">Thank you for your response!</string>
     <string name="poll_add_suggestion">Add your own suggestion</string>
     <string name="poll_expires_in">This poll expires in&#160;</string>
+
+
+    <string name="prev_updates_title">Previous Updates</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">
