@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_loyalty_card
 import android.app.Activity
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
-import android.content.DialogInterface
 import android.net.Uri
 import android.os.*
 import android.view.View
@@ -17,7 +16,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.add_custom_loyalty_card.AddCustomLoyaltyCardFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
 import com.bink.wallet.utils.enums.SignUpFieldTypes
@@ -306,10 +304,10 @@ class AddLoyaltyCardFragment :
         val bounceAnimation = AnimationUtils.loadAnimation(context, R.anim.bounce)
         binding.bottomView.enterManuallyContainer.startAnimation(bounceAnimation)
 
-        showDialog()
+        showCustomCardDialog()
     }
 
-    private fun showDialog() {
+    private fun showCustomCardDialog() {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
