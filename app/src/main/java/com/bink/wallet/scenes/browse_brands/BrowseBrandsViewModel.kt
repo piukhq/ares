@@ -113,10 +113,29 @@ class BrowseBrandsViewModel(
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
         val joinablePlans = membershipPlans
             .filter { plan -> plan.canPlanBeAdded() }
+        val newCards = joinablePlans.filter { it.isNewCard() }
         val (pllCards, RestOfCards) = joinablePlans.partition { it.isPlanPLL() }
 
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
             .partition { WebScrapableManager.isCardScrapable(it.id) }
+
+        if (newCards.isNotEmpty()) {
+            browseBrandsItems.add(
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.new_card_title,
+                    null
+                )
+            )
+            newCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, newCards.size - 1)
+                    )
+                )
+            }
+        }
 
         if (pllCards.isNotEmpty()) {
             browseBrandsItems.add(

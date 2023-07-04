@@ -8,6 +8,9 @@ import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.utils.enums.CardType
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -21,11 +24,13 @@ class MembershipPlan(
     @ColumnInfo(name = "balances") val balances: List<Balances>?,
     @ColumnInfo(name = "has_vouchers") val has_vouchers: Boolean? = null,
     @ColumnInfo(name = "card") val card: Card?,
-    @ColumnInfo(name = "content") val content: List<Content>?
+    @ColumnInfo(name = "content") val content: List<Content>?,
+    @ColumnInfo(name = "go_live") val go_live: String?,
 ) : Parcelable {
 
     constructor(id: String) : this(
         id,
+        null,
         null,
         null,
         null,
@@ -55,4 +60,15 @@ class MembershipPlan(
     fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
 
     fun isStoreCard(): Boolean = this.getCardType() == CardType.STORE
+
+    fun isNewCard(): Boolean {
+        val currentDate = Calendar.getInstance().time
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val goLiveDate: Date? = go_live?.let { formatter.parse(it) }
+
+        val difference = TimeUnit.MILLISECONDS.toDays(currentDate.time - (goLiveDate?.time ?: return false))
+
+        return difference in 0..30
+    }
 }
