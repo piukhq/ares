@@ -75,7 +75,7 @@ class AddCustomLoyaltyCardFragment :
                 contentDescription = "Bink logo",
                 alignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(all = 34.dp)
+                    .padding(all = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
                     .size(dimensionResource(id = R.dimen.brand_image_height))
             )
 
@@ -84,7 +84,7 @@ class AddCustomLoyaltyCardFragment :
                     .fillMaxWidth()
                     .padding(
                         top = dimensionResource(id = R.dimen.margin_padding_size_medium),
-                        start = 24.dp,
+                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
                     ), text = stringResource(id = R.string.custom_card_main_header),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
@@ -97,10 +97,9 @@ class AddCustomLoyaltyCardFragment :
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = 2.dp,
                         bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        start = 24.dp,
-                        end = 24.dp
+                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
                     ),
                 text = stringResource(id = R.string.custom_card_description),
                 fontFamily = nunitoSans,
@@ -110,7 +109,7 @@ class AddCustomLoyaltyCardFragment :
                 textAlign = TextAlign.Start
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
 
             var cardNumber by remember { mutableStateOf("") }
             var storeName by remember { mutableStateOf("") }
@@ -124,13 +123,17 @@ class AddCustomLoyaltyCardFragment :
                 label = { Text(stringResource(id = R.string.custom_card_card_number)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 8.dp),
+                    .padding(
+                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                        bottom = dimensionResource(id = R.dimen.margin_padding_size_small)
+                    ),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.background,
                     textColor = MaterialTheme.colors.onSurface
                 )
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
 
             TextField(
                 value = storeName,
@@ -138,14 +141,17 @@ class AddCustomLoyaltyCardFragment :
                 label = { Text(stringResource(id = R.string.custom_card_store_name)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp),
+                    .padding(
+                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
+                    ),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.background,
                     textColor = MaterialTheme.colors.onSurface
                 )
             )
 
-            Spacer(modifier = Modifier.padding(64.dp))
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_extra_large)))
 
             GradientButton(
                 text = stringResource(id = R.string.custom_card_button_text), modifier = Modifier
