@@ -671,6 +671,13 @@
     <string name="location_closes_soon_title">Closing Soon - Closes at&#160;</string>
     <string name="location_open_title">Open - Closes at&#160;</string>
 
+    <!-- Custom cards -->
+    <string name="custom_card_main_header"> Enter credentials</string>
+    <string name="custom_card_description"> Please enter your credentials below to add this card to your wallet.</string>
+    <string name="custom_card_card_number"> Card number</string>
+    <string name="custom_card_store_name"> Store name</string>
+    <string name="custom_card_button_text"> Add card</string>
+
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

@@ -4,11 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,11 +12,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
@@ -31,10 +26,7 @@ import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
-import com.bink.wallet.utils.ColourPalette
-import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.nunitoSans
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import java.util.*
@@ -72,7 +64,6 @@ class AddCustomLoyaltyCardFragment :
     }
 
     @Composable
-    @Preview
     private fun CustomCard() {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -83,7 +74,9 @@ class AddCustomLoyaltyCardFragment :
                 painter = painterResource(id = R.drawable.ic_bink_icon),
                 contentDescription = "Bink logo",
                 alignment = Alignment.Center,
-                modifier = Modifier.padding(all = 34.dp)
+                modifier = Modifier
+                    .padding(all = 34.dp)
+                    .size(dimensionResource(id = R.dimen.brand_image_height))
             )
 
             Text(
@@ -92,7 +85,7 @@ class AddCustomLoyaltyCardFragment :
                     .padding(
                         top = dimensionResource(id = R.dimen.margin_padding_size_medium),
                         start = 24.dp,
-                    ), text = "Enter credentials",
+                    ), text = stringResource(id = R.string.custom_card_main_header),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp,
@@ -108,13 +101,16 @@ class AddCustomLoyaltyCardFragment :
                         bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
                         start = 24.dp,
                         end = 24.dp
-                    ), text = "Please enter your credentials below to add this card to your wallet.",
+                    ),
+                text = stringResource(id = R.string.custom_card_description),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
                 fontSize = 21.sp,
                 color = MaterialTheme.colors.onSurface,
                 textAlign = TextAlign.Start
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             var cardNumber by remember { mutableStateOf("") }
             var storeName by remember { mutableStateOf("") }
@@ -125,32 +121,45 @@ class AddCustomLoyaltyCardFragment :
             TextField(
                 value = cardNumber,
                 onValueChange = { cardNumber = it },
-                label = { Text("Card number") },
+                label = { Text(stringResource(id = R.string.custom_card_card_number)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, bottom = 8.dp)
+                    .padding(start = 24.dp, end = 24.dp, bottom = 8.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.background,
+                    textColor = MaterialTheme.colors.onSurface
+                )
             )
+            Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
                 value = storeName,
                 onValueChange = { storeName = it },
-                label = { Text("Store name") },
+                label = { Text(stringResource(id = R.string.custom_card_store_name)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp)
+                    .padding(start = 24.dp, end = 24.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.background,
+                    textColor = MaterialTheme.colors.onSurface
+                )
             )
 
-            Button(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.force_barcode_rounding)))
+            Spacer(modifier = Modifier.padding(64.dp))
+
+            GradientButton(
+                text = stringResource(id = R.string.custom_card_button_text), modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, top = 60.dp),
-                contentPadding = PaddingValues(),
-                onClick = { generateCustomCard(cardNumber, storeName) },
-                enabled = enabled.value
-            ) {
-                Text(text = "Add card")
-            }
+                    .padding(
+                        start = dimensionResource(id = R.dimen.continue_button_padding),
+                        end = dimensionResource(id = R.dimen.continue_button_padding)
+                    ),
+                textModifier = Modifier.padding(dimensionResource(id = R.dimen.continue_button_text_padding)),
+                onClick = {
+                    generateCustomCard(cardNumber, storeName)
+                },
+                isEnabled = enabled.value
+            )
         }
     }
 

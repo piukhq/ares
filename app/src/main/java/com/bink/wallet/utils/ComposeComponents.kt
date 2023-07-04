@@ -66,30 +66,27 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     onClick: () -> Unit = { },
+    isEnabled:Boolean = true
 ) {
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         modifier = modifier.clip(RoundedCornerShape(25.dp)),
         contentPadding = PaddingValues(),
         onClick = { onClick() },
-    ) {
-        Box(
-            modifier = Modifier
-                .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F), Color(0xFF194B53))))
-                .then(modifier),
-            contentAlignment = Alignment.Center,
-        ) {
+        enabled = isEnabled
+    )
+        {
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = if (isEnabled) Color.White else Color.Gray,
                 fontSize = 18.sp,
                 modifier = textModifier
             )
         }
-    }
+
 }
 
 
