@@ -146,6 +146,9 @@ class AddCustomLoyaltyCardFragment :
 
     @Composable
     private fun TextFields() {
+        val isTextFieldEmpty = viewModel.cardNumber.isEmpty()
+        val image =
+            if (isTextFieldEmpty) R.drawable.ic_camera else R.drawable.ic_clear_search
 
         TextField(
             value = viewModel.cardNumber,
@@ -161,7 +164,17 @@ class AddCustomLoyaltyCardFragment :
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 textColor = MaterialTheme.colors.onSurface
-            )
+            ),
+            trailingIcon = {
+                IconButton(onClick = {
+                    if (!isTextFieldEmpty) viewModel.updateCardNumber("") else findNavController().popBackStack()
+                }, content = {
+                    Icon(
+                        painter = painterResource(id = image),
+                        contentDescription = "Trailing icon"
+                    )
+                })
+            }
         )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
 
