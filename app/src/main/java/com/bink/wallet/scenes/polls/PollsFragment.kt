@@ -222,10 +222,12 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 answerSelected(answer)
             }) {
 
-            RadioButton(selected = isSelected, onClick = {
-                focusManager.clearFocus()
-                answerSelected(answer)
-            })
+            RadioButton(selected = isSelected,
+                colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.white)),
+                onClick = {
+                    focusManager.clearFocus()
+                    answerSelected(answer)
+                })
 
             Text(
                 text = answer,
@@ -305,6 +307,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
 
                 RadioButton(
                     selected = result.isUsersAnswer,
+                    colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.white)),
                     onClick = { }
                 )
 
