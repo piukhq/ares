@@ -9,27 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddCustomCardFragmentBinding
-import com.bink.wallet.model.response.membership_card.Card
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.theme.AppTheme
 import com.bink.wallet.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import java.util.*
 
 class AddCustomLoyaltyCardFragment :
     BaseFragment<AddCustomLoyaltyCardViewModel, AddCustomCardFragmentBinding>() {
@@ -45,7 +40,8 @@ class AddCustomLoyaltyCardFragment :
             .build()
     }
 
-    lateinit var membershipPlan: MembershipPlan
+    private val args: AddCustomLoyaltyCardFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.composeView.setContent {
@@ -61,6 +57,9 @@ class AddCustomLoyaltyCardFragment :
                 )
             )
         }
+
+        val cardNumber = args.cardNumber ?: ""
+        viewModel.updateCardNumber(cardNumber)
     }
 
     @Composable
@@ -70,88 +69,17 @@ class AddCustomLoyaltyCardFragment :
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_bink_icon),
-                contentDescription = "Bink logo",
-                alignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(all = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
-                    .size(dimensionResource(id = R.dimen.brand_image_height))
-            )
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = dimensionResource(id = R.dimen.margin_padding_size_medium),
-                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                    ), text = stringResource(id = R.string.custom_card_main_header),
-                fontFamily = nunitoSans,
-                fontWeight = FontWeight.Bold,
-                fontSize = 21.sp,
-                color = MaterialTheme.colors.onSurface,
-                textAlign = TextAlign.Start
-            )
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
-                    ),
-                text = stringResource(id = R.string.custom_card_description),
-                fontFamily = nunitoSans,
-                fontWeight = FontWeight.Light,
-                fontSize = 21.sp,
-                color = MaterialTheme.colors.onSurface,
-                textAlign = TextAlign.Start
-            )
+            Header()
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
 
-            var cardNumber by remember { mutableStateOf("") }
-            var storeName by remember { mutableStateOf("") }
             val enabled = remember { mutableStateOf(false) }
 
-            enabled.value = (cardNumber.isNotEmpty() && storeName.isNotEmpty())
+            enabled.value = (viewModel.cardNumber.isNotEmpty() && viewModel.storeName.isNotEmpty())
 
-            TextField(
-                value = cardNumber,
-                onValueChange = { cardNumber = it },
-                label = { Text(stringResource(id = R.string.custom_card_card_number)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        bottom = dimensionResource(id = R.dimen.margin_padding_size_small)
-                    ),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = MaterialTheme.colors.background,
-                    textColor = MaterialTheme.colors.onSurface
-                )
-            )
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+            TextFields()
 
-            TextField(
-                value = storeName,
-                onValueChange = { storeName = it },
-                label = { Text(stringResource(id = R.string.custom_card_store_name)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
-                        end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
-                    ),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = MaterialTheme.colors.background,
-                    textColor = MaterialTheme.colors.onSurface
-                )
-            )
-
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.margin_padding_size_extra_large)))
+            Spacer(modifier = Modifier.weight(1f))
 
             GradientButton(
                 text = stringResource(id = R.string.custom_card_button_text), modifier = Modifier
@@ -162,34 +90,95 @@ class AddCustomLoyaltyCardFragment :
                     ),
                 textModifier = Modifier.padding(dimensionResource(id = R.dimen.continue_button_text_padding)),
                 onClick = {
-                    generateCustomCard(cardNumber, storeName)
+                    viewModel.createMembershipCard()
                 },
                 isEnabled = enabled.value
             )
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 
-    private fun generateCustomCard(cardNumber: String, storeName: String) {
-
-        val card = Card(
-            barcode = cardNumber,
-            null,
-            cardNumber,
-            ColourPalette.getRandomColour(),
-            null,
-            storeName
+    @Composable
+    private fun Header() {
+        Image(
+            painter = painterResource(id = R.drawable.ic_bink_icon),
+            contentDescription = "Bink logo",
+            alignment = Alignment.Center,
+            modifier = Modifier
+                .padding(all = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
+                .size(dimensionResource(id = R.dimen.brand_image_height))
         )
 
-        val membershipCard = MembershipCard(
-            id = generateCustomCardId(), "9999", null, null, card, null,
-            null, null, null, null, UUID.randomUUID().toString(), null, true
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                    start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                ), text = stringResource(id = R.string.custom_card_main_header),
+            fontFamily = nunitoSans,
+            fontWeight = FontWeight.Bold,
+            fontSize = 21.sp,
+            color = MaterialTheme.colors.onSurface,
+            textAlign = TextAlign.Start,
+            maxLines = 1
         )
 
-        viewModel.createMembershipCard(membershipCard)
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                    start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                    end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
+                ),
+            text = stringResource(id = R.string.custom_card_description),
+            fontFamily = nunitoSans,
+            fontWeight = FontWeight.Light,
+            fontSize = 18.sp,
+            color = MaterialTheme.colors.onSurface,
+            textAlign = TextAlign.Start,
+            maxLines = 1
+
+        )
     }
 
-    private fun generateCustomCardId(): String {
-        val id = (2000..18000).random() + System.currentTimeMillis().toInt()
-        return id.toString()
+    @Composable
+    private fun TextFields() {
+
+        TextField(
+            value = viewModel.cardNumber,
+            onValueChange = { viewModel.updateCardNumber(it) },
+            label = { Text(stringResource(id = R.string.custom_card_card_number)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                    end = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_small)
+                ),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colors.background,
+                textColor = MaterialTheme.colors.onSurface
+            )
+        )
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
+
+        TextField(
+            value = viewModel.storeName,
+            onValueChange = { viewModel.updateStoreName(it) },
+            label = { Text(stringResource(id = R.string.custom_card_store_name)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = dimensionResource(id = R.dimen.margin_padding_size_medium_large),
+                    end = dimensionResource(id = R.dimen.margin_padding_size_medium_large)
+                ),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colors.background,
+                textColor = MaterialTheme.colors.onSurface
+            )
+        )
     }
 }

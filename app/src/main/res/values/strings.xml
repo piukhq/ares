@@ -700,7 +700,7 @@
     <string name="custom_card_dialog_title">Unrecognised barcode</string>
     <string name="custom_card_dialog_message">Would you like to add this to your wallet anyway?</string>
     <string name="custom_card_cancel">Cancel</string>
-    <string name="custom_card_add">Add custom</string>
+    <string name="custom_card_add">Add a custom card</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

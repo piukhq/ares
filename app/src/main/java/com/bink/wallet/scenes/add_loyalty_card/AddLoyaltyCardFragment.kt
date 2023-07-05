@@ -130,6 +130,7 @@ class AddLoyaltyCardFragment :
 
             } ?: run {
                 showUnsupportedBarcodePopup(null)
+                performHaptic()
             }
         }
     }
@@ -159,6 +160,7 @@ class AddLoyaltyCardFragment :
 
     override fun handleResult(rawResult: Result?) {
         cancelHaptic = true
+
         val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
         savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
 
@@ -187,7 +189,11 @@ class AddLoyaltyCardFragment :
                 findNavController().navigateIfAdded(this, action)
 
             } ?: run {
-                showCustomCardDialog()
+                showCustomCardDialog(rawResult?.text)
+                performHaptic(
+                    getString(R.string.unrecognized_barcode_title),
+                    getString(R.string.unrecognized_barcode_body)
+                )
             }
         }
 
@@ -303,7 +309,7 @@ class AddLoyaltyCardFragment :
 
     }
 
-    private fun showCustomCardDialog() {
+    private fun showCustomCardDialog(cardNumber: String?) {
         val alertDialog: AlertDialog? = activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
@@ -320,7 +326,7 @@ class AddLoyaltyCardFragment :
                 ) { dialog, _ ->
                     dialog.dismiss()
                     if (isAdded)
-                        findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
+                        findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom(cardNumber))
                 }
             }
 
