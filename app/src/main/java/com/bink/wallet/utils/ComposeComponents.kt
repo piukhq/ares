@@ -3,6 +3,8 @@ package com.bink.wallet.utils
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,28 +66,32 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     onClick: () -> Unit = { },
-    isEnabled:Boolean = true
+    isEnabled: Boolean = true
 ) {
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         modifier = modifier.clip(RoundedCornerShape(25.dp)),
         contentPadding = PaddingValues(),
         onClick = { onClick() },
-        enabled = isEnabled
-    )
-        {
-            Text(
-                text = text,
-                textAlign = TextAlign.Center,
-                fontFamily = nunitoSans,
-                fontWeight = FontWeight.Bold,
-                color = if (isEnabled) Color.White else Color.Gray,
-                fontSize = 18.sp,
-                modifier = textModifier
-            )
-        }
-    }
+        enabled = isEnabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = MaterialTheme.colors.primaryVariant
+        )
 
+    )
+    {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontFamily = nunitoSans,
+            fontWeight = FontWeight.Bold,
+            color = if (isEnabled) Color.White else Color.White.copy(0.9f),
+            fontSize = 18.sp,
+            modifier = textModifier
+        )
+    }
+}
 
 
 @Composable

@@ -13,14 +13,17 @@ private val lightThemeColours = lightColors(
     primary = BinkPrimary,
     background = White,
     surface = White,
-    onSurface = Black
+    onSurface = Black,
+    primaryVariant = BinkPrimaryInactive
 )
 
 private val darkThemeColours = darkColors(
     primary = BinkPrimary,
     background = DarkThemeBackGround,
     surface = DarkThemeColourSurface,
-    onSurface = White
+    onSurface = White,
+    primaryVariant = BinkPrimaryInactive
+
 )
 
 @Composable
