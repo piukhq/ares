@@ -1,38 +1,54 @@
 package com.bink.wallet.scenes.loyalty_details.locations
 
-import android.app.Application
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LocationOpeningHours
-import com.bink.wallet.model.tescolocations.Properties
-import com.bink.wallet.model.tescolocations.TescoLocation
+import com.bink.wallet.model.locations.MerchantLocation
+import com.bink.wallet.model.locations.Properties
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.lang.reflect.Type
+import java.nio.charset.StandardCharsets
 
-class LoyaltyCardLocationsViewModel(private val application: Application) : BaseViewModel() {
+class LoyaltyCardLocationsViewModel : BaseViewModel() {
 
-    val locations: MutableState<TescoLocation?> = mutableStateOf(null)
+    private val _locationUiState = MutableStateFlow(LocationUiState())
+    val locationUiState: StateFlow<LocationUiState> = _locationUiState.asStateFlow()
+
     val selectedLocationProperties: MutableState<Properties?> = mutableStateOf(null)
 
-    fun getLocations() {
-        try {
-            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-            val adapter = moshi.adapter(TescoLocation::class.java)
-            val jsonString =
-                application.assets.open("tesco_locations.geojson").bufferedReader()
-                    .use { it.readText() }
 
-            adapter.fromJson(jsonString)?.let { tescoLocations ->
-                locations.value = tescoLocations
-            }
-        } catch (e: IOException) {
+    fun getLocations(name: String) {
+        _locationUiState.update {
+            it.copy(companyName = name)
         }
 
+        val storageRef =
+            Firebase.storage.reference.child("locations/${name.lowercase()}.geojson")
+
+        storageRef.getBytes(2048 * 2048).addOnSuccessListener { byteArray ->
+            val jsonString = String(byteArray, StandardCharsets.UTF_8)
+
+            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+            val adapter = moshi.adapter(MerchantLocation::class.java)
+
+
+            adapter.fromJson(jsonString)?.let { loc ->
+                _locationUiState.update {
+                    it.copy(location = loc)
+                }
+            }
+        }.addOnFailureListener {
+        }
     }
 
     fun getLocationOpeningHours(properties: Properties): LocationOpeningHours {
@@ -43,3 +59,5 @@ class LoyaltyCardLocationsViewModel(private val application: Application) : Base
     }
 
 }
+
+data class LocationUiState(val location: MerchantLocation? = null, val companyName: String? = null)

@@ -1,4 +1,4 @@
-package com.bink.wallet.model.tescolocations
+package com.bink.wallet.model.locations
 
 
 import com.squareup.moshi.Json

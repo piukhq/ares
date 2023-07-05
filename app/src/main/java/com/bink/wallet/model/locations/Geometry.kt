@@ -1,13 +1,13 @@
-package com.bink.wallet.model.tescolocations
+package com.bink.wallet.model.locations
 
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class TescoLocation(
-    @Json(name = "features")
-    val features: List<Feature>?,
+data class Geometry(
+    @Json(name = "coordinates")
+    val coordinates: List<Double>?,
     @Json(name = "type")
     val type: String?
 )
