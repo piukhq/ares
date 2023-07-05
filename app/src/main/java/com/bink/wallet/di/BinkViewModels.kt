@@ -173,7 +173,7 @@ val viewModelModules = module {
 
     viewModel { CheckInboxViewModel(get()) }
 
-    viewModel { LoyaltyCardLocationsViewModel(androidApplication()) }
+    viewModel { LoyaltyCardLocationsViewModel() }
 
     viewModel { BetaFeatureViewModel(get()) }
 

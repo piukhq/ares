@@ -1,8 +1,6 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,7 +10,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -492,11 +489,11 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-    private fun setupGoToSite(backgroundColor: Int){
+    private fun setupGoToSite(backgroundColor: Int) {
         binding.goToSite.setBackgroundColor(backgroundColor)
         binding.goToSite.setOnClickListener {
             logMixpanelEvent(MixpanelEvents.GO_TO_SITE)
-            if (isAdded){
+            if (isAdded) {
                 findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(viewModel.membershipPlan.value?.account?.plan_url ?: ""))
             }
         }
@@ -845,8 +842,9 @@ class LoyaltyCardDetailsFragment :
 
     private fun setLocationModuleClickListener() {
         val companyName = viewModel.membershipPlan.value?.account?.company_name ?: return
-        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT).contains(companyName.lowercase(Locale.ROOT)) && it.enabled }
-        if (!locationEnabledFeatures.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled(locationEnabledFeatures.firstOrNull()?.slug ?: "")) binding.showLocationWrapper.visibility = View.VISIBLE
+        val locationEnabledFeatures = RemoteConfigUtil().beta?.features?.filter { it.slug.lowercase(Locale.ROOT) == "locations" && it.enabled }
+        val enabledMerchants = locationEnabledFeatures?.filter { it.enabledMerchants.contains(companyName.lowercase(Locale.ROOT)) }
+        if (!enabledMerchants.isNullOrEmpty() && SharedPreferenceManager.betaFeatureEnabled("locations")) binding.showLocationWrapper.visibility = View.VISIBLE
         with(binding) {
             locationsTitle.text = getString(R.string.show_locations, companyName)
             Glide.with(requireContext()).load(R.drawable.location_gif).listener(object : RequestListener<Drawable> {
@@ -863,7 +861,7 @@ class LoyaltyCardDetailsFragment :
             }).into(locationsGif)
             binding.showLocationWrapper.setOnClickListener {
                 findNavController().navigateIfAdded(
-                    this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(), currentDestination
+                    this@LoyaltyCardDetailsFragment, LoyaltyCardDetailsFragmentDirections.detailToLocations(companyName), currentDestination
                 )
 
             }

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -34,22 +35,16 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardLocationFragmentBinding
 import com.bink.wallet.model.getCurrentOpeningTimes
-import com.bink.wallet.model.tescolocations.Feature
-import com.bink.wallet.model.tescolocations.Properties
+import com.bink.wallet.model.locations.Feature
 import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.noRippleClickable
 import com.bink.wallet.utils.nunitoSans
 import com.bink.wallet.utils.showDialog
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.compose.*
@@ -104,7 +99,18 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getLocations()
+        arguments?.let { bundle ->
+            LoyaltyCardLocationsFragmentArgs.fromBundle(bundle).apply {
+                viewModel.getLocations(this.companyName)
+                logMixpanelEvent(
+                    MixpanelEvents.SHOW_LOCATIONS,
+                    JSONObject().put(
+                        MixpanelEvents.BRAND_NAME,
+                        this.companyName
+                    )
+                )
+            }
+        }
 
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(requireContext())
         checkLocationPermission()
@@ -122,13 +128,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
             }
         }
 
-        logMixpanelEvent(
-            MixpanelEvents.SHOW_LOCATIONS,
-            JSONObject().put(
-                MixpanelEvents.BRAND_NAME,
-                "Tesco"
-            )
-        )
+
     }
 
     @OptIn(MapsComposeExperimentalApi::class)
@@ -189,7 +189,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                             MixpanelEvents.SHOW_LOCATIONS,
                             JSONObject().put(
                                 MixpanelEvents.SHOW_DIRECTIONS,
-                                "Tesco"
+                                viewModel.companyName.value
                             )
                         )
 
@@ -245,10 +245,10 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
 
     private fun turnOnLocation() {
         val builder =
-            LocationSettingsRequest.Builder().addLocationRequest(LocationRequest.create().apply {
-                interval = LOCATION_REQUEST_INTERVAL
-                priority = PRIORITY_HIGH_ACCURACY
-            })
+            LocationSettingsRequest.Builder().addLocationRequest(LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+                .apply {
+                    setIntervalMillis(LOCATION_REQUEST_INTERVAL)
+                }.build())
         val client = LocationServices.getSettingsClient(requireContext())
         val task = client.checkLocationSettings(builder.build())
 
@@ -286,16 +286,17 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
 
     private fun getLocation() {
         fusedLocationProvider?.getCurrentLocation(
-            PRIORITY_HIGH_ACCURACY,
+            Priority.PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
         )?.addOnSuccessListener { location ->
             try {
+                Log.d("Test123", "Got camera pos")
                 cameraPos.value = LatLng(
                     location.latitude,
                     location.longitude
                 )
             } catch (e: NullPointerException) {
-
+                Log.d("Test123", "Got camera pos ${e.localizedMessage}")
             }
         }
     }
