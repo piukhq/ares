@@ -3,6 +3,8 @@ package com.bink.wallet.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -417,7 +419,8 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         when {
             it < 0 -> {
                 sign = "-"
-                setTextColor(ContextCompat.getColor(context, R.color.black))
+                val colour = if (isDarkModeOn(this.resources)) R.color.white else R.color.black
+                setTextColor(ContextCompat.getColor(context, colour))
             }
             it == 0.0 -> {
                 sign = " "
@@ -489,8 +492,10 @@ fun ImageView.setArrow(membershipTransactions: MembershipTransactions) {
         when {
             it < 0 -> {
                 rotation = 180f
+                val colour = if (isDarkModeOn(this.resources)) R.color.white else R.color.black
+
                 setColorFilter(
-                    ContextCompat.getColor(context, R.color.black),
+                    ContextCompat.getColor(context, colour),
                     PorterDuff.Mode.SRC_IN
                 )
             }
@@ -697,4 +702,9 @@ fun RecyclerView.setItemDecorationSpacing(spacingPx: Float) {
     addItemDecoration(
         RecyclerViewItemDecoration()
     )
+}
+
+private fun isDarkModeOn(resources: Resources): Boolean {
+    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    return currentNightMode == Configuration.UI_MODE_NIGHT_YES
 }
