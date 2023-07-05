@@ -187,7 +187,7 @@ class AddLoyaltyCardFragment :
                 findNavController().navigateIfAdded(this, action)
 
             } ?: run {
-                showUnsupportedBarcodePopup()
+                showCustomCardDialog()
             }
         }
 
@@ -257,9 +257,7 @@ class AddLoyaltyCardFragment :
                 )
             }
 
-
         }
-
 
         performHaptic(
             getString(R.string.unrecognized_barcode_title),
@@ -303,7 +301,6 @@ class AddLoyaltyCardFragment :
         val bounceAnimation = AnimationUtils.loadAnimation(context, R.anim.bounce)
         binding.bottomView.enterManuallyContainer.startAnimation(bounceAnimation)
 
-        showCustomCardDialog()
     }
 
     private fun showCustomCardDialog() {
@@ -322,7 +319,8 @@ class AddLoyaltyCardFragment :
                     getString(R.string.custom_card_add)
                 ) { dialog, _ ->
                     dialog.dismiss()
-                    findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
+                    if (isAdded)
+                        findNavController().navigate(AddLoyaltyCardFragmentDirections.addLoyaltyToAddCustom())
                 }
             }
 
