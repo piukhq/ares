@@ -49,6 +49,18 @@ class LoyaltyWalletViewHolder(
         if(item.isCustomCard == true){
             val mPlan = item.plan ?: MembershipPlanUtils.getBlankMembershipPlan()
              bindVouchersToDisplay(cardBinding, mPlan,item)
+            cardBinding.apply {
+                customTextContainer.visibility = View.VISIBLE
+                companyLogo.visibility = View.INVISIBLE
+                valueWrapper.visibility = View.INVISIBLE
+                linkStatusWrapper.visibility = View.INVISIBLE
+            }
+
+        } else {
+            cardBinding.apply {
+                customTextContainer.visibility = View.GONE
+                companyLogo.visibility = View.VISIBLE
+            }
         }
 
         with(cardBinding.cardView) {
