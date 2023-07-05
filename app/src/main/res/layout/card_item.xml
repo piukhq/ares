@@ -8,6 +8,7 @@
         <variable
             name="plan"
             type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <variable
             name="membership_card"
             type="com.bink.wallet.model.response.membership_card.MembershipCard" />
@@ -34,18 +35,31 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 app:imageUrl="@{plan}"
-                app:merchantDetail="@{membership_card}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:merchantDetail="@{membership_card}"
                 app:shapeAppearanceOverlay="@style/rounded_corner"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/text_drawable"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_width="@dimen/margin_padding_size_extra_large"
+                android:layout_height="@dimen/margin_padding_size_extra_large"
+                android:layout_marginStart="@dimen/loyalty_value_margin_end"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:background="@drawable/rounded_text_view"
+                android:gravity="center"
+                android:textSize="@dimen/custom_card_text_label_size"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:merchantName="@{membership_card}"
+                tools:text="X" />
 
             <com.bink.wallet.CardView
                 android:id="@+id/card_view"

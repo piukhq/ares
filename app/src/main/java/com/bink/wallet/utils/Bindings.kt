@@ -47,8 +47,8 @@ import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
 
-@BindingAdapter("imageUrl", "merchantDetail", requireAll = false)
-fun ImageView.loadImage(item: MembershipPlan?, card: MembershipCard? = null) {
+@BindingAdapter("imageUrl")
+fun ImageView.loadImage(item: MembershipPlan?) {
     if (!item?.images.isNullOrEmpty()) {
         visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
@@ -60,10 +60,6 @@ fun ImageView.loadImage(item: MembershipPlan?, card: MembershipCard? = null) {
         } catch (e: NoSuchElementException) {
             logError("loadImage", e.localizedMessage, e)
         }
-    } else {
-        val merchantName = card?.card?.merchant_name ?: ""
-        val colour = card?.card?.colour ?: ColourPalette.getRandomColour()
-        Glide.with(context).load(TextDrawable(merchantName, colour)).into(this)
     }
 }
 
@@ -708,4 +704,12 @@ fun RecyclerView.setItemDecorationSpacing(spacingPx: Float) {
     addItemDecoration(
         RecyclerViewItemDecoration()
     )
+}
+
+@BindingAdapter("merchantName")
+fun TextView.setMerchantLetter(membershipCard: MembershipCard){
+    visibility = if (membershipCard.isCustomCard == true) View.VISIBLE else View.GONE
+    text = membershipCard.card?.merchant_name?.first().toString().uppercase() ?: ""
+    setTextColor(Color.WHITE)
+    setBackgroundColor(Color.parseColor(membershipCard.card?.colour))
 }

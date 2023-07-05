@@ -19,4 +19,6 @@
     <dimen name="card_onboarding_link_title">20sp</dimen>
     <dimen name="card_onnboarding_link_description">16sp</dimen>
 
+    <dimen name="custom_card_text_label_size">38sp</dimen>
+
 </resources>
