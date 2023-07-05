@@ -64,6 +64,9 @@
     <string name="browse_brands_no_match_label_text">No matches</string>
     <string name="scan_loyalty_card">Scan loyalty card</string>
     <string name="scan_loyalty_card_subtitle">Quickly add a card you already have</string>
+    <string name="add_custom_card_scan_title">Add custom card</string>
+    <string name="add_custom_card_subtitle">Can\'t find your card? Add custom cards here</string>
+
 
     <!-- Add Join -->
     <string name="add_join_screen_reward_info">Rewards info ></string>

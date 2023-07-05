@@ -56,6 +56,8 @@ class BrowseBrandsAdapter :
     override fun getItemViewType(position: Int): Int = getItem(position).id
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val isLastItem = currentList.lastIndex == position
+
         when (getItemViewType(position)) {
             BRAND_ITEM -> (getItem(position) as BrowseBrandsListItem.BrandItem).let {
                 (holder as BrandsViewHolder).bind(
@@ -63,9 +65,11 @@ class BrowseBrandsAdapter :
                     onBrandItemClickListener
                 )
             }
+
             SCAN_CARD_ITEM -> {
-                (holder as ScanCardViewHolder).bind(onScanCardItemClickListener)
+                (holder as ScanCardViewHolder).bind(onScanCardItemClickListener,isLastItem)
             }
+
             SECTION_TITLE_ITEM -> {
                 val item = (getItem(position) as BrowseBrandsListItem.SectionTitleItem)
                 (holder as SectionTitleViewHolder).bind(
