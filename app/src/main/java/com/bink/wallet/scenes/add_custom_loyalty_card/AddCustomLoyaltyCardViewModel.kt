@@ -71,7 +71,7 @@ class AddCustomLoyaltyCardViewModel(
             null,
             cardNumber,
             ColourPalette.getRandomColour(),
-            null,
+            ColourPalette.getRandomColour(),
             storeName
         )
 

@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -334,6 +335,13 @@ private fun LoyaltyCardHeader.loadRectangularBarcode(
     binding.rbCopyNumber.setOnClickListener {
         copyCardNumber(context, cardNumber)
     }
+    if (card?.isCustomCard == true) {
+        binding.rbCompanyLogo.visibility = View.GONE
+        binding.customViewCard.visibility = View.VISIBLE
+        val color = card.card?.colour ?: card.card?.secondary_colour
+        binding.customViewCard.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(color)))
+    }
+
 
 }
 

@@ -195,6 +195,7 @@
     <dimen name="burger_king_stamp_size">24dp</dimen>
     <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
     <dimen name="loyalty_card_details_module_radius">4dp</dimen>
+    <dimen name="custom_card_icon_size">40dp</dimen>
 
     <!-- Generic Views -->
     <dimen name="generic_view_button_height">48dp</dimen>
