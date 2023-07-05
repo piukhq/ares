@@ -10,6 +10,5 @@ data class PollResultItem(
     val createdDate: Int = 0,
     val overwritten: Boolean = false,
     val pollId: String? = null,
-    val userId: String = "",
-    val id: String = ""
+    val userId: String = ""
 )
