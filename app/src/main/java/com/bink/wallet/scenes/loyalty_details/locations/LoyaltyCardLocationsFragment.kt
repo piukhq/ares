@@ -116,13 +116,17 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
         checkLocationPermission()
 
         binding.compose.setContent {
+            val locationUiState by viewModel.locationUiState.collectAsState()
+
             Column(modifier = Modifier.fillMaxSize()) {
                 BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                    GoogleMapClustering(items = viewModel.locations.value?.features ?: arrayListOf(), modifier = Modifier.fillMaxSize())
+                    locationUiState.location?.features?.let {
+                        GoogleMapClustering(items = it, modifier = Modifier.fillMaxSize())
+                    }
                     LocationCard(modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_medium))))
+                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_medium))), companyName = locationUiState.companyName ?: "")
 
                 }
             }
@@ -169,7 +173,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
     }
 
     @Composable
-    private fun LocationCard(modifier: Modifier) {
+    private fun LocationCard(modifier: Modifier, companyName: String) {
         AnimatedVisibility(visible = viewModel.selectedLocationProperties.value != null, modifier = modifier) {
             viewModel.selectedLocationProperties.value?.let { properties ->
 
@@ -189,7 +193,7 @@ class LoyaltyCardLocationsFragment : BaseFragment<LoyaltyCardLocationsViewModel,
                             MixpanelEvents.SHOW_LOCATIONS,
                             JSONObject().put(
                                 MixpanelEvents.SHOW_DIRECTIONS,
-                                viewModel.companyName.value
+                                companyName
                             )
                         )
 
