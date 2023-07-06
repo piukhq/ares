@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,11 +10,10 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
 typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
-class BrowseBrandsAdapter :
+class BrowseBrandsAdapter(val onScanItemClickListener: (ScanCardViewHolder.ScanCardType) -> Unit = {}) :
     ListAdapter<BrowseBrandsListItem, RecyclerView.ViewHolder>(BrandItemsDiffUtil) {
 
     private var onBrandItemClickListener: OnBrandItemClickListener? = null
-    private var onScanCardItemClickListener: View.OnClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
@@ -29,6 +27,7 @@ class BrowseBrandsAdapter :
                     )
                 )
             }
+
             SCAN_CARD_ITEM -> {
                 ScanCardViewHolder(
                     DataBindingUtil.inflate(
@@ -36,9 +35,11 @@ class BrowseBrandsAdapter :
                         R.layout.item_scan_card,
                         parent,
                         false
-                    )
+                    ), onScanItemClickListener
+
                 )
             }
+
             else -> {
                 SectionTitleViewHolder(
                     DataBindingUtil.inflate(
@@ -67,7 +68,7 @@ class BrowseBrandsAdapter :
             }
 
             SCAN_CARD_ITEM -> {
-                (holder as ScanCardViewHolder).bind(onScanCardItemClickListener,isLastItem)
+                (holder as ScanCardViewHolder).bind(isLastItem)
             }
 
             SECTION_TITLE_ITEM -> {
@@ -81,10 +82,6 @@ class BrowseBrandsAdapter :
 
     fun setOnBrandItemClickListener(onBrandItemClickListener: OnBrandItemClickListener?) {
         this.onBrandItemClickListener = onBrandItemClickListener
-    }
-
-    fun setOnScanItemClickListener(onScanCardItemClickListener: View.OnClickListener?) {
-        this.onScanCardItemClickListener = onScanCardItemClickListener
     }
 
     companion object {

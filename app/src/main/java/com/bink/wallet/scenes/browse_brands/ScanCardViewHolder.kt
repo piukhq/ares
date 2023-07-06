@@ -1,15 +1,19 @@
 package com.bink.wallet.scenes.browse_brands
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.ScanItemBinding
 
-class ScanCardViewHolder(val binding: ScanItemBinding) :
+class ScanCardViewHolder(
+    val binding: ScanItemBinding,
+    val onClickListener: (ScanCardType) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(onClickListener: View.OnClickListener?, isLastItem: Boolean) {
+    fun bind( isLastItem: Boolean) {
         val context = binding.root.context
+        setClickListener(isLastItem)
+
         when (isLastItem) {
             true -> {
                 binding.tvScanTitle.text = context.getString(R.string.add_custom_card_scan_title)
@@ -21,8 +25,17 @@ class ScanCardViewHolder(val binding: ScanItemBinding) :
                 binding.tvScanSubtitle.text = context.getString(R.string.scan_loyalty_card_subtitle)
             }
         }
-        onClickListener?.let {
-            binding.root.setOnClickListener(it)
+    }
+
+    private fun setClickListener(isLastItem: Boolean){
+        val cardType = if (isLastItem) ScanCardType.CUSTOM_CARD else ScanCardType.LOYALTY_CARD
+
+        binding.cvScanLoyaltyCard.setOnClickListener {
+            onClickListener(cardType)
         }
+    }
+    enum class ScanCardType{
+        LOYALTY_CARD,
+        CUSTOM_CARD
     }
 }
