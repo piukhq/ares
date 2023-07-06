@@ -195,6 +195,7 @@
     <dimen name="burger_king_stamp_size">24dp</dimen>
     <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
     <dimen name="loyalty_card_details_module_radius">4dp</dimen>
+    <dimen name="custom_card_icon_size">40dp</dimen>
 
     <!-- Generic Views -->
     <dimen name="generic_view_button_height">48dp</dimen>
@@ -213,6 +214,7 @@
     <dimen name="camera_top_offset">20dp</dimen>
     <dimen name="border_offset">12dp</dimen>
     <dimen name="corner_radius">0dp</dimen>
+    <dimen name="custom_dialog_top">80dp</dimen>
 
     <!-- BinkWebView -->
     <dimen name="web_view_back_button_margin_horizontal">4dp</dimen>

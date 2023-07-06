@@ -10,6 +10,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.logDebug
 
 class WalletsViewModel(
     private var repository: LoyaltyWalletRepository,

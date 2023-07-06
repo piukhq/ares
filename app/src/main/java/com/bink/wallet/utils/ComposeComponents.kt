@@ -1,16 +1,15 @@
 package com.bink.wallet.utils
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -67,29 +66,30 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     onClick: () -> Unit = { },
+    isEnabled: Boolean = true
 ) {
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         modifier = modifier.clip(RoundedCornerShape(25.dp)),
         contentPadding = PaddingValues(),
         onClick = { onClick() },
-    ) {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colors.primary)
-                .then(modifier),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = text,
-                textAlign = TextAlign.Center,
-                fontFamily = nunitoSans,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                fontSize = 18.sp,
-                modifier = textModifier
-            )
-        }
+        enabled = isEnabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = MaterialTheme.colors.primaryVariant
+        )
+
+    )
+    {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            fontFamily = nunitoSans,
+            fontWeight = FontWeight.Bold,
+            color = if (isEnabled) Color.White else Color.White.copy(0.9f),
+            fontSize = 18.sp,
+            modifier = textModifier
+        )
     }
 }
 

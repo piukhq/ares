@@ -38,6 +38,12 @@ class BinkDatabaseMigrations {
             }
 
         }
+
+        val MIGRATION_22_23: Migration = object : Migration(22, 23) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE membership_card ADD COLUMN isCustomCard INTEGER DEFAULT 0")
+            }
+        }
     }
 
 }

@@ -20,7 +20,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBinding>() {
 
     private val args by navArgs<BrowseBrandsFragmentArgs>()
-    private val adapter = BrowseBrandsAdapter()
+    private val adapter = BrowseBrandsAdapter(onScanItemClickListener = {
+        goToScan()
+    })
     private val filtersAdapter = BrandsFiltersAdapter()
     override val layoutRes = R.layout.browse_brands_fragment
     override val viewModel: BrowseBrandsViewModel by viewModel()
@@ -83,10 +85,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 )
             }
 
-            setOnScanItemClickListener {
-                goToScan()
-            }
-
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     if (viewModel.activeFilters.value?.size ==
@@ -104,7 +102,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             setOnFilterClickListener {
                 viewModel.updateFilters(it)
             }
-            args.membershipPlans?.toList()?.getCategories()?.map { BrandsFilter(it) }?.let { setFilters(it) }
+            args.membershipPlans?.toList()?.getCategories()?.map { BrandsFilter(it) }
+                ?.let { setFilters(it) }
         }
 
         binding.buttonClearSearch.setOnClickListener {
@@ -122,6 +121,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     true -> {
                         View.VISIBLE
                     }
+
                     else -> {
                         View.GONE
                     }

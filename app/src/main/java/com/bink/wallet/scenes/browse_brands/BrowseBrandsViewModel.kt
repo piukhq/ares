@@ -198,6 +198,8 @@ class BrowseBrandsViewModel(
                 0,
                 BrowseBrandsListItem.ScanCardItem()
             )
+            val addCustomCardScanItem = browseBrandsItems.lastIndex + 1
+            browseBrandsItems.add(addCustomCardScanItem,BrowseBrandsListItem.ScanCardItem())
         }
 
         return browseBrandsItems

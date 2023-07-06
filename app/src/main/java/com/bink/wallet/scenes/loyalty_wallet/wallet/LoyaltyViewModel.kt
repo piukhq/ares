@@ -145,7 +145,9 @@ class LoyaltyViewModel constructor(
         cardsFromDb: List<MembershipCard>,
         cards: List<MembershipCard>,
     ) {
-        membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
+        if (WebScrapableManager.mapOldToNewCards(cardsFromDb, cards).isNotEmpty()){
+            membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
+        }
     }
 
     fun fetchPeriodicMembershipCards(

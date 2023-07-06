@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -59,8 +60,6 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         } catch (e: NoSuchElementException) {
             logError("loadImage", e.localizedMessage, e)
         }
-    } else {
-        visibility = View.INVISIBLE
     }
 }
 
@@ -332,6 +331,13 @@ private fun LoyaltyCardHeader.loadRectangularBarcode(
     binding.rbCopyNumber.setOnClickListener {
         copyCardNumber(context, cardNumber)
     }
+    if (card?.isCustomCard == true) {
+        binding.rbCompanyLogo.visibility = View.GONE
+        binding.customViewCard.visibility = View.VISIBLE
+        val color = card.card?.colour ?: card.card?.secondary_colour
+        binding.customViewCard.setCardBackgroundColor(ColorStateList.valueOf(Color.parseColor(color)))
+    }
+
 
 }
 
@@ -342,7 +348,8 @@ private fun copyCardNumber(context: Context, cardNumber: String) {
     clipboard.setPrimaryClip(clip)
     Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_LONG).show()
 
-    val mixpanelKey = if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
+    val mixpanelKey =
+        if (isProduction()) Keys.mixPanelProductionApiKey() else Keys.mixPanelBetaApiKey()
     val mixpanel = MixpanelAPI.getInstance(context, mixpanelKey)
     mixpanel.track(MixpanelEvents.COPY_CARD)
 }
@@ -697,4 +704,12 @@ fun RecyclerView.setItemDecorationSpacing(spacingPx: Float) {
     addItemDecoration(
         RecyclerViewItemDecoration()
     )
+}
+
+@BindingAdapter("merchantName")
+fun TextView.setMerchantLetter(membershipCard: MembershipCard){
+    visibility = if (membershipCard.isCustomCard == true) View.VISIBLE else View.GONE
+    text = membershipCard.card?.merchant_name?.first().toString().uppercase() ?: ""
+    setTextColor(Color.WHITE)
+    setBackgroundColor(Color.parseColor(membershipCard.card?.colour))
 }

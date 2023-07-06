@@ -3,7 +3,7 @@ package com.bink.wallet.theme
 import androidx.compose.ui.graphics.Color
 
 val BinkPrimary = Color(0xFF077EA8)
-val BinkPrimaryDark = Color(0xff00574B)
+val BinkPrimaryInactive = Color(0x80077EA8)
 val White = Color(0xffffffff)
 val Black = Color(0xff000000)
 

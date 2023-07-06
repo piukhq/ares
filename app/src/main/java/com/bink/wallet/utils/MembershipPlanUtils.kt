@@ -44,10 +44,14 @@ object MembershipPlanUtils {
                 UNAUTHORISED.status,
                 -> {
                     membershipCard.status?.reason_codes?.let { reasonCodes ->
-                        if (reasonCodes.intersect(listOf(CardCodes.X201.code).toSet()).isNotEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X201.code).toSet())
+                                .isNotEmpty()
+                        ) {
                             return LoginStatus.STATUS_SIGN_UP_FAILED
                         }
-                        if (reasonCodes.intersect(listOf(CardCodes.X202.code).toSet()).isNotEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X202.code).toSet())
+                                .isNotEmpty()
+                        ) {
                             return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                         }
                         if (reasonCodes.intersect(
@@ -64,7 +68,9 @@ object MembershipPlanUtils {
                         ) {
                             return LoginStatus.STATUS_LOGIN_FAILED
                         }
-                        if (reasonCodes.intersect(listOf(CardCodes.X105.code).toSet()).isNotEmpty()) {
+                        if (reasonCodes.intersect(listOf(CardCodes.X105.code).toSet())
+                                .isNotEmpty()
+                        ) {
                             return LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD
                         }
                         if (reasonCodes.isEmpty()
@@ -292,5 +298,9 @@ object MembershipPlanUtils {
         }
 
         return null
+    }
+
+    fun getBlankMembershipPlan(): MembershipPlan {
+        return MembershipPlan("", null, null, null, null, null, null, null, null,null)
     }
 }

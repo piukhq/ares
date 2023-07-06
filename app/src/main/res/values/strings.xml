@@ -56,6 +56,7 @@
     <string name="card_status_retry">Retry</string>
     <string name="link_status_cannot_link">Cannot link</string>
     <string name="plan_name_card_extra"><![CDATA[info >]]></string>
+    <string name="custom_card_barcode_name">Card</string>
 
     <!--Browse Brands -->
     <string name="browse_brands">Browse Brands</string>
@@ -64,6 +65,9 @@
     <string name="browse_brands_no_match_label_text">No matches</string>
     <string name="scan_loyalty_card">Scan loyalty card</string>
     <string name="scan_loyalty_card_subtitle">Quickly add a card you already have</string>
+    <string name="add_custom_card_scan_title">Add custom card</string>
+    <string name="add_custom_card_subtitle">Can\'t find your card? Add custom cards here</string>
+
 
     <!-- Add Join -->
     <string name="add_join_screen_reward_info">Rewards info ></string>
@@ -690,6 +694,17 @@
 
 
     <string name="prev_updates_title">Previous Updates</string>
+
+    <!-- Custom cards -->
+    <string name="custom_card_main_header"> Enter credentials</string>
+    <string name="custom_card_description"> Please enter your credentials below to add this card to your wallet.</string>
+    <string name="custom_card_card_number"> Card number</string>
+    <string name="custom_card_store_name"> Store name</string>
+    <string name="custom_card_button_text"> Add card</string>
+    <string name="custom_card_dialog_title">Unrecognised barcode</string>
+    <string name="custom_card_dialog_message">Would you like to add this to your wallet anyway?</string>
+    <string name="custom_card_cancel">Cancel</string>
+    <string name="custom_card_add">Add a custom card</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

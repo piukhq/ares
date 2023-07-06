@@ -64,8 +64,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         arguments?.let {
             viewModel.getSelectedTheme()
             BarcodeFragmentArgs.fromBundle(it).apply {
-                viewModel.companyName.value = currentMembershipPlan.account?.company_name
-                binding.title.text = currentMembershipPlan.account?.company_name
+                val companyName = currentMembershipPlan.account?.company_name
+                viewModel.companyName.value = companyName ?: membershipCard.card?.merchant_name
+                binding.title.text = companyName ?: membershipCard.card?.merchant_name
                 binding.composeView.setContent {
                     AppTheme(viewModel.theme.value) {
                         BarcodeScreen(membershipCard, currentMembershipPlan)
@@ -93,7 +94,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     @Composable
     fun BarcodeScreen(membershipCard: MembershipCard, membershipPlan: MembershipPlan) {
-        var barcode = MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))
+        var barcode =
+            MembershipPlanUtils.loadBarcode(requireContext(), BarcodeWrapper(membershipCard))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +108,11 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             Header(membershipPlan, barcode)
 
             if (!membershipCard.card?.membership_id.isNullOrEmpty()) {
-                MembershipNumber(membershipPlan.account?.plan_name_card ?: "", membershipCard.card?.membership_id!!)
+                MembershipNumber(
+                    membershipPlan.account?.plan_name_card
+                        ?: getString(R.string.custom_card_barcode_name),
+                    membershipCard.card?.membership_id!!
+                )
             }
 
             if (!membershipCard.card?.barcode.isNullOrEmpty() && membershipCard.card?.barcode != membershipCard.card?.membership_id) {
@@ -123,7 +129,10 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
     @Composable
     fun Header(membershipPlan: MembershipPlan, barcode: Bitmap?) {
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             if (barcode == null) {
                 getIconTypeFromPlan(membershipPlan)?.let { url ->
                     ImageViaUrl(
@@ -137,9 +146,13 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 Image(bitmap = barcode.asImageBitmap(), contentDescription = "Barcode")
             }
 
-            val text = if (barcode == null) getString(R.string.barcode_description_no_barcode) else getString(R.string.barcode_description)
+            val text =
+                if (barcode == null) getString(R.string.barcode_description_no_barcode) else getString(
+                    R.string.barcode_description
+                )
             Text(
-                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = text,
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium)),
+                text = text,
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Light,
                 fontSize = 21.sp,
@@ -155,7 +168,10 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.membership_number_title, title),
+                modifier = Modifier.padding(
+                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)
+                ), text = getString(R.string.membership_number_title, title),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp,
@@ -173,7 +189,10 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 .fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)), text = getString(R.string.barcode_text),
+                modifier = Modifier.padding(
+                    top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                    bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)
+                ), text = getString(R.string.barcode_text),
                 fontFamily = nunitoSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp
@@ -197,17 +216,34 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                     "true"
                 )
                 viewModel.setBarcodePreference()
-                Toast.makeText(requireContext(), getString(R.string.preferences_updated), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.preferences_updated),
+                    Toast.LENGTH_LONG
+                ).show()
             },
         ) {
             Box(
                 modifier = Modifier
-                    .background(Brush.horizontalGradient(listOf(Color(0xFF3D908F), Color(0xFF194B53)))),
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF3D908F),
+                                Color(0xFF194B53)
+                            )
+                        )
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 Column {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-                        .padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), top = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_small))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                            .padding(
+                                start = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                                end = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                                top = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                                bottom = dimensionResource(id = R.dimen.margin_padding_size_small)
+                            )
                     ) {
                         Text(
                             text = getString(R.string.show_barcode_title),
@@ -216,16 +252,22 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                             color = Color.White,
                             fontSize = 20.sp,
                             modifier = Modifier
-                                .weight(1f))
+                                .weight(1f)
+                        )
 
-                        Image(painterResource(R.drawable.ic_barcode), contentDescription = "Barcode", modifier = Modifier.size(dimensionResource(id = R.dimen.barcode_icon_size)))
+                        Image(
+                            painterResource(R.drawable.ic_barcode),
+                            contentDescription = "Barcode",
+                            modifier = Modifier.size(dimensionResource(id = R.dimen.barcode_icon_size))
+                        )
                     }
 
                     val clickHere = stringResource(id = R.string.click_here)
                     val body = stringResource(id = R.string.show_barcode_body)
                     val start = body.indexOf(clickHere)
                     val spanStyles = listOf(
-                        AnnotatedString.Range(SpanStyle(fontWeight = FontWeight.Bold),
+                        AnnotatedString.Range(
+                            SpanStyle(fontWeight = FontWeight.Bold),
                             start = start,
                             end = start + clickHere.length
                         )
@@ -236,7 +278,11 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                         fontFamily = nunitoSans,
                         color = Color.White,
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin_padding_size_medium), end = dimensionResource(id = R.dimen.margin_padding_size_medium), bottom = dimensionResource(id = R.dimen.margin_padding_size_medium))
+                        modifier = Modifier.padding(
+                            start = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                            end = dimensionResource(id = R.dimen.margin_padding_size_medium),
+                            bottom = dimensionResource(id = R.dimen.margin_padding_size_medium)
+                        )
                     )
                 }
             }
@@ -255,7 +301,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 modifier = Modifier
                     .background(backgroundColour)
                     .widthIn(min = dimensionResource(id = R.dimen.high_vis_width))
-                    .height(dimensionResource(id = R.dimen.high_vis_height)), horizontalAlignment = Alignment.CenterHorizontally
+                    .height(dimensionResource(id = R.dimen.high_vis_height)),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row {
                     Text(
