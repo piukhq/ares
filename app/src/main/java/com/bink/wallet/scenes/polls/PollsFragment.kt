@@ -149,7 +149,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
 
                 AnimatedVisibility(visible = resultUiState.loading) {
                     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = colorResource(id = R.color.blue_light))
+                        CircularProgressIndicator(color = colorResource(id = R.color.blue_accent))
                     }
                 }
             }
@@ -212,7 +212,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     private fun AnswerRow(answer: String, isSelected: Boolean, answerSelected: (String) -> Unit) {
         val focusManager = LocalFocusManager.current
 
-        val backgroundColour = if (isSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
+        val backgroundColour = if (isSelected) colorResource(id = R.color.blue_accent) else colorResource(id = R.color.blue_accent).copy(0.2f)
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
@@ -222,10 +222,12 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 answerSelected(answer)
             }) {
 
-            RadioButton(selected = isSelected, onClick = {
-                focusManager.clearFocus()
-                answerSelected(answer)
-            })
+            RadioButton(selected = isSelected,
+                colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.white)),
+                onClick = {
+                    focusManager.clearFocus()
+                    answerSelected(answer)
+                })
 
             Text(
                 text = answer,
@@ -245,7 +247,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     @Composable
     private fun AnswerRow(answerUiState: AnswerUiState) {
         val isSelected = answerUiState.customAnswer.isNotEmpty()
-        val backgroundColour = if (isSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
+        val backgroundColour = if (isSelected) colorResource(id = R.color.blue_accent) else colorResource(id = R.color.blue_accent).copy(0.2f)
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
@@ -288,14 +290,14 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.poll_answer_height))
-                .background(colorResource(id = R.color.blue_light).copy(0.2f))
+                .background(colorResource(id = R.color.blue_accent).copy(0.2f))
                 .align(Alignment.CenterEnd)) {}
 
             Row(modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
                 .fillMaxWidth(result.answerPercentage / 100)
                 .height(dimensionResource(id = R.dimen.poll_answer_height))
-                .background(colorResource(id = R.color.blue_light))
+                .background(colorResource(id = R.color.blue_accent))
                 .align(Alignment.CenterStart)) {}
 
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
@@ -305,6 +307,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
 
                 RadioButton(
                     selected = result.isUsersAnswer,
+                    colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.white)),
                     onClick = { }
                 )
 
@@ -335,7 +338,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.margin_padding_size_small)))
             .fillMaxWidth()
             .height(dimensionResource(id = R.dimen.poll_answer_height))
-            .background(colorResource(id = R.color.blue_light))) {
+            .background(colorResource(id = R.color.blue_accent))) {
 
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.margin_padding_size_small)))
 
@@ -371,7 +374,7 @@ class PollsFragment : BaseFragment<PollsViewModel, FragmentPollsBinding>() {
     @Composable
     private fun SubmitPoll(answerUiState: AnswerUiState, allowCustom: Boolean, submitAnswer: () -> Unit) {
         val isAnswerSelected = answerUiState.selectedAnswer.isNotEmpty() || if (allowCustom) answerUiState.customAnswer.isNotEmpty() else false
-        val backgroundColour = if (isAnswerSelected) colorResource(id = R.color.blue_light) else colorResource(id = R.color.blue_light).copy(0.2f)
+        val backgroundColour = if (isAnswerSelected) colorResource(id = R.color.blue_accent) else colorResource(id = R.color.blue_accent).copy(0.2f)
         Button(
             modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.poll_button_rounding)))
