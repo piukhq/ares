@@ -95,7 +95,7 @@ class AddCustomLoyaltyCardFragment :
                 isEnabled = enabled.value
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_medium)))
         }
     }
 
