@@ -90,6 +90,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var isRefresh = false
     private var isErrorShowing = false
     private var deletedCard: MembershipCard? = null
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var cards: List<MembershipCard>
     private lateinit var plans: List<MembershipPlan>
     private lateinit var handler: Handler
@@ -361,6 +362,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             WebScrapableManager.newlyAddedCard.value = null
         }
 
+        binding.loyaltyWalletList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                binding.swipeLayout.isEnabled = linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 // 0 is for first item position
+            }
+        })
+
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
@@ -573,8 +581,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun manageRecyclerView() {
+        linearLayoutManager = LinearLayoutManager(requireContext())
         binding.loyaltyWalletList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
             adapter = walletAdapter
             addItemDecoration(RecyclerViewItemDecoration())
             simpleCallback.attachToRecyclerView(this)
