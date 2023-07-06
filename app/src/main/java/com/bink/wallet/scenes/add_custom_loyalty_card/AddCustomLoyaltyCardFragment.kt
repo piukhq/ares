@@ -174,7 +174,8 @@ class AddCustomLoyaltyCardFragment :
                         contentDescription = "Trailing icon"
                     )
                 })
-            }
+            },
+            singleLine = true
         )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small)))
 
@@ -191,7 +192,9 @@ class AddCustomLoyaltyCardFragment :
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 textColor = MaterialTheme.colors.onSurface
-            )
+            ),
+            singleLine = true
+
         )
     }
 }
