@@ -56,7 +56,7 @@
     <string name="card_status_retry">Retry</string>
     <string name="link_status_cannot_link">Cannot link</string>
     <string name="plan_name_card_extra"><![CDATA[info >]]></string>
-    <string name="custom_card_barcode_name">Add</string>
+    <string name="custom_card_barcode_name">Card</string>
 
     <!--Browse Brands -->
     <string name="browse_brands">Browse Brands</string>
